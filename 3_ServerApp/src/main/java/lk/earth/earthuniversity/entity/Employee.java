@@ -77,6 +77,8 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<User> users;
+    @OneToMany(mappedBy = "employee")
+    private Collection<Ingredient> ingredients;
 
     public Employee(){}
 
@@ -272,5 +274,13 @@ public class Employee {
 
     public void setUsers(Collection<User> users) {
         this.users = users;
+    }
+
+    public Collection<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Collection<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }
