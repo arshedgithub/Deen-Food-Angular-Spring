@@ -28,11 +28,11 @@ public class Unittype {
         this.id = id;
     }
 
-    public String getNmae() {
+    public String getName() {
         return nmae;
     }
 
-    public void setNmae(String nmae) {
+    public void setName(String nmae) {
         this.nmae = nmae;
     }
 
