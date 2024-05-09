@@ -1,5 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -13,6 +15,8 @@ public class Unittype {
     @Basic
     @Column(name = "nmae")
     private String nmae;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "unittype")
     private Collection<Ingredient> ingredients;
 

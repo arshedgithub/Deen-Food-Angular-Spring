@@ -77,6 +77,8 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<User> users;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Ingredient> ingredients;
 

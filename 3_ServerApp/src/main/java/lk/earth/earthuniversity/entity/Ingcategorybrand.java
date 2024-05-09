@@ -1,5 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,9 +11,12 @@ public class Ingcategorybrand {
     @Id
     @Column(name = "id")
     private Integer id;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "ingcategory_id", referencedColumnName = "id", nullable = false)
     private Ingcategory ingcategory;
+
     @ManyToOne
     @JoinColumn(name = "brand_id", referencedColumnName = "id", nullable = false)
     private Brand brand;

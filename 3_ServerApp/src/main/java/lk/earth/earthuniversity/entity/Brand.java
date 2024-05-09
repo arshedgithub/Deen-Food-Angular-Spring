@@ -1,5 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -13,8 +15,12 @@ public class Brand {
     @Basic
     @Column(name = "name")
     private String name;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "brand")
     private Collection<Ingcategorybrand> ingcategorybrands;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "brand")
     private Collection<Ingredient> ingredients;
 

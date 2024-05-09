@@ -1,5 +1,7 @@
 package lk.earth.earthuniversity.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -15,6 +17,8 @@ public class Ingcategory {
     private String name;
     @OneToMany(mappedBy = "ingcategory")
     private Collection<Ingcategorybrand> ingcategorybrands;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "ingcategory")
     private Collection<Ingredient> ingredients;
 
