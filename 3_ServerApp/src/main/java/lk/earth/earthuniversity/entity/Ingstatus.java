@@ -15,7 +15,7 @@ public class Ingstatus {
     @Basic
     @Column(name = "name")
     private String name;
-    
+
     @JsonIgnore
     @OneToMany(mappedBy = "ingstatus")
     private Collection<Ingredient> ingredients;
