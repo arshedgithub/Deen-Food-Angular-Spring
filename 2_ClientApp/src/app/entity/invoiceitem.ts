@@ -1,15 +1,15 @@
 
-import {Item} from "./item";
+import {Ingredient} from "./ingredient";
 
 
 export class Invoiceitem {
 
   public id!:number;
-  public  item:Item;
+  public  item:Ingredient;
   public quantity !: number;
   public linetotal !: number;
 
-  constructor(id:number,item:Item,quantity:number,linetotal:number) {
+  constructor(id:number, item:Ingredient, quantity:number, linetotal:number) {
     this.id = id;
     this.item = item;
     this.quantity = quantity;

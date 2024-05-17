@@ -3,7 +3,7 @@ import {Brand} from "./brand";
 import {Unittype} from "./unittype";
 import {Employee} from "./employee";
 
-export class Item {
+export class Ingredient {
 
   public id !: number;
   public category !: Ingcategory;
