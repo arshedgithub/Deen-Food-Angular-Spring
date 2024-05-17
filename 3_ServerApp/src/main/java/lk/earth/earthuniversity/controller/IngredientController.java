@@ -1,8 +1,6 @@
 package lk.earth.earthuniversity.controller;
 
-import lk.earth.earthuniversity.dao.EmployeeDao;
 import lk.earth.earthuniversity.dao.IngredientDao;
-import lk.earth.earthuniversity.entity.Employee;
 import lk.earth.earthuniversity.entity.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,7 @@ public class IngredientController {
     private IngredientDao ingredientDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+//    @PreAuthorize("hasAuthority('ingredient-select')")
     public List<Ingredient> get(@RequestParam HashMap<String, String> params) {
 
         List<Ingredient> ingredients = this.ingredientDao.findAll();
@@ -32,12 +30,14 @@ public class IngredientController {
         String ingredientname = params.get("ingredientname");
         String categoryid= params.get("categoryid");
         String ingredientstatusid= params.get("ingredientstatusid");
+        String ingredientbrandid= params.get("ingredientbrandid");
 
         Stream<Ingredient> ingredientStream = ingredients.stream();
 
         if(ingredientname!=null) ingredientStream = ingredientStream.filter(i -> i.getName().contains(ingredientname));
         if(categoryid!=null) ingredientStream = ingredientStream.filter(i -> i.getIngcategory().getId()==Integer.parseInt(categoryid));
         if(ingredientstatusid!=null) ingredientStream = ingredientStream.filter(i -> i.getIngstatus().getId()==Integer.parseInt(ingredientstatusid));
+        if(ingredientbrandid!=null) ingredientStream = ingredientStream.filter(i -> i.getBrand().getId()==Integer.parseInt(ingredientbrandid));
 
         return ingredientStream.collect(Collectors.toList());
 
@@ -60,82 +60,75 @@ public class IngredientController {
 //    }
 
 
-//    @PostMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-////    @PreAuthorize("hasAuthority('Employee-Insert')")
-//    public HashMap<String,String> add(@RequestBody Employee employee){
-//
-//        HashMap<String,String> responce = new HashMap<>();
-//        String errors="";
-//
-//        if(employeedao.findByNumber(employee.getNumber())!=null)
-//            errors = errors+"<br> Existing Number";
-//        if(employeedao.findByNic(employee.getNic())!=null)
-//            errors = errors+"<br> Existing NIC";
-//
-//        System.out.println(employee.getDoassignment());
-//
-//        if(errors=="")
-//        employeedao.save(employee);
-//        else errors = "Server Validation Errors : <br> "+errors;
-//
-//        responce.put("id",String.valueOf(employee.getId()));
-//        responce.put("url","/employees/"+employee.getId());
-//        responce.put("errors",errors);
-//
-//        return responce;
-//    }
-//
-//    @PutMapping
-//    @ResponseStatus(HttpStatus.CREATED)
-////    @PreAuthorize("hasAuthority('Employee-Update')")
-//    public HashMap<String,String> update(@RequestBody Employee employee){
-//
-//        HashMap<String,String> responce = new HashMap<>();
-//        String errors="";
-//
-//        Employee emp1 = employeedao.findByNumber(employee.getNumber());
-//        Employee emp2 = employeedao.findByNic(employee.getNic());
-//
-//        if(emp1!=null && employee.getId()!=emp1.getId())
-//            errors = errors+"<br> Existing Number";
-//        if(emp2!=null && employee.getId()!=emp2.getId())
-//            errors = errors+"<br> Existing NIC";
-//
-//        if(errors=="") employeedao.save(employee);
-//        else errors = "Server Validation Errors : <br> "+errors;
-//
-//        responce.put("id",String.valueOf(employee.getId()));
-//        responce.put("url","/employees/"+employee.getId());
-//        responce.put("errors",errors);
-//
-//        return responce;
-//    }
-//
-//
-//    @DeleteMapping("/{id}")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public HashMap<String,String> delete(@PathVariable Integer id){
-//
-//        System.out.println(id);
-//
-//        HashMap<String,String> responce = new HashMap<>();
-//        String errors="";
-//
-//        Employee emp1 = employeedao.findByMyId(id);
-//
-//        if(emp1==null)
-//            errors = errors+"<br> Employee Does Not Existed";
-//
-//        if(errors=="") employeedao.delete(emp1);
-//        else errors = "Server Validation Errors : <br> "+errors;
-//
-//        responce.put("id",String.valueOf(id));
-//        responce.put("url","/employees/"+id);
-//        responce.put("errors",errors);
-//
-//        return responce;
-//    }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+//    @PreAuthorize("hasAuthority('Ingredient-Insert')")
+    public HashMap<String,String> add(@RequestBody Ingredient ingredient){
+
+        HashMap<String,String> response = new HashMap<>();
+        String errors="";
+
+        if(ingredientDao.findByName(ingredient.getName())!=null)
+            errors = errors+"<br> Existing Name";
+
+        if(errors=="")
+            ingredientDao.save(ingredient);
+        else errors = "Server Validation Errors : <br> "+errors;
+
+        response.put("id",String.valueOf(ingredient.getId()));
+        response.put("url","/ingredients/"+ingredient.getId());
+        response.put("errors",errors);
+        return response;
+    }
+
+    @PutMapping
+    @ResponseStatus(HttpStatus.CREATED)
+//    @PreAuthorize("hasAuthority('Ingredient-Update')")
+    public HashMap<String,String> update(@RequestBody Ingredient ingredient){
+
+        HashMap<String,String> response = new HashMap<>();
+        String errors="";
+
+        Ingredient ing = ingredientDao.findByName(ingredient.getName());
+
+        if(ing!=null && ingredient.getId()!=ing.getId())
+            errors = errors+"<br> Existing Name";
+
+
+        if(errors=="") ingredientDao.save(ingredient);
+        else errors = "Server Validation Errors : <br> "+errors;
+
+        response.put("id",String.valueOf(ingredient.getId()));
+        response.put("url","/ingredients/"+ingredient.getId());
+        response.put("errors",errors);
+
+        return response;
+    }
+
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public HashMap<String,String> delete(@PathVariable Integer id){
+
+        System.out.println(id);
+
+        HashMap<String,String> response = new HashMap<>();
+        String errors="";
+
+        Ingredient ing = ingredientDao.findByMyId(id);
+
+        if(ing==null)
+            errors = errors+"<br> Ingredient Does Not Existed";
+
+        if(errors=="") ingredientDao.delete(ing);
+        else errors = "Server Validation Errors : <br> "+errors;
+
+        response.put("id",String.valueOf(id));
+        response.put("url","/ingredients/"+id);
+        response.put("errors",errors);
+
+        return response;
+    }
 
 }
 
