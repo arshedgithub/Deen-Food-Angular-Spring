@@ -37,12 +37,12 @@ export class MainwindowComponent {
         return this.admMenuItems.some(menuItem => menuItem.accessFlag);
       case 'Inventory':
         return this.invMenuItems.some(menuItem => menuItem.accessFlag);
-      case 'Academic':
-        return this.acdMenuItems.some(menuItem => menuItem.accessFlag);
-        case 'Registration':
-        return this.regMenuItems.some(menuItem => menuItem.accessFlag);
-        case 'Class':
-        return this.clsMenuItems.some(menuItem => menuItem.accessFlag);
+      // case 'Academic':
+      //   return this.acdMenuItems.some(menuItem => menuItem.accessFlag);
+      // case 'Registration':
+      //   return this.regMenuItems.some(menuItem => menuItem.accessFlag);
+      // case 'Class':
+      //   return this.clsMenuItems.some(menuItem => menuItem.accessFlag);
       default:
         return false;
     }

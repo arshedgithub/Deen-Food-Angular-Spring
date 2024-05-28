@@ -69,24 +69,24 @@ export class AuthorizationManager {
       menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
     });
 
-    this.acdMenuItems.forEach(menuItem => {
-      menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
-    });
-
-    this.regMenuItems.forEach(menuItem => {
-      menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
-    });
-
-    this.clsMenuItems.forEach(menuItem => {
-      menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
-    });
+    // this.acdMenuItems.forEach(menuItem => {
+    //   menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
+    // });
+    //
+    // this.regMenuItems.forEach(menuItem => {
+    //   menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
+    // });
+    //
+    // this.clsMenuItems.forEach(menuItem => {
+    //   menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
+    // });
 
     // Save menu state in localStorage
     localStorage.setItem(this.localStorageAdmMenus, JSON.stringify(this.admMenuItems));
     localStorage.setItem(this.localStorageInvMenus, JSON.stringify(this.invMenuItems));
-    localStorage.setItem(this.localStorageAcdMenus, JSON.stringify(this.acdMenuItems));
-    localStorage.setItem(this.localStorageRegMenus, JSON.stringify(this.regMenuItems));
-    localStorage.setItem(this.localStorageClsMenus, JSON.stringify(this.clsMenuItems));
+    // localStorage.setItem(this.localStorageAcdMenus, JSON.stringify(this.acdMenuItems));
+    // localStorage.setItem(this.localStorageRegMenus, JSON.stringify(this.regMenuItems));
+    // localStorage.setItem(this.localStorageClsMenus, JSON.stringify(this.clsMenuItems));
 
   }
 

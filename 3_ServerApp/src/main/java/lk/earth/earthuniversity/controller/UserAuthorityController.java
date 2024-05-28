@@ -43,22 +43,8 @@ public class UserAuthorityController {
                     "employee-select","employee-delete","employee-update","employee-insert",
                     "operations-select","operations-delete","operations-update","operations-insert",
 
-                    "ingredients-select","ingredients-delete","ingredients-update","ingredients-insert",
+                    "ingredient-select","ingredient-delete","ingredient-update","ingredient-insert"
 
-                    "program-select","program-delete","program-update","program-insert",
-                    "course-select","course-delete","course-update","course-insert",
-                    "Batch-select","Batch-delete","Batch-update","Batch-insert",
-                    "Payment Schedule-select","Payment Schedule-delete","Payment Schedule-update","Payment Schedule-insert",
-                    "Course Materiale-select","Course Material-delete","Course Material-update","Course Material-insert",
-
-                    "Mat. Distribution-select","Mat. Distribution-delete","Mat. Distribution-update","Mat. Distribution-insert",
-                    "Payments-select","Payments-delete","Payments-update","Payments-insert",
-                    "student-select","student-delete","student-update","student-insert",
-                    "Batch Registration-select","Batch Registration-delete","Batch Registration-update","Batch Registration-insert",
-
-                    "Class Schedule-select","Class Schedule-delete","Class Schedule-update","Class Schedule-insert",
-                    "Attendance-select","Attendance-delete","Attendance-update","Attendance-insert",
-                    "Progress Review-select","Progress Review-delete","Progress Review-update","Progress Review-insert"
             );
         }
 
