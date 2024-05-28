@@ -7,6 +7,7 @@ import {HomeComponent} from "./view/home/home.component";
 import {UserComponent} from "./view/modules/user/user.component";
 import {ArrearsByProgramComponent} from "./report/view/arrearsbyprogram/arrearsbyprogram.component";
 import {PaymentComponent} from "./view/modules/payment/payment.component";
+import {IngredientComponent} from "./view/modules/ingredient/ingredient.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
       {path:"reports", component: ArrearsByProgramComponent},
       {path:"payments",component:PaymentComponent},
       {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
+      {path: "ingredient", component: IngredientComponent},
     ]
   }];
 
