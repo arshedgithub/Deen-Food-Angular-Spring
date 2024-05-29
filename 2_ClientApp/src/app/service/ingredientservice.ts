@@ -6,7 +6,7 @@ import {Ingredient} from "../entity/ingredient";
   providedIn: 'root'
 })
 
-export class ItemService {
+export class IngredientService {
 
   constructor(private http: HttpClient) {  }
 
