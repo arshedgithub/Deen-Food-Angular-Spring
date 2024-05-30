@@ -16,21 +16,18 @@ import {Ingredient} from "../../../entity/ingredient";
 })
 export class IngredientComponent {
 
-  columns: string[] = ['id', 'name', 'description', 'photo', 'qoh', 'rop', 'cost'];
-  headers: string[] = ['Id', 'Name', 'Description', 'photo', 'Quantity', 'Point', 'Cost'];
-  binders: string[] = ['id', 'name', 'description', 'photo', 'qoh', 'rop', 'cost'];
+  columns: string[] = ['id', 'name', 'brand_id', 'qoh', 'rop', 'cost'];
+  headers: string[] = ['Id', 'Name', 'Brand', 'Quantity', 'Re-Order Point', 'Cost'];
+  binders: string[] = ['id', 'name', 'brand.name', 'qoh', 'rop', 'cost'];
 
-  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname', 'csmodi'];
-  csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender',
-    'Search by Designation', 'Search by Full Name', 'Search by Modi'];
+  cscolumns: string[] = ['csid', 'csname', 'csbrand', 'csqoh', 'csrop', 'cscost' ];
+  csprompts: string[] = ['Search by Id', 'Search by Name', 'Search By Brand', 'Search by quantity', 'Search by Reorder Point ', 'Search by Cost'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
   public form!: FormGroup;
 
   ingredient!: Ingredient;
-
-  selectedrow: any;
 
   ingredients: Array<Ingredient> = [];
   data!: MatTableDataSource<Ingredient>;
@@ -43,6 +40,15 @@ export class IngredientComponent {
   constructor(private is: IngredientService, private fb: FormBuilder){
 
     this.uiassist = new UiAssist(this);
+
+    this.csearch = this.fb.group({
+      'csid': new FormControl(),
+      'csname': new FormControl(),
+      'csbrand': new FormControl(),
+      'csqoh': new FormControl(),
+      'csrop': new FormControl(),
+      'cscost': new FormControl(),
+    })
 
   }
 
@@ -75,6 +81,23 @@ export class IngredientComponent {
         this.data.paginator = this.paginator;
       });
 
+  }
+
+  filterTable():void {
+    const cssearchdata = this.csearch.getRawValue();
+
+
+    console.log(cssearchdata);
+
+    this.data.filterPredicate = ((ingredient: Ingredient, filter: string) => {
+      return (cssearchdata.csid == null || ingredient.id.toString().includes(cssearchdata.csid)) &&
+        (cssearchdata.csname == null || ingredient.name.includes(cssearchdata.csname)) &&
+        (cssearchdata.csbrand == null || ingredient.brand.name.includes(cssearchdata.csbrand)) &&
+        (cssearchdata.csqoh == null || ingredient.qoh.toString().includes(cssearchdata.csqoh)) &&
+        (cssearchdata.csrop == null || ingredient.rop.toString().includes(cssearchdata.csrop)) &&
+        (cssearchdata.cscost == null || ingredient.cost.toString().includes(cssearchdata.cscost));
+    });
+    this.data.filter = "xx";
   }
 
 }
