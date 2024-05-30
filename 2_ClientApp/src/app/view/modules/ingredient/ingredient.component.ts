@@ -11,6 +11,8 @@ import {Ingcategory} from "../../../entity/ingcategory";
 import {IngredientStatusService} from "../../../service/ingredientstatusservice";
 import {IngredientCategoryService} from "../../../service/ingredientcategoryservice";
 import {BrandService} from "../../../service/brandservice";
+import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-ingredient',
@@ -50,6 +52,7 @@ export class IngredientComponent {
     private ingStat: IngredientStatusService,
     private ingcat: IngredientCategoryService,
     private br: BrandService,
+    private dialog: MatDialog
   ){
 
     this.uiassist = new UiAssist(this);
@@ -61,6 +64,13 @@ export class IngredientComponent {
       'csqoh': new FormControl(),
       'csrop': new FormControl(),
       'cscost': new FormControl(),
+    });
+
+    this.ssearch = this.fb.group({
+      'ssname': new FormControl(),
+      'ssbrand': new FormControl(),
+      'ssingcategory': new FormControl(),
+      'ssingstatus': new FormControl()
     });
 
   }
@@ -114,6 +124,44 @@ export class IngredientComponent {
         (cssearchdata.cscost == null || ingredient.cost.toString().includes(cssearchdata.cscost));
     });
     this.data.filter = "xx";
+  }
+
+  btnSearchMc(): void {
+
+    const ssearchdata = this.ssearch.getRawValue();
+
+    let name = ssearchdata.ssname;
+    let brandid = ssearchdata.ssbrand;
+    let categoryid = ssearchdata.ssingcategory;
+    let ingstatusid = ssearchdata.ssingstatus;
+
+    let query = "";
+
+    if (name != null && name.trim() != "") query = query + "&ingredientname=" + name;
+    if (categoryid != null) query = query + "&categoryid=" + categoryid;
+    if (ingstatusid != null) query = query + "&ingredientstatusid=" + ingstatusid;
+    if (brandid != null) query = query + "&ingredientbrandid=" + brandid;
+
+    if (query != "") query = query.replace(/^./, "?")
+
+    this.loadTable(query);
+
+  }
+
+  btnSearchClearMc(): void {
+
+    const confirm = this.dialog.open(ConfirmComponent, {
+      width: '500px',
+      data: {heading: "Search Clear", message: "Are you sure to Clear the Search?"}
+    });
+
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        this.ssearch.reset();
+        this.loadTable("");
+      }
+    });
+
   }
 
 }
