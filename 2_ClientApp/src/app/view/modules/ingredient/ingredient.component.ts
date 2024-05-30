@@ -3,11 +3,14 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {UiAssist} from "../../../util/ui/ui.assist";
-import {MatDialog} from "@angular/material/dialog";
-import {DatePipe} from "@angular/common";
-import {AuthorizationManager} from "../../../service/authorizationmanager";
 import {IngredientService} from "../../../service/ingredientservice";
 import {Ingredient} from "../../../entity/ingredient";
+import {Ingstatus} from "../../../entity/ingstatus";
+import {Brand} from "../../../entity/brand";
+import {Ingcategory} from "../../../entity/ingcategory";
+import {IngredientStatusService} from "../../../service/ingredientstatusservice";
+import {IngredientCategoryService} from "../../../service/ingredientcategoryservice";
+import {BrandService} from "../../../service/brandservice";
 
 @Component({
   selector: 'app-ingredient',
@@ -37,7 +40,17 @@ export class IngredientComponent {
 
   uiassist: UiAssist;
 
-  constructor(private is: IngredientService, private fb: FormBuilder){
+  ingredientStatuses: Array<Ingstatus> = [];
+  ingredientCategories: Array<Ingcategory> = [];
+  brands: Array<Brand> = [];
+
+  constructor(
+    private is: IngredientService,
+    private fb: FormBuilder,
+    private ingStat: IngredientStatusService,
+    private ingcat: IngredientCategoryService,
+    private br: BrandService,
+  ){
 
     this.uiassist = new UiAssist(this);
 
@@ -48,7 +61,7 @@ export class IngredientComponent {
       'csqoh': new FormControl(),
       'csrop': new FormControl(),
       'cscost': new FormControl(),
-    })
+    });
 
   }
 
@@ -58,6 +71,10 @@ export class IngredientComponent {
 
   initialize() {
     this.createView();
+
+    this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
+    this.ingcat.getAllList().then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
+    this.br.getAllList().then((brs: Brand[]) => {this.brands = brs});
   }
 
   createView() {
@@ -85,7 +102,6 @@ export class IngredientComponent {
 
   filterTable():void {
     const cssearchdata = this.csearch.getRawValue();
-
 
     console.log(cssearchdata);
 
