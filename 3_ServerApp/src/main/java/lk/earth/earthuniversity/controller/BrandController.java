@@ -28,10 +28,6 @@ public class BrandController {
 
         String categoryid = params.get("categoryid");
         if (categoryid != null) brands = this.brandDao.findAllByBrand(Integer.parseInt(categoryid));
-
-
-//        ).collect(Collectors.toList());
-
         return brands;
 
     }
