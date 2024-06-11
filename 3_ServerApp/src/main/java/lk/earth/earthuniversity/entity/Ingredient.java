@@ -1,6 +1,9 @@
 package lk.earth.earthuniversity.entity;
 
+import lk.earth.earthuniversity.util.RegexPattern;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Arrays;
@@ -14,6 +17,7 @@ public class Ingredient {
     private Integer id;
     @Basic
     @Column(name = "name")
+    @Pattern(regexp = "^[A-Z][a-z]+(?:\\s[A-Z][a-z]+)?(?:\\s[A-Z][a-z]+)?(?:\\s[\\d]{1,3}(kg|g|ml|l))?$", message = "Invalid Name")
     private String name;
     @Basic
     @Column(name = "description")
@@ -23,15 +27,19 @@ public class Ingredient {
     private byte[] photo;
     @Basic
     @Column(name = "qoh")
+    @RegexPattern(reg = "^\\d{1,4}", msg = "Invalid Quantity")
     private BigDecimal qoh;
     @Basic
     @Column(name = "rop")
+    @RegexPattern(reg = "^\\d{1,3}", msg = "Invalid ROP")
     private BigDecimal rop;
     @Basic
     @Column(name = "cost")
+    @RegexPattern(reg = "^\\d{2,4}(?:[.][\\d]{2})?$", msg = "Invalid Price")
     private BigDecimal cost;
     @Basic
     @Column(name = "dointroduced")
+    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date")
     private Date dointroduced;
     @ManyToOne
     @JoinColumn(name = "ingcategory_id", referencedColumnName = "id", nullable = false)
