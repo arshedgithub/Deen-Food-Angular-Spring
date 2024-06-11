@@ -5,11 +5,9 @@ import lk.earth.earthuniversity.dao.IngstatusDao;
 import lk.earth.earthuniversity.entity.Brand;
 import lk.earth.earthuniversity.entity.Ingstatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,16 +20,17 @@ public class BrandController {
     private BrandDao brandDao;
 
     @GetMapping(path ="/list",produces = "application/json")
-    public List<Brand> get() {
+    public List<Brand> get(@RequestParam HashMap<String, String> params) {
 
         List<Brand> brands = this.brandDao.findAll();
 
-        brands = brands.stream().map(
-                brand -> { Brand b = new Brand();
-                            b.setId(brand.getId());
-                            b.setName(brand.getName());
-                            return b; }
-        ).collect(Collectors.toList());
+        if (params.isEmpty()) return brands;
+
+        String categoryid = params.get("categoryid");
+        if (categoryid != null) brands = this.brandDao.findAllByBrand(Integer.parseInt(categoryid));
+
+
+//        ).collect(Collectors.toList());
 
         return brands;
 

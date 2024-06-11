@@ -10,8 +10,8 @@ export class BrandService {
 
   constructor(private http: HttpClient) {  }
 
-  async getAllList(): Promise<Array<Brand>> {
-    const brands = await this.http.get<Array<Brand>>('http://localhost:8080/brands/list').toPromise();
+  async getAllList(qry: string): Promise<Array<Brand>> {
+    const brands = await this.http.get<Array<Brand>>('http://localhost:8080/brands/list' + qry).toPromise();
     if(brands == undefined){
       return [];
     }

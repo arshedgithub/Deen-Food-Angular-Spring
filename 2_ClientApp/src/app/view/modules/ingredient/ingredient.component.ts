@@ -84,7 +84,7 @@ export class IngredientComponent {
 
     this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
     this.ingcat.getAllList().then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
-    this.br.getAllList().then((brs: Brand[]) => {this.brands = brs});
+    this.br.getAllList("").then((brs: Brand[]) => {this.brands = brs});
   }
 
   createView() {
