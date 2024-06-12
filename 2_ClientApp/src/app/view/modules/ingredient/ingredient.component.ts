@@ -73,6 +73,12 @@ export class IngredientComponent {
       'ssingstatus': new FormControl()
     });
 
+    this.form = this.fb.group({
+      'ingcategory': new FormControl('', Validators.required),
+      'brand': new FormControl('', Validators.required),
+      'name': new FormControl('', Validators.required),
+    });
+
   }
 
   ngOnInit() {
@@ -84,7 +90,9 @@ export class IngredientComponent {
 
     this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
     this.ingcat.getAllList().then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
-    this.br.getAllList("").then((brs: Brand[]) => {this.brands = brs});
+    // this.br.getAllList("").then((brs: Brand[]) => {this.brands = brs});
+
+    this.filterBrands();
   }
 
   createView() {
@@ -161,7 +169,13 @@ export class IngredientComponent {
         this.loadTable("");
       }
     });
+  }
 
+  filterBrands(): void {
+    this.form.get("ingcategory")?.valueChanges.subscribe((cat: Ingcategory) => {
+      let qry = '?categoryid=' + cat.id;
+      this.br.getAllList(qry).then((brands: Brand[]) => {this.brands = brands});
+    });
   }
 
 }
