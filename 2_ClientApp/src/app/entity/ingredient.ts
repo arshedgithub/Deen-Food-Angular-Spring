@@ -2,6 +2,7 @@ import {Ingcategory} from "./ingcategory";
 import {Brand} from "./brand";
 import {Unittype} from "./unittype";
 import {Employee} from "./employee";
+import {Ingstatus} from "./ingstatus";
 
 export class Ingredient {
 
@@ -15,10 +16,11 @@ export class Ingredient {
   public qoh !: number;
   public rop !: number;
   public cost !: number;
+  public ingstatus !: Ingstatus;
   public dointroduced !: String;
   public employee !: Employee;
 
-  constructor(id: number, category: Ingcategory, brand: Brand, name: string, description: String, photo: String, unittype: Unittype, qoh: number, rop: number, cost: number, dointroduced: String, employee: Employee) {
+  constructor(id: number, category: Ingcategory, brand: Brand, name: string, description: String, photo: String, unittype: Unittype, qoh: number, rop: number, cost: number, ingstatus:Ingstatus, dointroduced: String, employee: Employee) {
     this.id = id;
     this.category = category;
     this.brand = brand;
@@ -29,6 +31,7 @@ export class Ingredient {
     this.qoh = qoh;
     this.rop = rop;
     this.cost = cost;
+    this.ingstatus = ingstatus;
     this.dointroduced = dointroduced;
     this.employee = employee;
   }

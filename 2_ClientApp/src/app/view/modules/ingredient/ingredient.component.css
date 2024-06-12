@@ -21,6 +21,10 @@ mat-card-header { background: #c0d9c3; }
   padding-top: 20px;
 }
 
+#radio {
+  border: 1px solid grey;
+  margin-bottom: 15px;
+}
 
 /* Ingredient Form > Photo Panel  */
 #imgpanel {

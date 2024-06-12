@@ -13,6 +13,11 @@ import {IngredientCategoryService} from "../../../service/ingredientcategoryserv
 import {BrandService} from "../../../service/brandservice";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MatDialog} from "@angular/material/dialog";
+import {RegexService} from "../../../service/regexservice";
+import {UnittypeService} from "../../../service/unittypeservice";
+import {Unittype} from "../../../entity/unittype";
+import {Employee} from "../../../entity/employee";
+import {EmployeeService} from "../../../service/employeeservice";
 
 @Component({
   selector: 'app-ingredient',
@@ -45,6 +50,8 @@ export class IngredientComponent {
   ingredientStatuses: Array<Ingstatus> = [];
   ingredientCategories: Array<Ingcategory> = [];
   brands: Array<Brand> = [];
+  unittypes: Array<Unittype> = [];
+  employees: Array<Employee> = [];
 
   constructor(
     private is: IngredientService,
@@ -52,6 +59,9 @@ export class IngredientComponent {
     private ingStat: IngredientStatusService,
     private ingcat: IngredientCategoryService,
     private br: BrandService,
+    private uns: UnittypeService,
+    private rxs: RegexService,
+    private emps: EmployeeService,
     private dialog: MatDialog
   ){
 
@@ -77,8 +87,16 @@ export class IngredientComponent {
       'ingcategory': new FormControl('', Validators.required),
       'brand': new FormControl('', Validators.required),
       'name': new FormControl('', Validators.required),
+      'description': new FormControl('', Validators.required),
+      'photo': new FormControl('', Validators.required),
+      'unittype': new FormControl('', Validators.required),
+      'qoh': new FormControl('', Validators.required),
+      'rop': new FormControl('', Validators.required),
+      'cost': new FormControl('', Validators.required),
+      'ingstatus': new FormControl('', Validators.required),
+      'dointroduced': new FormControl('', Validators.required),
+      'employee': new FormControl('', Validators.required),
     });
-
   }
 
   ngOnInit() {
@@ -90,9 +108,11 @@ export class IngredientComponent {
 
     this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
     this.ingcat.getAllList().then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
-    // this.br.getAllList("").then((brs: Brand[]) => {this.brands = brs});
+    this.uns.getAllList("").then((units: Unittype[]) => {this.unittypes = units});
+    this.emps.getAll("").then((employees: Employee[]) => {this.employees = employees});
 
     this.filterBrands();
+    this.getItemName();
   }
 
   createView() {
@@ -175,6 +195,12 @@ export class IngredientComponent {
     this.form.get("ingcategory")?.valueChanges.subscribe((cat: Ingcategory) => {
       let qry = '?categoryid=' + cat.id;
       this.br.getAllList(qry).then((brands: Brand[]) => {this.brands = brands});
+    });
+  }
+
+  getItemName(): void {
+    this.form.get("brand")?.valueChanges.subscribe((brand: Brand) => {
+      this.form.get("name")?.setValue(brand.name);
     });
   }
 
