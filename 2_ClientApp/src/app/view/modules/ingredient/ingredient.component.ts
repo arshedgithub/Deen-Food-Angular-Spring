@@ -18,6 +18,7 @@ import {UnittypeService} from "../../../service/unittypeservice";
 import {Unittype} from "../../../entity/unittype";
 import {Employee} from "../../../entity/employee";
 import {EmployeeService} from "../../../service/employeeservice";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-ingredient',
@@ -37,15 +38,23 @@ export class IngredientComponent {
   public ssearch!: FormGroup;
   public form!: FormGroup;
 
+  enaadd: boolean = false;
+  enaupd: boolean = false;
+  enadel: boolean = false;
+
   ingredient!: Ingredient;
+  oldingredient!: Ingredient;
 
   ingredients: Array<Ingredient> = [];
   data!: MatTableDataSource<Ingredient>;
   imageurl: string = '';
+  imageingurl: string = 'assets/default.png';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  regexes!: any;
   uiassist: UiAssist;
+  col!: {[p: string]: any;}
 
   ingredientStatuses: Array<Ingstatus> = [];
   ingredientCategories: Array<Ingcategory> = [];
@@ -62,7 +71,8 @@ export class IngredientComponent {
     private uns: UnittypeService,
     private rxs: RegexService,
     private emps: EmployeeService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private dp: DatePipe
   ){
 
     this.uiassist = new UiAssist(this);
@@ -95,7 +105,7 @@ export class IngredientComponent {
       'cost': new FormControl('', Validators.required),
       'ingstatus': new FormControl('', Validators.required),
       'dointroduced': new FormControl('', Validators.required),
-      'employee': new FormControl('', Validators.required),
+      'employee': new FormControl({value: new Date(), disabled: true}, Validators.required),
     });
   }
 
@@ -111,13 +121,63 @@ export class IngredientComponent {
     this.uns.getAllList("").then((units: Unittype[]) => {this.unittypes = units});
     this.emps.getAll("").then((employees: Employee[]) => {this.employees = employees});
 
+    this.rxs.get("ingredients").then((regexs: []) => {
+      this.regexes = regexs;
+      this.createForm();
+    });
+
     this.filterBrands();
     this.getItemName();
+    this.changeRadioColor();
   }
 
   createView() {
     this.imageurl = 'assets/pending.gif';
     this.loadTable("");
+  }
+
+  createForm(): void {
+    this.form.controls['ingcategory'].setValidators([Validators.required]);
+    this.form.controls['brand'].setValidators([Validators.required]);
+    this.form.controls['name'].setValidators([Validators.required, Validators.pattern(this.regexes['name']['regex'])]);
+    this.form.controls['unittype'].setValidators([Validators.required]);
+    this.form.controls['description'].setValidators([Validators.required]);
+    this.form.controls['photo'].setValidators([Validators.required]);
+    this.form.controls['qoh'].setValidators([Validators.required, Validators.pattern(this.regexes['qoh']['regex'])]);
+    this.form.controls['rop'].setValidators([Validators.required, Validators.pattern(this.regexes['rop']['regex'])]);
+    this.form.controls['cost'].setValidators([Validators.required, Validators.pattern(this.regexes['cost']['regex'])]);
+    this.form.controls['ingstatus'].setValidators([Validators.required]);
+    this.form.controls['dointroduced'].setValidators([Validators.required, Validators.pattern(this.regexes['dointroduced']['regex'])]);
+    this.form.controls['employee'].setValidators([Validators.required]);
+
+    Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
+
+    for (const controlName in this.form.controls) {
+      const control = this.form.controls[controlName];
+      control.valueChanges.subscribe(value => {
+          // @ts-ignore
+          if (controlName == "dointroduced")
+            value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
+
+          if (this.oldingredient != undefined && control.valid) {
+            // @ts-ignore
+            if (value === this.ingredient[controlName]) {
+              control.markAsPristine();
+            } else {
+              control.markAsDirty();
+            }
+          } else {
+            control.markAsPristine();
+          }
+      });
+    }
+    this.enableButtons(true,false,false);
+  }
+
+  enableButtons(add:boolean, upd:boolean, del:boolean){
+    this.enaadd=add;
+    this.enaupd=upd;
+    this.enadel=del;
   }
 
   loadTable(query: string) {
@@ -202,6 +262,30 @@ export class IngredientComponent {
     this.form.get("brand")?.valueChanges.subscribe((brand: Brand) => {
       this.form.get("name")?.setValue(brand.name);
     });
+  }
+
+  changeRadioColor(): void {
+    this.form.get("unittype")?.valueChanges.subscribe(() => {
+      let sts = this.form.get("unittype")?.invalid;
+      if (!sts) this.col = {"border": "1px solid grey"}
+      else this.col = {"border": "1px solid #e15959"}
+    });
+  }
+
+  selectImage(e: any): void {
+    if (e.target.files) {
+      let reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+      reader.onload = (event: any) => {
+        this.imageingurl = event.target.result;
+        this.form.controls['photo'].clearValidators();
+      }
+    }
+  }
+
+  clearImage(): void {
+    this.imageingurl = 'assets/default.png';
+    this.form.controls['photo'].setErrors({'required': true});
   }
 
 }

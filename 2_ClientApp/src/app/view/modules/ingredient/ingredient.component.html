@@ -40,6 +40,13 @@
             <input matInput formControlName="description">
           </mat-form-field>
 
+          <div id="imgpanel">
+            <img [src]="imageingurl">
+            <input id="userImage" hidden="hidden" (change)="selectImage($event)" Select type="file" formControlName="photo">
+            <label for="userImage" id="selectbutton">Select</label>
+            <label id="clearbutton" (click)="clearImage()">Clear</label>
+          </div>
+
           <mat-form-field appearance="outline">
             <mat-label>Qunatity</mat-label>
             <input matInput formControlName="qoh">
@@ -51,11 +58,23 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
+            <mat-label>Cost</mat-label>
+            <input matInput formControlName="cost">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
             <mat-label>Select Ingredient Status</mat-label>
             <mat-select formControlName="ingstatus">
               <mat-option value="null">Not Selected</mat-option>
               <mat-option *ngFor="let status of ingredientStatuses" [value]="status">{{status.name}}</mat-option>
             </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Introduced Date</mat-label>
+            <input matInput [matDatepicker]="dateintro" formControlName="dointroduced">
+            <mat-datepicker-toggle matIconSuffix [for]="dateintro"></mat-datepicker-toggle>
+            <mat-datepicker #dateintro></mat-datepicker>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
