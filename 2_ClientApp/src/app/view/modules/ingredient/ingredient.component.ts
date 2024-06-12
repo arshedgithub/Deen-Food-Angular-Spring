@@ -19,6 +19,7 @@ import {Unittype} from "../../../entity/unittype";
 import {Employee} from "../../../entity/employee";
 import {EmployeeService} from "../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
+import {MessageComponent} from "../../../util/dialog/message/message.component";
 
 @Component({
   selector: 'app-ingredient',
@@ -72,7 +73,7 @@ export class IngredientComponent {
     private rxs: RegexService,
     private emps: EmployeeService,
     private dialog: MatDialog,
-    private dp: DatePipe
+    private dp: DatePipe,
   ){
 
     this.uiassist = new UiAssist(this);
@@ -104,8 +105,8 @@ export class IngredientComponent {
       'rop': new FormControl('', Validators.required),
       'cost': new FormControl('', Validators.required),
       'ingstatus': new FormControl('', Validators.required),
-      'dointroduced': new FormControl('', Validators.required),
-      'employee': new FormControl({value: new Date(), disabled: true}, Validators.required),
+      'dointroduced': new FormControl({value: new Date(), disabled: false}, Validators.required),
+      'employee': new FormControl('', Validators.required),
     });
   }
 
@@ -286,6 +287,120 @@ export class IngredientComponent {
   clearImage(): void {
     this.imageingurl = 'assets/default.png';
     this.form.controls['photo'].setErrors({'required': true});
+  }
+
+  getErrors(): string {
+    let errors: string = "";
+
+    for (const controlName in this.form.controls) {
+      const control = this.form.controls[controlName];
+      if (control.errors) {
+        if (this.regexes[controlName] != undefined) {
+          errors = errors + "<br>" + this.regexes[controlName]['message'];
+        } else {
+          errors = errors + "<br>Invalid " + controlName;
+        }
+      }
+    }
+    return errors;
+  }
+
+  add() {
+
+    let errors = this.getErrors();
+
+    if (errors != "") {
+      const errmsg = this.dialog.open(MessageComponent, {
+        width: '500px',
+        data: {heading: "Errors - Ingredient Add ", message: "You have following Errors <br> " + errors}
+      });
+      errmsg.afterClosed().subscribe(async result => {
+        if (!result) {
+          return;
+        }
+      });
+    } else {
+
+      this.ingredient = this.form.getRawValue();
+      this.ingredient.photo = btoa(this.imageingurl);
+
+      let ingdata: string = "";
+
+      ingdata = ingdata + "<br>Name is : " + this.ingredient.name;
+      ingdata = ingdata + "<br>" + this.ingredient.description;
+
+      const confirm = this.dialog.open(ConfirmComponent, {
+        width: '500px',
+        data: {
+          heading: "Confirmation - Ingredient Add",
+          message: "Are you sure to Add the following Ingredient? <br> <br>" + ingdata
+        }
+      });
+
+      let addstatus: boolean = false;
+      let addmessage: string = "Server Not Found";
+
+      confirm.afterClosed().subscribe(async result => {
+        if (result) {
+          // console.log("EmployeeService.add(emp)");
+
+          this.is.add(this.ingredient).then((response: [] | undefined) => {
+            //console.log("Res-" + response);
+            //console.log("Un-" + response == undefined);
+            if (response != undefined) { // @ts-ignore
+              console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
+              // @ts-ignore
+              addstatus = response['errors'] == "";
+              console.log("Add Sta-" + addstatus);
+              if (!addstatus) { // @ts-ignore
+                addmessage = response['errors'];
+              }
+            } else {
+              console.log("undefined");
+              addstatus = false;
+              addmessage = "Content Not Found"
+            }
+          }).finally(() => {
+
+            if (addstatus) {
+              addmessage = "Successfully Saved";
+              this.form.reset();
+              this.clearImage();
+              Object.values(this.form.controls).forEach(control => {
+                control.markAsTouched();
+              });
+              this.loadTable("");
+            }
+
+            const stsmsg = this.dialog.open(MessageComponent, {
+              width: '500px',
+              data: {heading: "Status -Ingredient Add", message: addmessage}
+            });
+
+            stsmsg.afterClosed().subscribe(async result => {
+              if (!result) {
+                return;
+              }
+            });
+          });
+        }
+      });
+    }
+  }
+  clear():void{
+    const confirm = this.dialog.open(ConfirmComponent, {
+      width: '500px',
+      data: {
+        heading: "Confirmation - Ingredient Clear",
+        message: "Are you sure to Clear following Details ? <br> <br>"
+      }
+    });
+
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        this.form.reset()
+      }
+    });
   }
 
 }

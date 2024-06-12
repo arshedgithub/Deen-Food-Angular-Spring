@@ -18,6 +18,10 @@ export class IngredientService {
     return ingredients;
   }
 
+  async add(ingredient: Ingredient): Promise<[]|undefined>{
+    return this.http.post<[]>('http://localhost:8080/ingredients', ingredient).toPromise();
+  }
+
 }
 
 

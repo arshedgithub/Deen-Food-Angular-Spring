@@ -85,6 +85,13 @@
             </mat-select>
           </mat-form-field>
 
+          <div id="butpanel">
+            <button mat-raised-button (click)="add()" [disabled]="">Add</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
+<!--            <button mat-raised-button (click)="update()" [disabled]="!authService.getEnaUpd()">Update</button>-->
+<!--            <button mat-raised-button (click)="delete()" [disabled]="!authService.getEnaDel()">Delete</button>-->
+          </div>
+
         </form>
       </mat-card-content>
 
