@@ -1,23 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ReportService } from '../../reportservice';
-import { CountByDesignation } from '../../entity/countByDesignation';
+import {Component, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
+import {ReportService} from "../../reportservice";
+import {IngCountByCategory} from "../../entity/ingCountByCategory";
 
 declare var google: any;
 
 @Component({
-  selector: 'app-designation',
-  templateUrl: './countbydesignation.component.html',
-  styleUrls: ['./countbydesignation.component.css']
+  selector: 'app-ingredientcountbycategory',
+  templateUrl: './ingredientcountbycategory.component.html',
+  styleUrls: ['./ingredientcountbycategory.component.css']
 })
-export class CountByDesignationComponent implements OnInit {
+export class IngredientcountbycategoryComponent {
+  ingredientCountByCategories!: IngCountByCategory[];
+  data!: MatTableDataSource<IngCountByCategory>;
 
-  countbydesignations!: CountByDesignation[];
-  data!: MatTableDataSource<CountByDesignation>;
-
-  columns: string[] = ['designation', 'count', 'percentage'];
-  headers: string[] = ['Designation', 'Count', 'Percentage'];
-  binders: string[] = ['designation', 'count', 'percentage'];
+  columns: string[] = ['ingredient', 'count'];
+  headers: string[] = ['Ingredient', 'Count'];
+  binders: string[] = ['ingredient', 'count'];
 
   @ViewChild('barchart', { static: false }) barchart: any;
   @ViewChild('piechart', { static: false }) piechart: any;
@@ -29,18 +28,16 @@ export class CountByDesignationComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.rs.countByDesignation()
-      .then((des: CountByDesignation[]) => {
-        this.countbydesignations = des;
-        }).finally(() => {
+    this.rs.ingCountByCategory().then((ings: IngCountByCategory[]) => {
+      this.ingredientCountByCategories = ings;
+    }).finally(() => {
       this.loadTable();
       this.loadCharts();
     });
-
   }
 
   loadTable() : void{
-    this.data = new MatTableDataSource(this.countbydesignations);
+    this.data = new MatTableDataSource(this.ingredientCountByCategories);
   }
 
   loadCharts() : void{
@@ -51,39 +48,40 @@ export class CountByDesignationComponent implements OnInit {
   drawCharts() {
 
     const barData = new google.visualization.DataTable();
-    barData.addColumn('string', 'Designation');
+    barData.addColumn('string', 'Ingredient');
     barData.addColumn('number', 'Count');
 
     const pieData = new google.visualization.DataTable();
-    pieData.addColumn('string', 'Designation');
+    pieData.addColumn('string', 'Ingredient');
     pieData.addColumn('number', 'Count');
 
     const lineData = new google.visualization.DataTable();
-    lineData.addColumn('string', 'Designation');
+    lineData.addColumn('string', 'Ingredient');
     lineData.addColumn('number', 'Count');
 
-    this.countbydesignations.forEach((des: CountByDesignation) => {
-      barData.addRow([des.designation, des.count]);
-      pieData.addRow([des.designation, des.count]);
-      lineData.addRow([des.designation, des.count]);
+    this.ingredientCountByCategories.forEach((ing: IngCountByCategory) => {
+
+      barData.addRow([ing.ingredient, ing.count]);
+      pieData.addRow([ing.ingredient, ing.count]);
+      lineData.addRow([ing.ingredient, ing.count]);
     });
 
     const barOptions = {
-      title: 'Designation Count (Bar Chart)',
-      subtitle: 'Count of Employees by Designation',
+      title: 'Ingredient Count (Bar Chart)',
+      subtitle: 'Count of Ingredients by Category',
       bars: 'horizontal',
       height: 400,
       width: 600
     };
 
     const pieOptions = {
-      title: 'Designation Count (Pie Chart)',
+      title: 'Ingredient Count (Pie Chart)',
       height: 400,
       width: 550
     };
 
     const lineOptions = {
-      title: 'Designation Count (Line Chart)',
+      title: 'Ingredient Count (Line Chart)',
       height: 400,
       width: 600
     };

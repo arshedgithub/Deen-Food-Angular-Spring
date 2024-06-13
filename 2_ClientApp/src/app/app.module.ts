@@ -42,6 +42,7 @@ import { OperationComponent } from './view/modules/operation/operation.component
 import { PaymentComponent } from './view/modules/payment/payment.component';
 import { IngredientComponent } from './view/modules/ingredient/ingredient.component';
 import {MatRadioModule} from "@angular/material/radio";
+import { IngredientcountbycategoryComponent } from './report/view/ingredientcountbycategory/ingredientcountbycategory.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import {MatRadioModule} from "@angular/material/radio";
     OperationComponent,
     PaymentComponent,
     IngredientComponent,
+    IngredientcountbycategoryComponent,
   ],
     imports: [
         MatDatepickerModule,

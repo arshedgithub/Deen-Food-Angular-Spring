@@ -1,6 +1,7 @@
-import {CountByDesignation} from "./entity/countbydesignation";
+import {CountByDesignation} from "./entity/countByDesignation";
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {IngCountByCategory} from "./entity/ingCountByCategory";
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,15 @@ export class ReportService {
       return [];
     }
     return countbydesignations;
+  }
+
+  async ingCountByCategory(): Promise<Array<IngCountByCategory>> {
+
+    const ingCountByCategories = await this.http.get<Array<IngCountByCategory>>('http://localhost:8080/reports/ingredientcountbycategory').toPromise();
+    if(ingCountByCategories == undefined){
+      return [];
+    }
+    return ingCountByCategories;
   }
 
 }
