@@ -81,6 +81,9 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Ingredient> ingredients;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private Collection<Supplier> suppliers;
 
     public Employee(){}
 
@@ -284,5 +287,13 @@ public class Employee {
 
     public void setIngredients(Collection<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Collection<Supplier> getSuppliers() {
+        return suppliers;
+    }
+
+    public void setSuppliers(Collection<Supplier> suppliers) {
+        this.suppliers = suppliers;
     }
 }

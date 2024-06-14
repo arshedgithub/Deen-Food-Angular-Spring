@@ -7,22 +7,22 @@ import {Ingstatus} from "./ingstatus";
 export class Ingredient {
 
   public id !: number;
-  public category !: Ingcategory;
+  public ingcategory !: Ingcategory;
   public brand !: Brand;
   public name !: string;
-  public description !: String;
-  public photo !: String;
+  public description !: string;
+  public photo !: string;
   public unittype !: Unittype;
   public qoh !: number;
   public rop !: number;
   public cost !: number;
   public ingstatus !: Ingstatus;
-  public dointroduced !: String;
+  public dointroduced !: string;
   public employee !: Employee;
 
-  constructor(id: number, category: Ingcategory, brand: Brand, name: string, description: String, photo: String, unittype: Unittype, qoh: number, rop: number, cost: number, ingstatus:Ingstatus, dointroduced: String, employee: Employee) {
+  constructor(id: number, ingcategory: Ingcategory, brand: Brand, name: string, description: string, photo: string, unittype: Unittype, qoh: number, rop: number, cost: number, ingstatus:Ingstatus, dointroduced: string, employee: Employee) {
     this.id = id;
-    this.category = category;
+    this.ingcategory = ingcategory;
     this.brand = brand;
     this.name = name;
     this.description = description;

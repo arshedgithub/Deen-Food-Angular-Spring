@@ -22,6 +22,15 @@ export class IngredientService {
     return this.http.post<[]>('http://localhost:8080/ingredients', ingredient).toPromise();
   }
 
+  async update(ingredient: Ingredient): Promise<[]|undefined>{
+    return this.http.put<[]>('http://localhost:8080/ingredients', ingredient).toPromise();
+  }
+
+  async delete(id: number): Promise<[]|undefined>{
+    // @ts-ignore
+    return this.http.delete('http://localhost:8080/ingredients/' + id).toPromise();
+  }
+
 }
 
 

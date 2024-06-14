@@ -21,6 +21,8 @@ public class Ingcategory {
     @JsonIgnore
     @OneToMany(mappedBy = "ingcategory")
     private Collection<Ingredient> ingredients;
+    @OneToMany(mappedBy = "ingcategory")
+    private Collection<Supplieringcategory> supplieringcategories;
 
     public Integer getId() {
         return id;
@@ -65,5 +67,13 @@ public class Ingcategory {
 
     public void setIngredients(Collection<Ingredient> ingredients) {
         this.ingredients = ingredients;
+    }
+
+    public Collection<Supplieringcategory> getSupplieringcategories() {
+        return supplieringcategories;
+    }
+
+    public void setSupplieringcategories(Collection<Supplieringcategory> supplieringcategories) {
+        this.supplieringcategories = supplieringcategories;
     }
 }

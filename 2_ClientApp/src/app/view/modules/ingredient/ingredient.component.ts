@@ -20,6 +20,7 @@ import {Employee} from "../../../entity/employee";
 import {EmployeeService} from "../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-ingredient',
@@ -56,6 +57,8 @@ export class IngredientComponent {
   regexes!: any;
   uiassist: UiAssist;
   col!: {[p: string]: any;}
+  itemNameSubs!: Subscription;
+  selectedRow!: any;
 
   ingredientStatuses: Array<Ingstatus> = [];
   ingredientCategories: Array<Ingcategory> = [];
@@ -118,7 +121,7 @@ export class IngredientComponent {
     this.createView();
 
     this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
-    this.ingcat.getAllList().then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
+    this.ingcat.getAllList("").then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
     this.uns.getAllList("").then((units: Unittype[]) => {this.unittypes = units});
     this.emps.getAll("").then((employees: Employee[]) => {this.employees = employees});
 
@@ -260,7 +263,8 @@ export class IngredientComponent {
   }
 
   getItemName(): void {
-    this.form.get("brand")?.valueChanges.subscribe((brand: Brand) => {
+    // @ts-ignore
+    this.itemNameSubs = this.form.get("brand")?.valueChanges.subscribe((brand: Brand) => {
       this.form.get("name")?.setValue(brand.name);
     });
   }
@@ -402,5 +406,199 @@ export class IngredientComponent {
       }
     });
   }
+
+  fillForm(ingredient: Ingredient) {
+
+    this.selectedRow=ingredient;
+    this.ingredient = JSON.parse(JSON.stringify(ingredient));
+    this.oldingredient = JSON.parse(JSON.stringify(ingredient));
+
+    console.log("Row : ", this.selectedRow);
+    console.log(this.ingredient);
+
+    if (this.ingredient.photo != null) {
+      this.imageingurl = atob(this.ingredient.photo);
+      this.form.controls['photo'].clearValidators();
+    } else {
+      this.clearImage();
+    }
+    this.ingredient.photo = "";
+    this.itemNameSubs.unsubscribe();
+
+    this.form.get("ingcategory")?.valueChanges.subscribe((category: Ingcategory) => {
+      let qry  = "?categoryid=" + category.id;
+      this.br.getAllList(qry).then((brands: Brand[]) => {
+        // console.log(brands)
+        this.brands = brands;
+        // @ts-ignore
+        // this.ingredient.brand = this.brands.find(b => {
+        //   console.log(b, this.ingredient)
+        //   b.id === this.ingredient.brand.id   // brand undefined
+        // });
+        // @ts-ignore
+        this.ingredient.unittype = this.unittypes.find(u => u.id === this.ingredient.unittype.id);
+        // @ts-ignore
+        this.ingredient.ingstatus = this.ingredientStatuses.find(i => i.id === this.ingredient.ingstatus.id);
+        // @ts-ignore
+        this.ingredient.employee = this.employees.find(e => e.id === this.ingredient.employee.id);
+        // @ts-ignore
+        this.ingredient.brand = this.brands.find(e => e.id === this.ingredient.brand.id);
+
+        this.form.patchValue(this.ingredient);
+        this.form.markAsPristine();
+
+        this.enableButtons(false,true,true);
+
+      });
+    });
+    // @ts-ignore
+    this.ingredient.ingcategory = this.ingredientCategories.find(c => c.id === this.ingredient.ingcategory.id);
+    this.form.controls['ingcategory'].setValue(this.ingredient.ingcategory);
+  }
+
+  getUpdates(): string {
+
+    let updates: string = "";
+    for (const controlName in this.form.controls) {
+      const control = this.form.controls[controlName];
+      if (control.dirty) {
+        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
+      }
+    }
+    return updates;
+  }
+
+
+  update() {
+
+    let errors = this.getErrors();
+
+    if (errors != "") {
+
+      const errmsg = this.dialog.open(MessageComponent, {
+        width: '500px',
+        data: {heading: "Errors - Ingredient Update ", message: "You have following Errors <br> " + errors}
+      });
+      errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+    } else {
+
+      let updates: string = this.getUpdates();
+
+      if (updates != "") {
+
+        let updstatus: boolean = false;
+        let updmessage: string = "Server Not Found";
+
+        const confirm = this.dialog.open(ConfirmComponent, {
+          width: '500px',
+          data: {
+            heading: "Confirmation - Ingredient Update",
+            message: "Are you sure to Save folowing Updates? <br> <br>" + updates
+          }
+        });
+        confirm.afterClosed().subscribe(async result => {
+          if (result) {
+            //console.log("EmployeeService.update()");
+            this.ingredient = this.form.getRawValue();
+            if (this.form.controls['photo'].dirty) this.ingredient.photo = btoa(this.imageingurl);
+            else this.ingredient.photo = this.oldingredient.photo;
+            this.ingredient.id = this.oldingredient.id;
+
+            this.is.update(this.ingredient).then((response: [] | undefined) => {
+              if (response != undefined) { // @ts-ignore
+                //console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
+                // @ts-ignore
+                updstatus = response['errors'] == "";
+                //console.log("Upd Sta-" + updstatus);
+                if (!updstatus) { // @ts-ignore
+                  updmessage = response['errors'];
+                }
+              } else {
+                //console.log("undefined");
+                updstatus = false;
+                updmessage = "Content Not Found"
+              }
+            } ).finally(() => {
+              if (updstatus) {
+                updmessage = "Successfully Updated";
+                this.form.reset();
+                this.clearImage();
+                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
+                this.loadTable("");
+              }
+
+              const stsmsg = this.dialog.open(MessageComponent, {
+                width: '500px',
+                data: {heading: "Status -Ingredient Add", message: updmessage}
+              });
+              stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+            });
+          }
+        });
+      }
+      else {
+
+        const updmsg = this.dialog.open(MessageComponent, {
+          width: '500px',
+          data: {heading: "Confirmation - Ingredient Update", message: "Nothing Changed"}
+        });
+        updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+      }
+    }
+
+
+  }
+
+
+
+  delete() {
+
+    const confirm = this.dialog.open(ConfirmComponent, {
+      width: '500px',
+      data: {
+        heading: "Confirmation - Ingredient Delete",
+        message: "Are you sure to Delete following Employee? <br> <br>" + this.ingredient.name
+      }
+    });
+
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        let delstatus: boolean = false;
+        let delmessage: string = "Server Not Found";
+
+        this.is.delete(this.ingredient.id).then((response: [] | undefined) => {
+
+          if (response != undefined) { // @ts-ignore
+            delstatus = response['errors'] == "";
+            if (!delstatus) { // @ts-ignore
+              delmessage = response['errors'];
+            }
+          } else {
+            delstatus = false;
+            delmessage = "Content Not Found"
+          }
+        } ).finally(() => {
+          if (delstatus) {
+            delmessage = "Successfully Deleted";
+            this.form.reset();
+            this.clearImage();
+            Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
+            this.loadTable("");
+          }
+
+          const stsmsg = this.dialog.open(MessageComponent, {
+            width: '500px',
+            data: {heading: "Status - Ingredient Delete ", message: delmessage}
+          });
+          stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+        });
+      }
+    });
+  }
+
 
 }
