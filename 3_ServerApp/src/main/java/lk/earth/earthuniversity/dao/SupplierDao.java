@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface SupplierDao extends JpaRepository<Supplier,Integer> {
 
+    Supplier findByRegno(String number);
     Optional<Supplier> findById(Integer id);
 
     @Query("select s from Supplier s where s.id = :id")
