@@ -43,6 +43,7 @@ import { PaymentComponent } from './view/modules/payment/payment.component';
 import { IngredientComponent } from './view/modules/ingredient/ingredient.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { IngredientcountbycategoryComponent } from './report/view/ingredientcountbycategory/ingredientcountbycategory.component';
+import { SupplierComponent } from './view/modules/supplier/supplier.component';
 
 
 @NgModule({
@@ -62,6 +63,7 @@ import { IngredientcountbycategoryComponent } from './report/view/ingredientcoun
     PaymentComponent,
     IngredientComponent,
     IngredientcountbycategoryComponent,
+    SupplierComponent,
   ],
     imports: [
         MatDatepickerModule,
