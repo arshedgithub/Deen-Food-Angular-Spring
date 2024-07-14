@@ -23,6 +23,7 @@ export class MainwindowComponent {
 
   logout(): void {
     this.router.navigateByUrl("login")
+
     this.authService.clearUsername();
     this.authService.clearButtonState();
     this.authService.clearMenuState();
