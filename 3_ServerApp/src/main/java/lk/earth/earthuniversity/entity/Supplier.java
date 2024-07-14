@@ -59,6 +59,11 @@ public class Supplier {
     @OneToMany(mappedBy = "supplier")
     private Collection<Supplieringcategory> supplieringcategories;
 
+    public Supplier(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Integer getId() {
         return id;
     }

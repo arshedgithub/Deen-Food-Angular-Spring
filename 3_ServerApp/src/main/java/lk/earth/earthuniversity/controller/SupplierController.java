@@ -1,8 +1,8 @@
 package lk.earth.earthuniversity.controller;
 
-import lk.earth.earthuniversity.dao.EmployeeDao;
 import lk.earth.earthuniversity.dao.SupplierDao;
-import lk.earth.earthuniversity.entity.Employee;
+import lk.earth.earthuniversity.dao.SupplierDao;
+import lk.earth.earthuniversity.entity.Supplier;
 import lk.earth.earthuniversity.entity.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,67 +22,63 @@ public class SupplierController {
     private SupplierDao supplierDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+//    @PreAuthorize("hasAuthority('supplier-select')")
     public List<Supplier> get(@RequestParam HashMap<String, String> params) {
 
         List<Supplier> suppliers = this.supplierDao.findAll();
 
         if(params.isEmpty())  return suppliers;
 
-        String number = params.get("number");
-        String genderid= params.get("genderid");
-        String fullname= params.get("fullname");
-        String designationid= params.get("designationid");
-        String nic= params.get("nic");
+        String regNumber = params.get("regnumber");
+        String name = params.get("name");
+        String supplierStatus = params.get("supplierstatus");
+        String employee= params.get("employee");
 
-        Stream<Employee> estream = employees.stream();
+        Stream<Supplier> sstream = suppliers.stream();
 
-        if(designationid!=null) estream = estream.filter(e -> e.getDesignation().getId()==Integer.parseInt(designationid));
-        if(genderid!=null) estream = estream.filter(e -> e.getGender().getId()==Integer.parseInt(genderid));
-        if(number!=null) estream = estream.filter(e -> e.getNumber().equals(number));
-        if(nic!=null) estream = estream.filter(e -> e.getNic().contains(nic));
-        if(fullname!=null) estream = estream.filter(e -> e.getFullname().contains(fullname));
+        if(name!=null) sstream = sstream.filter(e -> e.getName().contains(name));
+        if(regNumber!=null) sstream = sstream.filter(e -> e.getRegno().equals(regNumber));
+        if(supplierStatus!=null) sstream = sstream.filter(e -> e.getSupplierstatus().getId()==Integer.parseInt(supplierStatus));
+        if(employee!=null) sstream = sstream.filter(e -> e.getEmployee().getId()==Integer.parseInt(employee));
 
-        return estream.collect(Collectors.toList());
+        return sstream.collect(Collectors.toList());
 
     }
 
     @GetMapping(path ="/list",produces = "application/json")
-    public List<Employee> get() {
+    public List<Supplier> get() {
 
-        List<Employee> employees = this.supplierDao.findAllNameId();
+        List<Supplier> suppliers = this.supplierDao.findAllNameId();
 
-        employees = employees.stream().map(
-                employee -> {
-                    Employee e = new Employee(employee.getId(), employee.getCallingname());
-                    return  e;
+        suppliers = suppliers.stream().map(
+                supplier -> {
+                    Supplier s = new Supplier(supplier.getId(), supplier.getName());
+                    return  s;
                 }
         ).collect(Collectors.toList());
 
-        return employees;
+        return suppliers;
 
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+//    @PreAuthorize("hasAuthority('Supplier-Insert')")
     public HashMap<String,String> add(@RequestBody Supplier supplier){
 
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         if(supplierDao.findByRegno(supplier.getRegno())!=null)
-            errors = errors+"<br> Existing Number";
-
-        System.out.println(employee.getDoassignment());
+            errors = errors+"<br> Existing Registration Number";
 
         if(errors=="")
         supplierDao.save(supplier);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        response.put("id",String.valueOf(employee.getId()));
-        response.put("url","/suppliers/"+employee.getId());
+        response.put("id",String.valueOf(supplier.getId()));
+        response.put("url","/suppliers/"+supplier.getId());
         response.put("errors",errors);
 
         return response;
@@ -90,25 +86,22 @@ public class SupplierController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
-    public HashMap<String,String> update(@RequestBody Employee employee){
+//    @PreAuthorize("hasAuthority('Supplier-Update')")
+    public HashMap<String,String> update(@RequestBody Supplier supplier){
 
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
-        Employee emp1 = supplierDao.findByNumber(employee.getNumber());
-        Employee emp2 = supplierDao.findByNic(employee.getNic());
+        Supplier sup = supplierDao.findByRegno(supplier.getRegno());
 
-        if(emp1!=null && employee.getId()!=emp1.getId())
-            errors = errors+"<br> Existing Number";
-        if(emp2!=null && employee.getId()!=emp2.getId())
-            errors = errors+"<br> Existing NIC";
+        if(sup!=null && supplier.getId()!=sup.getId())
+            errors = errors+"<br> Existing Registration Number";
 
-        if(errors=="") supplierDao.save(employee);
+        if(errors=="") supplierDao.save(supplier);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        response.put("id",String.valueOf(employee.getId()));
-        response.put("url","/employees/"+employee.getId());
+        response.put("id",String.valueOf(supplier.getId()));
+        response.put("url","/suppliers/"+supplier.getId());
         response.put("errors",errors);
 
         return response;
@@ -124,16 +117,16 @@ public class SupplierController {
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
-        Employee emp1 = supplierDao.findByMyId(id);
+        Supplier sup = supplierDao.findByMyId(id);
 
-        if(emp1==null)
-            errors = errors+"<br> Employee Does Not Existed";
+        if(sup==null)
+            errors = errors+"<br> Supplier Does Not Existed";
 
-        if(errors=="") supplierDao.delete(emp1);
+        if(errors=="") supplierDao.delete(sup);
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(id));
-        response.put("url","/employees/"+id);
+        response.put("url","/suppliers/"+id);
         response.put("errors",errors);
 
         return response;
