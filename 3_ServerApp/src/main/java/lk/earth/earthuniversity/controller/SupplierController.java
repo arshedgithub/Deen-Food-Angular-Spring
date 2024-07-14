@@ -1,8 +1,6 @@
 package lk.earth.earthuniversity.controller;
 
 import lk.earth.earthuniversity.dao.SupplierDao;
-import lk.earth.earthuniversity.dao.SupplierDao;
-import lk.earth.earthuniversity.entity.Supplier;
 import lk.earth.earthuniversity.entity.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
