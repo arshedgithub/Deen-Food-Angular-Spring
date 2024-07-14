@@ -27,19 +27,19 @@ public class SupplierController {
 
         List<Supplier> suppliers = this.supplierDao.findAll();
 
-        if(params.isEmpty())  return suppliers;
+        if(params.isEmpty()) return suppliers;
 
         String regNumber = params.get("regnumber");
         String name = params.get("name");
-        String supplierStatus = params.get("supplierstatus");
-        String employee= params.get("employee");
+        String supplierStatus = params.get("supplierstatusid");
+        String employeeid= params.get("employeeid");
 
         Stream<Supplier> sstream = suppliers.stream();
 
         if(name!=null) sstream = sstream.filter(e -> e.getName().contains(name));
         if(regNumber!=null) sstream = sstream.filter(e -> e.getRegno().equals(regNumber));
         if(supplierStatus!=null) sstream = sstream.filter(e -> e.getSupplierstatus().getId()==Integer.parseInt(supplierStatus));
-        if(employee!=null) sstream = sstream.filter(e -> e.getEmployee().getId()==Integer.parseInt(employee));
+        if(employeeid!=null) sstream = sstream.filter(e -> e.getEmployee().getId()==Integer.parseInt(employeeid));
 
         return sstream.collect(Collectors.toList());
 
