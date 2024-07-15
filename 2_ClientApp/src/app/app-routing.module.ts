@@ -14,6 +14,7 @@ import {CountByDesignationComponent} from "./report/view/countbydesignation/coun
 import {
   IngredientcountbycategoryComponent
 } from "./report/view/ingredientcountbycategory/ingredientcountbycategory.component";
+import {SupplierComponent} from "./view/modules/supplier/supplier.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -24,6 +25,7 @@ const routes: Routes = [
     children: [
       {path: "home", component: HomeComponent},
       {path: "employee", component: EmployeeComponent},
+      {path: "supplier", component: SupplierComponent},
       {path: "user", component: UserComponent},
       {path: "privilege", component: PrivilageComponent},
       {path: "operation", component: OperationComponent},

@@ -18,6 +18,7 @@ export class AuthorizationManager {
 
   admMenuItems = [
     { name: 'Employee', accessFlag: true, routerLink: 'employee' },
+    { name: 'Supplier', accessFlag: true, routerLink: 'supplier' },
     { name: 'User', accessFlag: true, routerLink: 'user' },
     { name: 'Privilege', accessFlag: true, routerLink: 'privilege' },
     { name: 'Operations', accessFlag: true, routerLink: 'operation' }

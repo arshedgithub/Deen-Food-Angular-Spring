@@ -43,7 +43,7 @@ public class UserAuthorityController {
                     "employee-select","employee-delete","employee-update","employee-insert",
                     "operations-select","operations-delete","operations-update","operations-insert",
 
-                    "ingredient-select","ingredient-delete","ingredient-update","ingredient-insert"
+                    "ingredient-select","ingredient-delete","ingredient-update","ingredient-insert",
                     "supplier-select","supplier-delete","supplier-update","supplier-insert"
 
             );
