@@ -11,6 +11,7 @@ import {SupplierStatus} from "../../../entity/supplierstatus";
 import {Employee} from "../../../entity/employee";
 import {SupplierstatusService} from "../../../service/supplierstatusservice";
 import {EmployeeService} from "../../../service/employeeservice";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-supplier',
@@ -42,9 +43,9 @@ export class SupplierComponent {
   imageurl: string = '';
   // imageempurl: string = 'assets/default.png'
 
-  // enaadd:boolean = false;
-  // enaupd:boolean = false;
-  // enadel:boolean = false;
+  enaadd:boolean = false;
+  enaupd:boolean = false;
+  enadel:boolean = false;
 
   supplierStatuses: Array<SupplierStatus> = [];
   employees: Array<Employee> = [];
@@ -58,6 +59,7 @@ export class SupplierComponent {
     private fb: FormBuilder,
     private supStatusService: SupplierstatusService,
     private employeeService: EmployeeService,
+    private datePipe: DatePipe,
     public authService:AuthorizationManager) {
 
     this.uiassist = new UiAssist(this);
@@ -80,22 +82,20 @@ export class SupplierComponent {
 
 
     this.form = this.fb.group({
-      "number": new FormControl('', [Validators.required]),
-      "fullname": new FormControl('', [Validators.required]),
-      "callingname": new FormControl('', [Validators.required]),
-      "gender": new FormControl('', [Validators.required]),
-      "nic": new FormControl('', [Validators.required]),
-      "dobirth": new FormControl('', [Validators.required]),
-      "photo": new FormControl('', [Validators.required]),
+      "name": new FormControl('', [Validators.required]),
+      "regNo": new FormControl('', [Validators.required]),
+      "regYear": new FormControl('', [Validators.required]),
       "address": new FormControl('', [Validators.required]),
-      "mobile": new FormControl('', [Validators.required]),
-      "land": new FormControl('', ),
+      "telephone": new FormControl('', [Validators.required]),
+      "fax": new FormControl(''),
       "email": new FormControl('', [Validators.required]),
-      "designation": new FormControl('', [Validators.required]),
-      "doassignment": new FormControl('', [Validators.required]),
-      "description": new FormControl('', [Validators.required]),
-      "emptype": new FormControl('', [Validators.required]),
-      "empstatus": new FormControl('', [Validators.required]),
+      "contactPerson": new FormControl('', [Validators.required]),
+      "contactMobile": new FormControl('', [Validators.required]),
+      "creditLimit": new FormControl('', [Validators.required]),
+      "description": new FormControl(''),
+      "doregister": new FormControl({value: new Date(), disabled: false}, [Validators.required]),
+      "supplierStatus": new FormControl('', [Validators.required]),
+      "employee": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
 
   }
@@ -129,59 +129,57 @@ export class SupplierComponent {
   }
 
 
-  // createForm() {
-  //
-  //   this.form.controls['number'].setValidators([Validators.required, Validators.pattern(this.regexes['number']['regex'])]);
-  //   this.form.controls['fullname'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
-  //   this.form.controls['callingname'].setValidators([Validators.required, Validators.pattern(this.regexes['callingname']['regex'])]);
-  //   this.form.controls['gender'].setValidators([Validators.required]);
-  //   this.form.controls['nic'].setValidators([Validators.required, Validators.pattern(this.regexes['nic']['regex'])]);
-  //   this.form.controls['dobirth'].setValidators([Validators.required]);
-  //   this.form.controls['photo'].setValidators([Validators.required]);
-  //   this.form.controls['address'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
-  //   this.form.controls['mobile'].setValidators([Validators.required, Validators.pattern(this.regexes['mobile']['regex'])]);
-  //   this.form.controls['land'].setValidators([Validators.pattern(this.regexes['land']['regex'])]);
-  //   this.form.controls['email'].setValidators([Validators.required,Validators.pattern(this.regexes['email']['regex'])]);
-  //   this.form.controls['designation'].setValidators([Validators.required]);
-  //   this.form.controls['doassignment'].setValidators([Validators.required]);
-  //   this.form.controls['description'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
-  //   this.form.controls['emptype'].setValidators([Validators.required]);
-  //   this.form.controls['empstatus'].setValidators([Validators.required]);
-  //
-  //   Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
-  //
-  //   for (const controlName in this.form.controls) {
-  //     const control = this.form.controls[controlName];
-  //     control.valueChanges.subscribe(value => {
-  //         // @ts-ignore
-  //         if (controlName == "dobirth" || controlName == "doassignment")
-  //           value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
-  //
-  //         if (this.oldemployee != undefined && control.valid) {
-  //           // @ts-ignore
-  //           if (value === this.employee[controlName]) {
-  //             control.markAsPristine();
-  //           } else {
-  //             control.markAsDirty();
-  //           }
-  //         } else {
-  //           control.markAsPristine();
-  //         }
-  //       }
-  //     );
-  //
-  //   }
-  //
-  //   // this.enableButtons(true,false,false);
-  //
-  // }
-  //
+  createForm() {
 
-  // enableButtons(add:boolean, upd:boolean, del:boolean){
-  //   this.enaadd=add;
-  //   this.enaupd=upd;
-  //   this.enadel=del;
-  // }
+    this.form.controls['name'].setValidators([Validators.required, Validators.pattern(this.regexes['number']['regex'])]);
+    this.form.controls['regNo'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
+    this.form.controls['regYear'].setValidators([Validators.required, Validators.pattern(this.regexes['callingname']['regex'])]);
+    this.form.controls['address'].setValidators([Validators.required]);
+    this.form.controls['telephone'].setValidators([Validators.required, Validators.pattern(this.regexes['nic']['regex'])]);
+    this.form.controls['fax'].setValidators([Validators.required]);
+    this.form.controls['email'].setValidators([Validators.required]);
+    this.form.controls['contactPerson'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
+    this.form.controls['contactMobile'].setValidators([Validators.required, Validators.pattern(this.regexes['mobile']['regex'])]);
+    this.form.controls['creditLimit'].setValidators([Validators.pattern(this.regexes['land']['regex'])]);
+    this.form.controls['description'].setValidators([Validators.required,Validators.pattern(this.regexes['email']['regex'])]);
+    this.form.controls['doregister'].setValidators([Validators.required]);
+    this.form.controls['supplierStatus'].setValidators([Validators.required]);
+    this.form.controls['employee'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
+
+    Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
+
+    for (const controlName in this.form.controls) {
+      const control = this.form.controls[controlName];
+      control.valueChanges.subscribe(value => {
+          // @ts-ignore
+          if (controlName == "dobirth" || controlName == "doassignment")
+            value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
+
+          if (this.oldSupplier != undefined && control.valid) {
+            // @ts-ignore
+            if (value === this.employee[controlName]) {
+              control.markAsPristine();
+            } else {
+              control.markAsDirty();
+            }
+          } else {
+            control.markAsPristine();
+          }
+        }
+      );
+
+    }
+
+    this.enableButtons(true,false,false);
+
+  }
+
+
+  enableButtons(add:boolean, upd:boolean, del:boolean){
+    this.enaadd=add;
+    this.enaupd=upd;
+    this.enadel=del;
+  }
 
 
   loadTable(query: string) {

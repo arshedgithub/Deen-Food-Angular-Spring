@@ -18,8 +18,8 @@ export class Supplier{
   public description !: string;
   public doregister !: string;
   public supplierStatus !: SupplierStatus;
-  public employee !: Employee;
   public supplierIngcategory !: SupplierIngcategory;
+  public employee !: Employee;
 
 
   constructor(id: number, name: string, regNo: string, regYear: string, address: string, telephone: string, fax: string, email: string, contactPerson: string, contactMobile: string, creditLimit: string, description: string, doregister: string, supplierStatus: SupplierStatus, employee: Employee, supplierIngcategory: SupplierIngcategory) {
