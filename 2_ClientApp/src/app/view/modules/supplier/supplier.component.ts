@@ -7,6 +7,10 @@ import {SupplierService} from "../../../service/supplierservice";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
+import {SupplierStatus} from "../../../entity/supplierstatus";
+import {Employee} from "../../../entity/employee";
+import {SupplierstatusService} from "../../../service/supplierstatusservice";
+import {EmployeeService} from "../../../service/employeeservice";
 
 @Component({
   selector: 'app-supplier',
@@ -42,10 +46,8 @@ export class SupplierComponent {
   // enaupd:boolean = false;
   // enadel:boolean = false;
 
-  // genders: Array<Gender> = [];
-  // designations: Array<Designation> = [];
-  // employeestatuses: Array<Empstatus> = [];
-  // employeetypes: Array<Emptype> = [];
+  supplierStatuses: Array<SupplierStatus> = [];
+  employees: Array<Employee> = [];
 
   regexes: any;
 
@@ -54,27 +56,27 @@ export class SupplierComponent {
   constructor(
     private supService: SupplierService,
     private fb: FormBuilder,
+    private supStatusService: SupplierstatusService,
+    private employeeService: EmployeeService,
     public authService:AuthorizationManager) {
-
 
     this.uiassist = new UiAssist(this);
 
     this.csearch = this.fb.group({
-      "csnumber": new FormControl(),
-      "cscallingname": new FormControl(),
-      "csgender": new FormControl(),
-      "csdesignation": new FormControl(),
-      "csname": new FormControl(),
-      "csmodi": new FormControl(),
+      "csRegNo": new FormControl(),
+      "csName": new FormControl(),
+      "csTelephone": new FormControl(),
+      "csSupplierStatus": new FormControl(),
+      "csEmployee": new FormControl(),
     });
 
-    this.ssearch = this.fb.group({
-      "ssnumber": new FormControl(),
-      "ssfullname": new FormControl(),
-      "ssgender": new FormControl(),
-      "ssdesignation": new FormControl(),
-      "ssnic": new FormControl()
-    });
+    // this.ssearch = this.fb.group({
+    //   "ssnumber": new FormControl(),
+    //   "ssfullname": new FormControl(),
+    //   "ssgender": new FormControl(),
+    //   "ssdesignation": new FormControl(),
+    //   "ssnic": new FormControl()
+    // });
 
 
     this.form = this.fb.group({
@@ -96,7 +98,6 @@ export class SupplierComponent {
       "empstatus": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
 
-
   }
 
   ngOnInit() {
@@ -107,22 +108,14 @@ export class SupplierComponent {
 
     this.createView();
 
-    // this.gs.getAllList().then((gens: Gender[]) => {
-    //   this.genders = gens;
-    // });
-    //
-    // this.ds.getAllList().then((dess: Designation[]) => {
-    //   this.designations = dess;
-    // });
-    //
-    // this.ss.getAllList().then((stes: Empstatus[]) => {
-    //   this.employeestatuses = stes;
-    // });
-    //
-    // this.et.getAllList().then((typs: Emptype[]) => {
-    //   this.employeetypes = typs;
-    // });
-    //
+    this.supStatusService.getAllList().then((statuses: SupplierStatus[]) => {
+      this.supplierStatuses = statuses;
+    });
+
+    this.employeeService.getAllListNameId().then((employees: Employee[]) => {
+      this.employees = employees;
+    });
+
     // this.rs.get('employee').then((regs: []) => {
     //   this.regexes = regs;
     //   this.createForm();
@@ -210,19 +203,22 @@ export class SupplierComponent {
   }
 
   filterTable(): void {
-  //
-  //   const cserchdata = this.csearch.getRawValue();
-  //
-  //   this.data.filterPredicate = (employee: Supplier, filter: string) => {
-  //     // return (cserchdata.csnumber == null || employee.number.toLowerCase().includes(cserchdata.csnumber)) &&
-  //     //   (cserchdata.cscallingname == null || employee.callingname.toLowerCase().includes(cserchdata.cscallingname)) &&
-  //     //   (cserchdata.csgender == null || employee.gender.name.toLowerCase().includes(cserchdata.csgender)) &&
-  //     //   (cserchdata.csdesignation == null || employee.designation.name.toLowerCase().includes(cserchdata.csdesignation)) &&
-  //     //   (cserchdata.csname == null || employee.fullname.toLowerCase().includes(cserchdata.csname)) &&
-  //     //   (cserchdata.csmodi == null || this.getModi(employee).toLowerCase().includes(cserchdata.csmodi));
-  //   };
-  //
-  //   this.data.filter = 'xx';
+
+    const csSearchData = this.csearch.getRawValue();
+
+    console.log(csSearchData);
+
+    this.data.filterPredicate = ((supplier: Supplier, filter: string) => {
+      console.log("filter predicate")
+      console.log(supplier.regNo.includes(csSearchData.csRegNo))
+      return (csSearchData.csRegNo == null || supplier.regNo.includes(csSearchData.csRegNo)) &&
+        (csSearchData.csName == null || supplier.name.includes(csSearchData.csName)) &&
+        (csSearchData.csTelephone == null || supplier.telephone.includes(csSearchData.csTelephone)) &&
+        (csSearchData.csSupplierStatus == null || supplier.supplierStatus.name.includes(csSearchData.csSupplierStatus)) &&
+        (csSearchData.csEmployee == null || supplier.employee.fullname.includes(csSearchData.csEmployee));
+    });
+
+    this.data.filter = 'xx';
 
   }
 
