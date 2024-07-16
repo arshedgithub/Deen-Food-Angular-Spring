@@ -1,8 +1,10 @@
 package lk.earth.earthuniversity.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lk.earth.earthuniversity.util.RegexPattern;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Collection;
@@ -15,39 +17,50 @@ public class Supplier {
     private Integer id;
     @Basic
     @Column(name = "name")
+    @Pattern(regexp = "^([A-Z][a-z]*[.]?[\\s]?)*([A-Z][a-z]*)$", message = "Invalid Name")
     private String name;
     @Basic
     @Column(name = "regno")
+    @Pattern(regexp = "^R[0-9]{6}$", message = "Invalid Reg. Number")
     private String regno;
     @Basic
     @Column(name = "regyear")
+    @Pattern(regexp = "^[1,2][0-9]{3}$", message = "Invalid Year")
     private Integer regyear;
     @Basic
     @Column(name = "address")
+    @Pattern(regexp = "^([\\w\\-,\\s]{2,})$", message = "Invalid Address")
     private String address;
     @Basic
     @Column(name = "telephone")
+    @Pattern(regexp = "^[0][0-9]{9}$", message = "Invalid Telephone Number")
     private String telephone;
     @Basic
     @Column(name = "fax")
+    @Pattern(regexp = "^[0][0-9]{9}$", message = "Invalid FAX")
     private String fax;
     @Basic
     @Column(name = "email")
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid Email")
     private String email;
     @Basic
     @Column(name = "contactperson")
     private String contactperson;
     @Basic
     @Column(name = "contactmobile")
+    @Pattern(regexp = "^[0][0-9]{9}$", message = "Invalid Contact Number")
     private String contactmobile;
     @Basic
     @Column(name = "creditlimit")
+    @RegexPattern(reg = "^\\d{2,6}(?:[.][\\d]{2})?$", msg = "Invalid Credit Range")
     private BigDecimal creditlimit;
     @Basic
     @Column(name = "description")
+    @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
     @Basic
     @Column(name = "doregister")
+    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date")
     private Date doregister;
     @ManyToOne
     @JoinColumn(name = "supplierstatus_id", referencedColumnName = "id", nullable = false)

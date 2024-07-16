@@ -2,6 +2,7 @@ package lk.earth.earthuniversity.controller;
 
 import lk.earth.earthuniversity.entity.Employee;
 import lk.earth.earthuniversity.entity.Ingredient;
+import lk.earth.earthuniversity.entity.Supplier;
 import lk.earth.earthuniversity.entity.User;
 import lk.earth.earthuniversity.util.RegexProvider;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
-
-
 
 @CrossOrigin
 @RestController
@@ -30,6 +29,11 @@ public class RegexController {
     @GetMapping(path ="/ingredients", produces = "application/json")
     public HashMap<String, HashMap<String, String>> ingredient() {
         return RegexProvider.get(new Ingredient());
+    }
+
+    @GetMapping(path ="/suppliers", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> supplier() {
+        return RegexProvider.get(new Supplier());
     }
 
 }
