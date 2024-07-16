@@ -12,6 +12,7 @@ import {Employee} from "../../../entity/employee";
 import {SupplierstatusService} from "../../../service/supplierstatusservice";
 import {EmployeeService} from "../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-supplier',
@@ -60,6 +61,7 @@ export class SupplierComponent {
     private supStatusService: SupplierstatusService,
     private employeeService: EmployeeService,
     private datePipe: DatePipe,
+    private dialog: MatDialog,
     public authService:AuthorizationManager) {
 
     this.uiassist = new UiAssist(this);
@@ -72,13 +74,12 @@ export class SupplierComponent {
       "csEmployee": new FormControl(),
     });
 
-    // this.ssearch = this.fb.group({
-    //   "ssnumber": new FormControl(),
-    //   "ssfullname": new FormControl(),
-    //   "ssgender": new FormControl(),
-    //   "ssdesignation": new FormControl(),
-    //   "ssnic": new FormControl()
-    // });
+    this.ssearch = this.fb.group({
+      "ssRegNo": new FormControl(),
+      "ssName": new FormControl(),
+      "ssSupStatus": new FormControl(),
+      "ssEmployee": new FormControl(),
+    });
 
 
     this.form = this.fb.group({
@@ -124,7 +125,7 @@ export class SupplierComponent {
   }
 
   createView() {
-    // this.imageurl = 'assets/pending.gif';
+    this.imageurl = 'assets/pending.gif';
     this.loadTable("");
   }
 
@@ -187,11 +188,11 @@ export class SupplierComponent {
     this.supService.getAll(query)
       .then((sups: Supplier[]) => {
         this.suppliers = sups;
-        // this.imageurl = 'assets/fullfilled.png';
+        this.imageurl = 'assets/fullfilled.png';
       })
       .catch((error) => {
         console.log(error);
-        // this.imageurl = 'assets/rejected.png';
+        this.imageurl = 'assets/rejected.png';
       })
       .finally(() => {
         this.data = new MatTableDataSource(this.suppliers);
@@ -224,19 +225,17 @@ export class SupplierComponent {
 
     const sserchdata = this.ssearch.getRawValue();
 
-    let number = sserchdata.ssnumber;
-    let fullname = sserchdata.ssfullname;
-    let nic = sserchdata.ssnic;
-    let genderid = sserchdata.ssgender;
-    let designationid = sserchdata.ssdesignation;
+    let regNo = sserchdata.ssRegNo;
+    let name = sserchdata.ssName;
+    let supStatus = sserchdata.ssSupStatus;
+    let employee = sserchdata.ssEmployee;
 
     let query = "";
 
-    if (number != null && number.trim() != "") query = query + "&number=" + number;
-    if (fullname != null && fullname.trim() != "") query = query + "&fullname=" + fullname;
-    if (nic != null && nic.trim() != "") query = query + "&nic=" + nic;
-    if (genderid != null) query = query + "&genderid=" + genderid;
-    if (designationid != null) query = query + "&designationid=" + designationid;
+    if (regNo != null && regNo.trim() != "") query = query + "&regnumber=" + regNo;
+    if (name != null && name.trim() != "") query = query + "&name=" + name;
+    if (supStatus != null) query = query + "&supplierstatusid=" + supStatus;
+    if (employee != null) query = query + "&employeeid=" + employee;
 
     if (query != "") query = query.replace(/^./, "?")
 
@@ -245,21 +244,21 @@ export class SupplierComponent {
   }
 
 
-  // btnSearchClearMc(): void {
-  //
-  //   const confirm = this.dg.open(ConfirmComponent, {
-  //     width: '500px',
-  //     data: {heading: "Search Clear", message: "Are you sure to Clear the Search?"}
-  //   });
-  //
-  //   confirm.afterClosed().subscribe(async result => {
-  //     if (result) {
-  //       this.ssearch.reset();
-  //       this.loadTable("");
-  //     }
-  //   });
-  //
-  // }
+  btnSearchClearMc(): void {
+
+    const confirm = this.dialog.open(ConfirmComponent, {
+      width: '500px',
+      data: {heading: "Search Clear", message: "Are you sure to Clear the Search?"}
+    });
+
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        this.ssearch.reset();
+        this.loadTable("");
+      }
+    });
+
+  }
 
 
   add() {

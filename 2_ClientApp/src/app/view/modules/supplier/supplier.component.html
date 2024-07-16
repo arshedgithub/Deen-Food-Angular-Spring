@@ -106,50 +106,45 @@
   <mat-grid-tile [colspan]="8" [rowspan]="4">
     <mat-card id="ssearch">
       <mat-card-header>
-        <mat-card-title>Employee Search</mat-card-title>
+        <mat-card-title>Supplier Search</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
 
-<!--        <mat-form [formGroup]="ssearch">-->
+        <mat-form [formGroup]="ssearch">
 
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Search by Number</mat-label>-->
-<!--            <input matInput formControlName="ssnumber">-->
-<!--          </mat-form-field>-->
+          <mat-form-field appearance="outline">
+            <mat-label>Search by Reg. Number</mat-label>
+            <input matInput formControlName="ssRegNo">
+          </mat-form-field>
 
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Search by Fullname</mat-label>-->
-<!--            <input matInput formControlName="ssfullname">-->
-<!--          </mat-form-field>-->
+          <mat-form-field appearance="outline">
+            <mat-label>Search by Name</mat-label>
+            <input matInput formControlName="ssName">
+          </mat-form-field>
 
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Search by NIC</mat-label>-->
-<!--            <input matInput formControlName="ssnic">-->
-<!--          </mat-form-field>-->
+          <mat-form-field appearance="outline">
+            <mat-label>Supplier Status</mat-label>
+            <mat-select formControlName="ssSupStatus">
+              <mat-option [value]="null" selected>Not Selected</mat-option>
+              <mat-option *ngFor="let status of supplierStatuses" [value]="status.id">{{status.name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Gender</mat-label>-->
-<!--            <mat-select formControlName="ssgender">-->
-<!--              <mat-option [value]="null" selected>Not Selected</mat-option>-->
-<!--              <mat-option *ngFor="let gender of genders" [value]="gender.id">{{gender.name}}</mat-option>-->
-<!--            </mat-select>-->
-<!--          </mat-form-field>-->
+          <mat-form-field appearance="outline">
+            <mat-label>Employee</mat-label>
+            <mat-select formControlName="ssEmployee">
+              <mat-option [value]="null" selected >Not Selected</mat-option>
+              <mat-option *ngFor="let employee of employees" [value]="employee.id">{{employee.callingname}}</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-<!--          <mat-form-field appearance="outline">-->
-<!--            <mat-label>Designation</mat-label>-->
-<!--            <mat-select formControlName="ssdesignation">-->
-<!--              <mat-option [value]="null" selected >Not Selected</mat-option>-->
-<!--              <mat-option *ngFor="let designation of designations" [value]="designation.id">{{designation.name}}</mat-option>-->
-<!--            </mat-select>-->
-<!--          </mat-form-field>-->
+          <div>
+            <button mat-raised-button color="primary" (click)="btnSearchMc()"><mat-icon>search</mat-icon> Search </button>
+            <button mat-raised-button color="primary" (click)="btnSearchClearMc()"><mat-icon>reorder</mat-icon> Clear Search </button>
+          </div>
 
-<!--          <div>-->
-<!--            <button mat-raised-button color="primary" (click)="btnSearchMc()"><mat-icon>search</mat-icon> Search </button>-->
-<!--            <button mat-raised-button color="primary" (click)="btnSearchClearMc()"><mat-icon>reorder</mat-icon> Clear Search </button>-->
-<!--          </div>-->
-
-<!--        </mat-form>-->
+        </mat-form>
 
       </mat-card-content>
 

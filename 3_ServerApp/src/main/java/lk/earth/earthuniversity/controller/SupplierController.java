@@ -30,14 +30,14 @@ public class SupplierController {
         String regNumber = params.get("regnumber");
         String name = params.get("name");
         String supplierStatus = params.get("supplierstatusid");
-        String employeeid= params.get("employeeid");
+        String employeeId= params.get("employeeid");
 
         Stream<Supplier> sstream = suppliers.stream();
 
         if(name!=null) sstream = sstream.filter(e -> e.getName().contains(name));
-        if(regNumber!=null) sstream = sstream.filter(e -> e.getRegno().equals(regNumber));
+        if(regNumber!=null) sstream = sstream.filter(e -> e.getRegno().contains(regNumber));
         if(supplierStatus!=null) sstream = sstream.filter(e -> e.getSupplierstatus().getId()==Integer.parseInt(supplierStatus));
-        if(employeeid!=null) sstream = sstream.filter(e -> e.getEmployee().getId()==Integer.parseInt(employeeid));
+        if(employeeId!=null) sstream = sstream.filter(e -> e.getEmployee().getId()==Integer.parseInt(employeeId));
 
         return sstream.collect(Collectors.toList());
 
