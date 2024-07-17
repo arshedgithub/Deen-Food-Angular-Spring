@@ -18,12 +18,12 @@ export class SupplierService {
     return suppliers;
   }
 
-  async add(ingredient: Supplier): Promise<[]|undefined>{
-    return this.http.post<[]>('http://localhost:8080/suppliers', ingredient).toPromise();
+  async add(supplier: Supplier): Promise<[]|undefined>{
+    return this.http.post<[]>('http://localhost:8080/suppliers', supplier).toPromise();
   }
 
-  async update(ingredient: Supplier): Promise<[]|undefined>{
-    return this.http.put<[]>('http://localhost:8080/suppliers', ingredient).toPromise();
+  async update(supplier: Supplier): Promise<[]|undefined>{
+    return this.http.put<[]>('http://localhost:8080/suppliers', supplier).toPromise();
   }
 
   async delete(id: number): Promise<[]|undefined>{

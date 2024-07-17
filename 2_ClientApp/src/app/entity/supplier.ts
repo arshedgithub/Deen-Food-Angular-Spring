@@ -7,7 +7,7 @@ export class Supplier{
   public id !: number;
   public name !: string;
   public regNo !: string;
-  public regYear !: string;
+  public regYear !: number;
   public address !: string;
   public telephone !: string;
   public fax !: string;
@@ -22,7 +22,7 @@ export class Supplier{
   public employee !: Employee;
 
 
-  constructor(id: number, name: string, regNo: string, regYear: string, address: string, telephone: string, fax: string, email: string, contactPerson: string, contactMobile: string, creditLimit: string, description: string, doregister: string, supplierStatus: SupplierStatus, employee: Employee, supplierIngcategory: SupplierIngcategory) {
+  constructor(id: number, name: string, regNo: string, regYear: number, address: string, telephone: string, fax: string, email: string, contactPerson: string, contactMobile: string, creditLimit: string, description: string, doregister: string, supplierStatus: SupplierStatus, employee: Employee, supplierIngcategory: SupplierIngcategory) {
     this.id = id;
     this.name = name;
     this.regNo = regNo;

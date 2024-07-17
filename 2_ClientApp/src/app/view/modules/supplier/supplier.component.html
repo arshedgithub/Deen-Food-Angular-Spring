@@ -26,7 +26,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
+            <mat-label>Description</mat-label>
             <input matInput formControlName="description">
           </mat-form-field>
 
@@ -74,7 +74,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Supplier Status</mat-label>
-            <mat-select formControlName="designation">
+            <mat-select formControlName="supplierStatus">
               <mat-option [value]="null" selected>Not Selected</mat-option>
               <mat-option *ngFor="let status of supplierStatuses" [value]="status">{{status.name}}</mat-option>
             </mat-select>
@@ -82,17 +82,17 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Employee</mat-label>
-            <mat-select formControlName="designation">
+            <mat-select formControlName="employee">
               <mat-option [value]="null" selected>Not Selected</mat-option>
               <mat-option *ngFor="let employee of employees" [value]="employee">{{employee.callingname}}</mat-option>
             </mat-select>
           </mat-form-field>
 
           <div id="butpanel">
-            <button mat-raised-button (click)="add()" [disabled]="false">Add</button>
-            <button mat-raised-button>Clear</button>
-            <button mat-raised-button [disabled]="false">Update</button>
-            <button mat-raised-button [disabled]="false">Delete</button>
+            <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
+            <button mat-raised-button (click)="clear()">Clear</button>
+            <button mat-raised-button (click)="update()" [disabled]="!enaupd">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>
           </div>
 
         </mat-form>

@@ -13,6 +13,8 @@ import {SupplierstatusService} from "../../../service/supplierstatusservice";
 import {EmployeeService} from "../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
+import {MessageComponent} from "../../../util/dialog/message/message.component";
+import {RegexService} from "../../../service/regexservice";
 
 @Component({
   selector: 'app-supplier',
@@ -42,7 +44,6 @@ export class SupplierComponent {
   data!: MatTableDataSource<Supplier>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   imageurl: string = '';
-  // imageempurl: string = 'assets/default.png'
 
   enaadd:boolean = false;
   enaupd:boolean = false;
@@ -62,6 +63,7 @@ export class SupplierComponent {
     private employeeService: EmployeeService,
     private datePipe: DatePipe,
     private dialog: MatDialog,
+    private rxs: RegexService,
     public authService:AuthorizationManager) {
 
     this.uiassist = new UiAssist(this);
@@ -80,7 +82,6 @@ export class SupplierComponent {
       "ssSupStatus": new FormControl(),
       "ssEmployee": new FormControl(),
     });
-
 
     this.form = this.fb.group({
       "name": new FormControl('', [Validators.required]),
@@ -117,10 +118,10 @@ export class SupplierComponent {
       this.employees = employees;
     });
 
-    // this.rs.get('employee').then((regs: []) => {
-    //   this.regexes = regs;
-    //   this.createForm();
-    // });
+    this.rxs.get('suppliers').then((regs: []) => {
+      this.regexes = regs;
+      this.createForm();
+    });
 
   }
 
@@ -132,20 +133,20 @@ export class SupplierComponent {
 
   createForm() {
 
-    this.form.controls['name'].setValidators([Validators.required, Validators.pattern(this.regexes['number']['regex'])]);
-    this.form.controls['regNo'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
-    this.form.controls['regYear'].setValidators([Validators.required, Validators.pattern(this.regexes['callingname']['regex'])]);
-    this.form.controls['address'].setValidators([Validators.required]);
-    this.form.controls['telephone'].setValidators([Validators.required, Validators.pattern(this.regexes['nic']['regex'])]);
-    this.form.controls['fax'].setValidators([Validators.required]);
-    this.form.controls['email'].setValidators([Validators.required]);
-    this.form.controls['contactPerson'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
-    this.form.controls['contactMobile'].setValidators([Validators.required, Validators.pattern(this.regexes['mobile']['regex'])]);
-    this.form.controls['creditLimit'].setValidators([Validators.pattern(this.regexes['land']['regex'])]);
-    this.form.controls['description'].setValidators([Validators.required,Validators.pattern(this.regexes['email']['regex'])]);
-    this.form.controls['doregister'].setValidators([Validators.required]);
+    this.form.controls['name'].setValidators([Validators.required, Validators.pattern(this.regexes['name']['regex'])]);
+    this.form.controls['regNo'].setValidators([Validators.required, Validators.pattern(this.regexes['regno']['regex'])]);
+    this.form.controls['regYear'].setValidators([Validators.required, Validators.pattern(this.regexes['regyear']['regex'])]);
+    this.form.controls['address'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
+    this.form.controls['telephone'].setValidators([Validators.required, Validators.pattern(this.regexes['telephone']['regex'])]);
+    this.form.controls['fax'].setValidators([Validators.pattern(this.regexes['fax']['regex'])] );
+    this.form.controls['email'].setValidators([Validators.required, Validators.pattern(this.regexes['email']['regex'])]);
+    this.form.controls['contactPerson'].setValidators([Validators.required]);
+    this.form.controls['contactMobile'].setValidators([Validators.required, Validators.pattern(this.regexes['contactmobile']['regex'])]);
+    this.form.controls['creditLimit'].setValidators([Validators.pattern(this.regexes['creditlimit']['regex'])]);
+    this.form.controls['description'].setValidators([Validators.required,Validators.pattern(this.regexes['description']['regex'])]);
+    this.form.controls['doregister'].setValidators([Validators.required, Validators.pattern(this.regexes['doregister']['regex'])]);
     this.form.controls['supplierStatus'].setValidators([Validators.required]);
-    this.form.controls['employee'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
+    this.form.controls['employee'].setValidators([Validators.required]);
 
     Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
 
@@ -153,12 +154,12 @@ export class SupplierComponent {
       const control = this.form.controls[controlName];
       control.valueChanges.subscribe(value => {
           // @ts-ignore
-          if (controlName == "dobirth" || controlName == "doassignment")
+          if (controlName == "doregister")
             value = this.datePipe.transform(new Date(value), 'yyyy-MM-dd');
 
           if (this.oldSupplier != undefined && control.valid) {
             // @ts-ignore
-            if (value === this.employee[controlName]) {
+            if (value === this.supplier[controlName]) {
               control.markAsPristine();
             } else {
               control.markAsDirty();
@@ -181,7 +182,6 @@ export class SupplierComponent {
     this.enaupd=upd;
     this.enadel=del;
   }
-
 
   loadTable(query: string) {
 
@@ -263,89 +263,82 @@ export class SupplierComponent {
 
   add() {
 
-    // let errors = this.getErrors();
-    //
-    // if (errors != "") {
-    //   const errmsg = this.dg.open(MessageComponent, {
-    //     width: '500px',
-    //     data: {heading: "Errors - Employee Add ", message: "You have following Errors <br> " + errors}
-    //   });
-    //   errmsg.afterClosed().subscribe(async result => {
-    //     if (!result) {
-    //       return;
-    //     }
-    //   });
-    // } else {
-    //
-    //   this.employee = this.form.getRawValue();
-    //
-    //   //console.log("Photo-Before"+this.employee.photo);
-    //   this.employee.photo = btoa(this.imageempurl);
-    //   //console.log("Photo-After"+this.employee.photo);
-    //
-    //   let empdata: string = "";
-    //
-    //   empdata = empdata + "<br>Number is : " + this.employee.number;
-    //   empdata = empdata + "<br>Fullname is : " + this.employee.fullname;
-    //   empdata = empdata + "<br>Callingname is : " + this.employee.callingname;
-    //
-    //   const confirm = this.dg.open(ConfirmComponent, {
-    //     width: '500px',
-    //     data: {
-    //       heading: "Confirmation - Employee Add",
-    //       message: "Are you sure to Add the following Employee? <br> <br>" + empdata
-    //     }
-    //   });
-    //
-    //   let addstatus: boolean = false;
-    //   let addmessage: string = "Server Not Found";
-    //
-    //   confirm.afterClosed().subscribe(async result => {
-    //     if (result) {
-    //       // console.log("EmployeeService.add(emp)");
-    //
-    //       this.es.add(this.employee).then((responce: [] | undefined) => {
-    //         //console.log("Res-" + responce);
-    //         //console.log("Un-" + responce == undefined);
-    //         if (responce != undefined) { // @ts-ignore
-    //           console.log("Add-" + responce['id'] + "-" + responce['url'] + "-" + (responce['errors'] == ""));
-    //           // @ts-ignore
-    //           addstatus = responce['errors'] == "";
-    //           console.log("Add Sta-" + addstatus);
-    //           if (!addstatus) { // @ts-ignore
-    //             addmessage = responce['errors'];
-    //           }
-    //         } else {
-    //           console.log("undefined");
-    //           addstatus = false;
-    //           addmessage = "Content Not Found"
-    //         }
-    //       }).finally(() => {
-    //
-    //         if (addstatus) {
-    //           addmessage = "Successfully Saved";
-    //           this.form.reset();
-    //           this.clearImage();
-    //           Object.values(this.form.controls).forEach(control => {
-    //             control.markAsTouched();
-    //           });
-    //           this.loadTable("");
-    //         }
-    //
-    //         const stsmsg = this.dg.open(MessageComponent, {
-    //           width: '500px',
-    //           data: {heading: "Status -Employee Add", message: addmessage}
-    //         });
-    //
-    //         stsmsg.afterClosed().subscribe(async result => {
-    //           if (!result) {
-    //             return;
-    //           }
-    //         });
-    //       });
-    //     }
-    //   });
-    // }
+    let addErr = ""
+    let errors = this.getErrors();
+
+    if (errors != "") { const errmsg = this.dialog.open(MessageComponent, {
+            width: '500px',
+            data: {heading: "Errors - Supplier Add ", message: "You have following Errors <br> " + errors}
+          });
+        errmsg.afterClosed().subscribe(async result => {
+          if (!result) {
+            return;
+          }
+        });
+      } else {
+
+        this.supplier = this.form.getRawValue();
+
+        let supData: string = "";
+
+        supData = supData + "<br>Reg. Number is : " + this.supplier.regNo;
+        supData = supData + "<br>Name is : " + this.supplier.name;
+
+        const confirm = this.dialog.open(ConfirmComponent, {
+          width: '500px',
+          data: {
+            heading: "Confirmation - Supplier Add",
+            message: "Are you sure to Add the following supplier? <br> <br>" + supData
+          }
+        });
+
+        let addstatus: boolean = false;
+        let addmessage: string = "Server Not Found";
+
+        confirm.afterClosed().subscribe(async result => {
+          if (result) {
+
+            this.supService.add(this.supplier).then((response: [] | undefined) => {
+              if (response != undefined) { // @ts-ignore
+                console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
+                // @ts-ignore
+                addstatus = response['errors'] == "";
+                // @ts-ignore
+                addErr = response['errors'];
+                console.log(addErr);
+                console.log("Add Sta-" + addstatus);
+                if (!addstatus) {
+                  // @ts-ignore
+                  addmessage = response['errors'];
+                }
+            } else {
+              console.log("undefined");
+              addstatus = false;
+              addmessage = "Content Not Found"
+            }
+          }).finally(() => {
+
+            if (addstatus) {
+              addmessage = "Successfully Saved";
+              this.form.reset();
+              Object.values(this.form.controls).forEach(control => {
+                control.markAsTouched();
+              });
+              this.loadTable("");
+            }
+
+            const stsmsg = this.dialog.open(MessageComponent, {
+              width: '500px',
+              data: {heading: "Status -Supplier Add", message: addmessage}
+            });
+
+            stsmsg.afterClosed().subscribe(async result => {
+              if (!result) return;
+            });
+          });
+        }
+      });
+    }
   }
 
 
@@ -370,197 +363,178 @@ export class SupplierComponent {
 
   fillForm(supplier: Supplier) {
 
-    // // this.enableButtons(false,true,true);
-    //
-    // this.selectedrow=employee;
-    //
-    // this.supplier = JSON.parse(JSON.stringify(employee));
-    // this.oldSupplier = JSON.parse(JSON.stringify(employee));
-    //
-    // if (this.supplier.photo != null) {
-    //   this.imageempurl = atob(this.employee.photo);
-    //   this.form.controls['photo'].clearValidators();
-    // } else {
-    //   this.clearImage();
-    // }
-    // this.employee.photo = "";
-    //
-    // //@ts-ignore
-    // this.employee.gender = this.genders.find(g => g.id === this.employee.gender.id);
-    // //@ts-ignore
-    // this.employee.designation = this.designations.find(d => d.id === this.employee.designation.id);
-    // //@ts-ignore
-    // this.employee.empstatus = this.employeestatuses.find(s => s.id === this.employee.empstatus.id);
-    // //@ts-ignore
-    // this.employee.emptype = this.employeetypes.find(s => s.id === this.employee.emptype.id);
-    //
-    // this.form.patchValue(this.employee);
-    // this.form.markAsPristine();
+      this.enableButtons(false,true,true);
 
-  }
+      this.selectedrow=supplier;
+
+      this.supplier = JSON.parse(JSON.stringify(supplier));
+      this.oldSupplier = JSON.parse(JSON.stringify(supplier));
+
+      //@ts-ignore
+      this.supplier.supplierStatus = this.supplierStatuses.find(s => s.id === this.supplier.supplierStatus.id);
+      //@ts-ignore
+      this.supplier.employee = this.employees.find(e => e.id === this.supplier.employee.id);
+
+      this.form.patchValue(this.supplier);
+      this.form.markAsPristine();
+
+    }
 
 
-  getUpdates(): string {
+    getUpdates(): string {
 
-    let updates: string = "";
-    for (const controlName in this.form.controls) {
-      const control = this.form.controls[controlName];
-      if (control.dirty) {
-        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
+      let updates: string = "";
+      for (const controlName in this.form.controls) {
+        const control = this.form.controls[controlName];
+        if (control.dirty) {
+          updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
+        }
+      }
+      return updates;
+    }
+
+
+    update() {
+
+      let errors = this.getErrors();
+
+      if (errors != "") {
+
+        const errmsg = this.dialog.open(MessageComponent, {
+          width: '500px',
+          data: {heading: "Errors - Supplier Update ", message: "You have following Errors <br> " + errors}
+        });
+        errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+      } else {
+
+        let updates: string = this.getUpdates();
+
+        if (updates != "") {
+
+          let updstatus: boolean = false;
+          let updmessage: string = "Server Not Found";
+
+          const confirm = this.dialog.open(ConfirmComponent, {
+            width: '500px',
+            data: {
+              heading: "Confirmation - Employee Update",
+              message: "Are you sure to Save folowing Updates? <br> <br>" + updates
+            }
+          });
+          confirm.afterClosed().subscribe(async result => {
+            if (result) {
+              //console.log("EmployeeService.update()");
+              this.supplier = this.form.getRawValue();
+              this.supplier.id = this.oldSupplier.id;
+
+              this.supService.update(this.supplier).then((response: [] | undefined) => {
+                //console.log("Res-" + response);
+                // console.log("Un-" + response == undefined);
+                if (response != undefined) { // @ts-ignore
+                  //console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
+                  // @ts-ignore
+                  updstatus = response['errors'] == "";
+                  //console.log("Upd Sta-" + updstatus);
+                  if (!updstatus) { // @ts-ignore
+                    updmessage = response['errors'];
+                  }
+                } else {
+                  //console.log("undefined");
+                  updstatus = false;
+                  updmessage = "Content Not Found"
+                }
+              } ).finally(() => {
+                if (updstatus) {
+                  updmessage = "Successfully Updated";
+                  this.form.reset();
+                  Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
+                  this.loadTable("");
+                }
+
+                const stsmsg = this.dialog.open(MessageComponent, {
+                  width: '500px',
+                  data: {heading: "Status - Supplier Add", message: updmessage}
+                });
+                stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+              });
+            }
+          });
+        }
+        else {
+
+          const updmsg = this.dialog.open(MessageComponent, {
+            width: '500px',
+            data: {heading: "Confirmation - Supplier Update", message: "Nothing Changed"}
+          });
+          updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+        }
       }
     }
-    return updates;
+
+
+    delete() {
+
+      const confirm = this.dialog.open(ConfirmComponent, {
+        width: '500px',
+        data: {
+          heading: "Confirmation - Supplier Delete",
+          message: "Are you sure to Delete following Supplier? <br> <br>" + this.supplier.name
+        }
+      });
+
+      confirm.afterClosed().subscribe(async result => {
+        if (result) {
+          let delstatus: boolean = false;
+          let delmessage: string = "Server Not Found";
+
+          this.supService.delete(this.supplier.id).then((response: [] | undefined) => {
+
+            if (response != undefined) { // @ts-ignore
+              delstatus = response['errors'] == "";
+              if (!delstatus) { // @ts-ignore
+                delmessage = response['errors'];
+              }
+            } else {
+              delstatus = false;
+              delmessage = "Content Not Found"
+            }
+          } ).finally(() => {
+            if (delstatus) {
+              delmessage = "Successfully Deleted";
+              this.form.reset();
+              Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
+              this.loadTable("");
+            }
+
+            const stsmsg = this.dialog.open(MessageComponent, {
+              width: '500px',
+              data: {heading: "Status - Supplier Delete ", message: delmessage}
+            });
+            stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
+          });
+        }
+      });
+    }
+
+    clear():void{
+      const confirm = this.dialog.open(ConfirmComponent, {
+        width: '500px',
+        data: {
+          heading: "Confirmation - Supplier Clear",
+          message: "Are you sure to Clear following Details ? <br> <br>"
+        }
+      });
+
+      confirm.afterClosed().subscribe(async result => {
+        if (result) {
+          this.form.reset()
+        }
+      });
+    }
+
+
   }
-
-
-  // update() {
-
-  //   let errors = this.getErrors();
-  //
-  //   if (errors != "") {
-  //
-  //     const errmsg = this.dg.open(MessageComponent, {
-  //       width: '500px',
-  //       data: {heading: "Errors - Employee Update ", message: "You have following Errors <br> " + errors}
-  //     });
-  //     errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-  //
-  //   } else {
-  //
-  //     let updates: string = this.getUpdates();
-  //
-  //     if (updates != "") {
-  //
-  //       let updstatus: boolean = false;
-  //       let updmessage: string = "Server Not Found";
-  //
-  //       const confirm = this.dg.open(ConfirmComponent, {
-  //         width: '500px',
-  //         data: {
-  //           heading: "Confirmation - Employee Update",
-  //           message: "Are you sure to Save folowing Updates? <br> <br>" + updates
-  //         }
-  //       });
-  //       confirm.afterClosed().subscribe(async result => {
-  //         if (result) {
-  //           //console.log("EmployeeService.update()");
-  //           this.employee = this.form.getRawValue();
-  //           if (this.form.controls['photo'].dirty) this.employee.photo = btoa(this.imageempurl);
-  //           else this.employee.photo = this.oldemployee.photo;
-  //           this.employee.id = this.oldemployee.id;
-  //
-  //           this.es.update(this.employee).then((responce: [] | undefined) => {
-  //             //console.log("Res-" + responce);
-  //             // console.log("Un-" + responce == undefined);
-  //             if (responce != undefined) { // @ts-ignore
-  //               //console.log("Add-" + responce['id'] + "-" + responce['url'] + "-" + (responce['errors'] == ""));
-  //               // @ts-ignore
-  //               updstatus = responce['errors'] == "";
-  //               //console.log("Upd Sta-" + updstatus);
-  //               if (!updstatus) { // @ts-ignore
-  //                 updmessage = responce['errors'];
-  //               }
-  //             } else {
-  //               //console.log("undefined");
-  //               updstatus = false;
-  //               updmessage = "Content Not Found"
-  //             }
-  //           } ).finally(() => {
-  //             if (updstatus) {
-  //               updmessage = "Successfully Updated";
-  //               this.form.reset();
-  //               this.clearImage();
-  //               Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-  //               this.loadTable("");
-  //             }
-  //
-  //             const stsmsg = this.dg.open(MessageComponent, {
-  //               width: '500px',
-  //               data: {heading: "Status -Employee Add", message: updmessage}
-  //             });
-  //             stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-  //
-  //           });
-  //         }
-  //       });
-  //     }
-  //     else {
-  //
-  //       const updmsg = this.dg.open(MessageComponent, {
-  //         width: '500px',
-  //         data: {heading: "Confirmation - Employee Update", message: "Nothing Changed"}
-  //       });
-  //       updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-  //
-  //     }
-  //   }
-  //
-  //
-  // }
-  //
-  //
-  //
-  // delete() {
-  //
-  //   const confirm = this.dg.open(ConfirmComponent, {
-  //     width: '500px',
-  //     data: {
-  //       heading: "Confirmation - Employee Delete",
-  //       message: "Are you sure to Delete following Employee? <br> <br>" + this.employee.callingname
-  //     }
-  //   });
-  //
-  //   confirm.afterClosed().subscribe(async result => {
-  //     if (result) {
-  //       let delstatus: boolean = false;
-  //       let delmessage: string = "Server Not Found";
-  //
-  //       this.es.delete(this.employee.id).then((responce: [] | undefined) => {
-  //
-  //         if (responce != undefined) { // @ts-ignore
-  //           delstatus = responce['errors'] == "";
-  //           if (!delstatus) { // @ts-ignore
-  //             delmessage = responce['errors'];
-  //           }
-  //         } else {
-  //           delstatus = false;
-  //           delmessage = "Content Not Found"
-  //         }
-  //       } ).finally(() => {
-  //         if (delstatus) {
-  //           delmessage = "Successfully Deleted";
-  //           this.form.reset();
-  //           this.clearImage();
-  //           Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-  //           this.loadTable("");
-  //         }
-  //
-  //         const stsmsg = this.dg.open(MessageComponent, {
-  //           width: '500px',
-  //           data: {heading: "Status - Employee Delete ", message: delmessage}
-  //         });
-  //         stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-  //
-  //       });
-  //     }
-  //   });
-  // }
-  //
-  // clear():void{
-  //   const confirm = this.dg.open(ConfirmComponent, {
-  //     width: '500px',
-  //     data: {
-  //       heading: "Confirmation - Employee Clear",
-  //       message: "Are you sure to Clear following Details ? <br> <br>"
-  //     }
-  //   });
-  //
-  //   confirm.afterClosed().subscribe(async result => {
-  //     if (result) {
-  //       this.form.reset()
-  //     }
-  //   });
-  // }
-
-
-}

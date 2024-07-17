@@ -25,8 +25,8 @@ public class Supplier {
     private String regno;
     @Basic
     @Column(name = "regyear")
-    @Pattern(regexp = "^[1,2][0-9]{3}$", message = "Invalid Year")
-    private Integer regyear;
+    @Pattern(regexp = "^[1,2]{1}[0-9]{3}$", message = "Invalid Year")
+    private String regyear;
     @Basic
     @Column(name = "address")
     @Pattern(regexp = "^([\\w\\-,\\s]{2,})$", message = "Invalid Address")
@@ -103,11 +103,11 @@ public class Supplier {
         this.regno = regno;
     }
 
-    public Integer getRegyear() {
+    public String getRegyear() {
         return regyear;
     }
 
-    public void setRegyear(Integer regyear) {
+    public void setRegyear(String regyear) {
         this.regyear = regyear;
     }
 

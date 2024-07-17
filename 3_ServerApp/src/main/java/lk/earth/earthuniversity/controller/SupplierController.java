@@ -71,8 +71,7 @@ public class SupplierController {
         if(supplierDao.findByRegno(supplier.getRegno())!=null)
             errors = errors+"<br> Existing Registration Number";
 
-        if(errors=="")
-        supplierDao.save(supplier);
+        if(errors=="") supplierDao.save(supplier);
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(supplier.getId()));
