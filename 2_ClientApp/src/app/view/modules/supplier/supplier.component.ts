@@ -85,18 +85,18 @@ export class SupplierComponent {
 
     this.form = this.fb.group({
       "name": new FormControl('', [Validators.required]),
-      "regNo": new FormControl('', [Validators.required]),
-      "regYear": new FormControl('', [Validators.required]),
+      "regno": new FormControl('', [Validators.required]),
+      "regyear": new FormControl('', [Validators.required]),
       "address": new FormControl('', [Validators.required]),
       "telephone": new FormControl('', [Validators.required]),
       "fax": new FormControl(''),
       "email": new FormControl('', [Validators.required]),
-      "contactPerson": new FormControl('', [Validators.required]),
-      "contactMobile": new FormControl('', [Validators.required]),
-      "creditLimit": new FormControl('', [Validators.required]),
+      "contactperson": new FormControl('', [Validators.required]),
+      "contactmobile": new FormControl('', [Validators.required]),
+      "creditlimit": new FormControl('', [Validators.required]),
       "description": new FormControl(''),
       "doregister": new FormControl({value: new Date(), disabled: false}, [Validators.required]),
-      "supplierStatus": new FormControl('', [Validators.required]),
+      "supplierstatus": new FormControl('', [Validators.required]),
       "employee": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
 
@@ -134,18 +134,17 @@ export class SupplierComponent {
   createForm() {
 
     this.form.controls['name'].setValidators([Validators.required, Validators.pattern(this.regexes['name']['regex'])]);
-    this.form.controls['regNo'].setValidators([Validators.required, Validators.pattern(this.regexes['regno']['regex'])]);
-    this.form.controls['regYear'].setValidators([Validators.required, Validators.pattern(this.regexes['regyear']['regex'])]);
+    this.form.controls['regno'].setValidators([Validators.required, Validators.pattern(this.regexes['regno']['regex'])]);
+    this.form.controls['regyear'].setValidators([Validators.required, Validators.pattern(this.regexes['regyear']['regex'])]);
     this.form.controls['address'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
     this.form.controls['telephone'].setValidators([Validators.required, Validators.pattern(this.regexes['telephone']['regex'])]);
-    this.form.controls['fax'].setValidators([Validators.pattern(this.regexes['fax']['regex'])] );
     this.form.controls['email'].setValidators([Validators.required, Validators.pattern(this.regexes['email']['regex'])]);
-    this.form.controls['contactPerson'].setValidators([Validators.required]);
-    this.form.controls['contactMobile'].setValidators([Validators.required, Validators.pattern(this.regexes['contactmobile']['regex'])]);
-    this.form.controls['creditLimit'].setValidators([Validators.pattern(this.regexes['creditlimit']['regex'])]);
+    this.form.controls['contactperson'].setValidators([Validators.required]);
+    this.form.controls['contactmobile'].setValidators([Validators.required, Validators.pattern(this.regexes['contactmobile']['regex'])]);
+    this.form.controls['creditlimit'].setValidators([Validators.pattern(this.regexes['creditlimit']['regex'])]);
     this.form.controls['description'].setValidators([Validators.required,Validators.pattern(this.regexes['description']['regex'])]);
     this.form.controls['doregister'].setValidators([Validators.required, Validators.pattern(this.regexes['doregister']['regex'])]);
-    this.form.controls['supplierStatus'].setValidators([Validators.required]);
+    this.form.controls['supplierstatus'].setValidators([Validators.required]);
     this.form.controls['employee'].setValidators([Validators.required]);
 
     Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
@@ -209,11 +208,11 @@ export class SupplierComponent {
 
     this.data.filterPredicate = ((supplier: Supplier, filter: string) => {
       console.log("filter predicate")
-      console.log(supplier.regNo.includes(csSearchData.csRegNo))
-      return (csSearchData.csRegNo == null || supplier.regNo.includes(csSearchData.csRegNo)) &&
+      console.log(supplier.regno.includes(csSearchData.csRegNo))
+      return (csSearchData.csRegNo == null || supplier.regno.includes(csSearchData.csRegNo)) &&
         (csSearchData.csName == null || supplier.name.includes(csSearchData.csName)) &&
         (csSearchData.csTelephone == null || supplier.telephone.includes(csSearchData.csTelephone)) &&
-        (csSearchData.csSupplierStatus == null || supplier.supplierStatus.name.includes(csSearchData.csSupplierStatus)) &&
+        (csSearchData.csSupplierStatus == null || supplier.supplierstatus.name.includes(csSearchData.csSupplierStatus)) &&
         (csSearchData.csEmployee == null || supplier.employee.fullname.includes(csSearchData.csEmployee));
     });
 
@@ -281,7 +280,7 @@ export class SupplierComponent {
 
         let supData: string = "";
 
-        supData = supData + "<br>Reg. Number is : " + this.supplier.regNo;
+        supData = supData + "<br>Reg. Number is : " + this.supplier.regno;
         supData = supData + "<br>Name is : " + this.supplier.name;
 
         const confirm = this.dialog.open(ConfirmComponent, {
@@ -329,7 +328,7 @@ export class SupplierComponent {
 
             const stsmsg = this.dialog.open(MessageComponent, {
               width: '500px',
-              data: {heading: "Status -Supplier Add", message: addmessage}
+              data: {heading: "Status - Supplier Add", message: addmessage}
             });
 
             stsmsg.afterClosed().subscribe(async result => {
@@ -372,7 +371,7 @@ export class SupplierComponent {
 
       //@ts-ignore
       this.supplier.supplierStatus = this.supplierStatuses.find(s => s.id === this.supplier.supplierStatus.id);
-      //@ts-ignore
+      // @ts-ignore
       this.supplier.employee = this.employees.find(e => e.id === this.supplier.employee.id);
 
       this.form.patchValue(this.supplier);
@@ -418,7 +417,7 @@ export class SupplierComponent {
           const confirm = this.dialog.open(ConfirmComponent, {
             width: '500px',
             data: {
-              heading: "Confirmation - Employee Update",
+              heading: "Confirmation - Supplier Update",
               message: "Are you sure to Save folowing Updates? <br> <br>" + updates
             }
           });
