@@ -242,10 +242,10 @@ export class EmployeeComponent {
 
     this.data.filterPredicate = (employee: Employee, filter: string) => {
       return (cserchdata.csnumber == null || employee.number.toLowerCase().includes(cserchdata.csnumber)) &&
-        (cserchdata.cscallingname == null || employee.callingname.toLowerCase().includes(cserchdata.cscallingname)) &&
-        (cserchdata.csgender == null || employee.gender.name.toLowerCase().includes(cserchdata.csgender)) &&
-        (cserchdata.csdesignation == null || employee.designation.name.toLowerCase().includes(cserchdata.csdesignation)) &&
-        (cserchdata.csname == null || employee.fullname.toLowerCase().includes(cserchdata.csname)) &&
+        (cserchdata.cscallingname == null || employee.callingname.toLowerCase().includes(cserchdata.cscallingname.toLowerCase())) &&
+        (cserchdata.csgender == null || employee.gender.name.toLowerCase().includes(cserchdata.csgender.toLowerCase())) &&
+        (cserchdata.csdesignation == null || employee.designation.name.toLowerCase().includes(cserchdata.csdesignation.toLowerCase())) &&
+        (cserchdata.csname == null || employee.fullname.toLowerCase().includes(cserchdata.csname.toLowerCase())) &&
         (cserchdata.csmodi == null || this.getModi(employee).toLowerCase().includes(cserchdata.csmodi));
     };
 

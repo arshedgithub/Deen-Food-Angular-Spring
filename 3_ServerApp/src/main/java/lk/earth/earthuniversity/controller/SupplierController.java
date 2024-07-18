@@ -109,8 +109,6 @@ public class SupplierController {
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String,String> delete(@PathVariable Integer id){
 
-        System.out.println(id);
-
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 

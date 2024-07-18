@@ -209,11 +209,11 @@ export class SupplierComponent {
     this.data.filterPredicate = ((supplier: Supplier, filter: string) => {
       console.log("filter predicate")
       console.log(supplier.regno.includes(csSearchData.csRegNo))
-      return (csSearchData.csRegNo == null || supplier.regno.includes(csSearchData.csRegNo)) &&
-        (csSearchData.csName == null || supplier.name.includes(csSearchData.csName)) &&
+      return (csSearchData.csRegNo == null || supplier.regno.toLowerCase().includes(csSearchData.csRegNo.toLowerCase())) &&
+        (csSearchData.csName == null || supplier.name.toLowerCase().includes(csSearchData.csName.toLowerCase())) &&
         (csSearchData.csTelephone == null || supplier.telephone.includes(csSearchData.csTelephone)) &&
-        (csSearchData.csSupplierStatus == null || supplier.supplierstatus.name.includes(csSearchData.csSupplierStatus)) &&
-        (csSearchData.csEmployee == null || supplier.employee.fullname.includes(csSearchData.csEmployee));
+        (csSearchData.csSupplierStatus == null || supplier.supplierstatus.name.toLowerCase().includes(csSearchData.csSupplierStatus.toLowerCase())) &&
+        (csSearchData.csEmployee == null || supplier.employee.fullname.toLowerCase().includes(csSearchData.csEmployee.toLowerCase()));
     });
 
     this.data.filter = 'xx';
@@ -365,12 +365,12 @@ export class SupplierComponent {
       this.enableButtons(false,true,true);
 
       this.selectedrow=supplier;
-
+      console.log(this.selectedrow)
       this.supplier = JSON.parse(JSON.stringify(supplier));
       this.oldSupplier = JSON.parse(JSON.stringify(supplier));
 
       //@ts-ignore
-      this.supplier.supplierStatus = this.supplierStatuses.find(s => s.id === this.supplier.supplierStatus.id);
+      this.supplier.supplierstatus = this.supplierStatuses.find(s => s.id === this.supplier.supplierstatus.id);
       // @ts-ignore
       this.supplier.employee = this.employees.find(e => e.id === this.supplier.employee.id);
 
@@ -504,6 +504,7 @@ export class SupplierComponent {
             if (delstatus) {
               delmessage = "Successfully Deleted";
               this.form.reset();
+              this.enableButtons(true,false,false);
               Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
               this.loadTable("");
             }
@@ -530,7 +531,7 @@ export class SupplierComponent {
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          this.form.reset()
+          this.form.reset();
         }
       });
     }

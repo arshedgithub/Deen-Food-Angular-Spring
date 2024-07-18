@@ -37,7 +37,6 @@ public class Supplier {
     private String telephone;
     @Basic
     @Column(name = "fax")
-    @Pattern(regexp = "^[0][0-9]{9}$", message = "Invalid FAX")
     private String fax;
     @Basic
     @Column(name = "email")
