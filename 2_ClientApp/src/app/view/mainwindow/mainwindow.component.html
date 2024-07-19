@@ -7,7 +7,7 @@
     </span>
 
     <span class="toolbar-right">
-      <label class="lbl-user">{{authService.getUsername().toUpperCase()}}</label>
+      <label clas s="lbl-user">{{authService.getUsername().toUpperCase()}}</label>
       <img src="assets/user.png" class="img-user"/>
       <button mat-icon-button (click)="logout()" class="btn-logout"><mat-icon>exit_to_app</mat-icon> </button>
     </span>
@@ -22,13 +22,15 @@
     <mat-nav-list>
 
       <mat-list-item>
-        <a routerLink="home"><mat-icon>home</mat-icon>Home</a>
+        <a routerLink="home"><mat-icon>home</mat-icon>
+          Home</a>
       </mat-list-item>
 
       <mat-list-item> <a routerLink="dashboard">
         <mat-icon>widgets</mat-icon>
         Dashboard</a></mat-list-item>
 
+      <mat-accordion>
       <mat-expansion-panel *ngIf="isMenuVisible('Admin')">
         <mat-expansion-panel-header>
           <mat-list-item><a>
@@ -58,11 +60,13 @@
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-list-item>
-            <a><mat-icon>poll</mat-icon>Reports</a>
+            <a><mat-icon>poll</mat-icon>
+              Reports</a>
           </mat-list-item>
         </mat-expansion-panel-header>
         <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>
       </mat-expansion-panel>
+      </mat-accordion>
 
     </mat-nav-list>
   </mat-sidenav>

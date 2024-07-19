@@ -1,28 +1,22 @@
 mat-card {
-  width: 30%;
+  width: 60%;
+  margin: auto;
+  margin-top: 50px;
   border: #003300;
   box-shadow: black 2px 2px 15px;
 }
 
-
-mat-card-header {
-  /*background: #003300;*/
-  background: #6eab47;
-}
-
-mat-card-title img {
-  width: 26.5rem;
-  height: 100%;
+mat-grid-tile form {
+  padding: 10%;
   text-align: center;
 }
 
-mat-card-title p {
-  color: white;
-  text-align: center;
+mat-grid-tile form h2 {
+  margin-bottom: 40px;
 }
 
 mat-card-content {
-  padding: 10%;
+  padding: 0px !important;
 }
 
 mat-card-actions {
@@ -30,7 +24,7 @@ mat-card-actions {
 }
 
 mat-card-actions button:nth-child(2) {
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 button {
@@ -38,11 +32,10 @@ button {
 }
 
 button[btn-a] {
-  background: darkolivegreen !important;
-
+  background: #3606d5 !important;
 }
 
 button[btn-b] {
-  background: #355E3B !important;
+  background: #170144 !important;
 }
 

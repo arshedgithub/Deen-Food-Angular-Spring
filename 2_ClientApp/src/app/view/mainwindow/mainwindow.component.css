@@ -75,19 +75,18 @@ mat-sidenav a {
 }
 
 mat-sidenav mat-icon {
-  font-size: 16px;
+  font-size: 18px;
   margin: 0px 0px -10px 0px;
 }
 
 mat-nav-list mat-list-item {
   height: 35px;
   font-size: 14px;
-  padding: 0px 5px 0px 10px;
-  border-bottom: #8aa88a 2px solid;
+  padding: 20px 5px 20px 15px;
 }
 
 mat-nav-list mat-list-item:hover {
-  background: #b5d3b5;
+  background: #97b0fc;
 }
 
 mat-nav-list mat-expansion-panel {
@@ -98,10 +97,11 @@ mat-nav-list mat-expansion-panel {
 mat-nav-list mat-expansion-panel-header {
   height: 35px;
   padding: 0 20px 0 0;
+  /*margin-top: 10px;*/
 }
 
 mat-nav-list mat-expansion-panel-header:hover {
-  background: #b5d3b5 !important;
+  background: #97b0fc !important;
 }
 
 mat-nav-list mat-expansion-panel mat-list-item {
