@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HomeComponent} from './view/home/home.component';
 import {LoginComponent} from './view/login/login.component';
 import {MainwindowComponent} from './view/mainwindow/mainwindow.component';
-import {EmployeeComponent} from './view/modules/employee/employee.component';
+import {EmployeeComponent} from './view/modules/employees/employee/employee.component';
 import {UserComponent} from './view/modules/user/user.component';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
@@ -44,6 +44,7 @@ import { IngredientComponent } from './view/modules/ingredient/ingredient.compon
 import {MatRadioModule} from "@angular/material/radio";
 import { IngredientcountbycategoryComponent } from './report/view/ingredientcountbycategory/ingredientcountbycategory.component';
 import { SupplierComponent } from './view/modules/supplier/supplier.component';
+import { EmployeeFormComponent } from './view/modules/employees/employee-form/employee-form.component';
 
 
 @NgModule({
@@ -64,6 +65,7 @@ import { SupplierComponent } from './view/modules/supplier/supplier.component';
     IngredientComponent,
     IngredientcountbycategoryComponent,
     SupplierComponent,
+    EmployeeFormComponent,
   ],
     imports: [
         MatDatepickerModule,

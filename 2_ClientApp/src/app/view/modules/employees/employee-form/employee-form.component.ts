@@ -1,60 +1,38 @@
-import {Component, ViewChild} from '@angular/core';
-import {Employee} from "../../../entity/employee";
-import {EmployeeService} from "../../../service/employeeservice";
-import {MatPaginator} from "@angular/material/paginator";
-import {MatTableDataSource} from "@angular/material/table";
-import {FormBuilder, FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {UiAssist} from "../../../util/ui/ui.assist";
-import {Gender} from "../../../entity/gender";
-import {Designation} from "../../../entity/designation";
-import {GenderService} from "../../../service/genderservice";
-import {DesignationService} from "../../../service/designationservice";
+import { Component } from '@angular/core';
+import {Gender} from "../../../../entity/gender";
+import {Designation} from "../../../../entity/designation";
+import {Empstatus} from "../../../../entity/empstatus";
+import {Emptype} from "../../../../entity/emptype";
+import {GenderService} from "../../../../service/genderservice";
+import {DesignationService} from "../../../../service/designationservice";
+import {Empstatusservice} from "../../../../service/empstatusservice";
+import {Emptypeservice} from "../../../../service/emptypeservice";
+import {MessageComponent} from "../../../../util/dialog/message/message.component";
+import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.component";
+import {Employee} from "../../../../entity/employee";
+import {UiAssist} from "../../../../util/ui/ui.assist";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {MessageComponent} from "../../../util/dialog/message/message.component";
-import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
-import {Empstatusservice} from "../../../service/empstatusservice";
-import {Empstatus} from "../../../entity/empstatus";
-import {RegexService} from "../../../service/regexservice";
+import {RegexService} from "../../../../service/regexservice";
 import {DatePipe} from "@angular/common";
-import {AuthorizationManager} from "../../../service/authorizationmanager";
-import {Emptype} from "../../../entity/emptype";
-import {Emptypeservice} from "../../../service/emptypeservice";
-
+import {EmployeeService} from "../../../../service/employeeservice";
 
 @Component({
-  selector: 'app-employee',
-  templateUrl: './employee.component.html',
-  styleUrls: ['./employee.component.css']
+  selector: 'app-employee-form',
+  templateUrl: './employee-form.component.html',
+  styleUrls: ['./employee-form.component.css']
 })
+export class EmployeeFormComponent {
 
-export class EmployeeComponent {
-
-  columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname', 'modi'];
-  headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name', 'Modification'];
-  binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname', 'getModi()'];
-
-  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname', 'csmodi'];
-  csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender',
-    'Search by Designation', 'Search by Full Name', 'Search by Modi'];
-
-  public csearch!: FormGroup;
-  public ssearch!: FormGroup;
   public form!: FormGroup;
-
   employee!: Employee;
   oldemployee!: Employee;
-
-  selectedrow: any;
-
-  employees: Array<Employee> = [];
-  data!: MatTableDataSource<Employee>;
-  imageurl: string = '';
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   imageempurl: string = 'assets/default.png'
+
+  selectedrow!: Employee;
 
   // enaadd:boolean = false;
   // enaupd:boolean = false;
-  // enadel:boolean = false;
 
   genders: Array<Gender> = [];
   designations: Array<Designation> = [];
@@ -65,38 +43,43 @@ export class EmployeeComponent {
 
   uiassist: UiAssist;
 
-  constructor(
-    private es: EmployeeService,
-    private gs: GenderService,
-    private ds: DesignationService,
-    private ss: Empstatusservice,
-    private et: Emptypeservice,
-    private rs: RegexService,
-    private fb: FormBuilder,
-    private dg: MatDialog,
-    private dp: DatePipe,
-    public authService:AuthorizationManager) {
+  ngOnInit(){
+    this.gs.getAllList().then((gens: Gender[]) => {
+      this.genders = gens;
+    });
 
+    this.ds.getAllList().then((dess: Designation[]) => {
+      this.designations = dess;
+    });
+
+    this.ss.getAllList().then((stes: Empstatus[]) => {
+      this.employeestatuses = stes;
+    });
+
+    this.ts.getAllList().then((types: Emptype[]) => {
+      this.employeetypes = types;
+    });
+
+    this.rs.get('employee').then((regs: []) => {
+      this.regexes = regs;
+      this.createForm();
+    });
+
+  }
+
+  constructor(
+      private es: EmployeeService,
+      private gs: GenderService,
+      private ds: DesignationService,
+      private ss: Empstatusservice,
+      private ts: Emptypeservice,
+      private dg: MatDialog,
+      private rs: RegexService,
+      private fb: FormBuilder,
+      private dp: DatePipe
+  ){
 
     this.uiassist = new UiAssist(this);
-
-    this.csearch = this.fb.group({
-      "csnumber": new FormControl(),
-      "cscallingname": new FormControl(),
-      "csgender": new FormControl(),
-      "csdesignation": new FormControl(),
-      "csname": new FormControl(),
-      "csmodi": new FormControl(),
-    });
-
-    this.ssearch = this.fb.group({
-      "ssnumber": new FormControl(),
-      "ssfullname": new FormControl(),
-      "ssgender": new FormControl(),
-      "ssdesignation": new FormControl(),
-      "ssnic": new FormControl()
-    });
-
 
     this.form = this.fb.group({
       "number": new FormControl('', [Validators.required]),
@@ -117,45 +100,7 @@ export class EmployeeComponent {
       "empstatus": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
 
-
   }
-
-  ngOnInit() {
-    this.initialize();
-  }
-
-  initialize() {
-
-    this.createView();
-
-    this.gs.getAllList().then((gens: Gender[]) => {
-      this.genders = gens;
-    });
-
-    this.ds.getAllList().then((dess: Designation[]) => {
-      this.designations = dess;
-    });
-
-    this.ss.getAllList().then((stes: Empstatus[]) => {
-      this.employeestatuses = stes;
-    });
-
-    this.et.getAllList().then((typs: Emptype[]) => {
-      this.employeetypes = typs;
-    });
-
-    this.rs.get('employee').then((regs: []) => {
-      this.regexes = regs;
-      this.createForm();
-    });
-
-  }
-
-  createView() {
-    this.imageurl = 'assets/pending.gif';
-    this.loadTable("");
-  }
-
 
   createForm() {
 
@@ -183,7 +128,7 @@ export class EmployeeComponent {
       control.valueChanges.subscribe(value => {
             // @ts-ignore
             if (controlName == "dobirth" || controlName == "doassignment")
-                value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
+              value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
 
             if (this.oldemployee != undefined && control.valid) {
               // @ts-ignore
@@ -198,99 +143,9 @@ export class EmployeeComponent {
           }
       );
 
-      }
+    }
 
     // this.enableButtons(true,false,false);
-
-  }
-
-
-  // enableButtons(add:boolean, upd:boolean, del:boolean){
-  //   this.enaadd=add;
-  //   this.enaupd=upd;
-  //   this.enadel=del;
-  // }
-
-
-  loadTable(query: string) {
-
-    this.es.getAll(query)
-      .then((emps: Employee[]) => {
-        this.employees = emps;
-        this.imageurl = 'assets/fullfilled.png';
-      })
-      .catch((error) => {
-        console.log(error);
-        this.imageurl = 'assets/rejected.png';
-      })
-      .finally(() => {
-        this.data = new MatTableDataSource(this.employees);
-        this.data.paginator = this.paginator;
-      });
-
-  }
-
-
-  getModi(element: Employee) {
-    return element.number + '(' + element.callingname + ')';
-  }
-
-
-  filterTable(): void {
-
-    const cserchdata = this.csearch.getRawValue();
-
-    this.data.filterPredicate = (employee: Employee, filter: string) => {
-      return (cserchdata.csnumber == null || employee.number.toLowerCase().includes(cserchdata.csnumber)) &&
-        (cserchdata.cscallingname == null || employee.callingname.toLowerCase().includes(cserchdata.cscallingname.toLowerCase())) &&
-        (cserchdata.csgender == null || employee.gender.name.toLowerCase().includes(cserchdata.csgender.toLowerCase())) &&
-        (cserchdata.csdesignation == null || employee.designation.name.toLowerCase().includes(cserchdata.csdesignation.toLowerCase())) &&
-        (cserchdata.csname == null || employee.fullname.toLowerCase().includes(cserchdata.csname.toLowerCase())) &&
-        (cserchdata.csmodi == null || this.getModi(employee).toLowerCase().includes(cserchdata.csmodi));
-    };
-
-    this.data.filter = 'xx';
-
-  }
-
-  btnSearchMc(): void {
-
-    const sserchdata = this.ssearch.getRawValue();
-
-    let number = sserchdata.ssnumber;
-    let fullname = sserchdata.ssfullname;
-    let nic = sserchdata.ssnic;
-    let genderid = sserchdata.ssgender;
-    let designationid = sserchdata.ssdesignation;
-
-    let query = "";
-
-    if (number != null && number.trim() != "") query = query + "&number=" + number;
-    if (fullname != null && fullname.trim() != "") query = query + "&fullname=" + fullname;
-    if (nic != null && nic.trim() != "") query = query + "&nic=" + nic;
-    if (genderid != null) query = query + "&genderid=" + genderid;
-    if (designationid != null) query = query + "&designationid=" + designationid;
-
-    if (query != "") query = query.replace(/^./, "?")
-
-    this.loadTable(query);
-
-  }
-
-
-  btnSearchClearMc(): void {
-
-    const confirm = this.dg.open(ConfirmComponent, {
-      width: '500px',
-      data: {heading: "Search Clear", message: "Are you sure to Clear the Search?"}
-    });
-
-    confirm.afterClosed().subscribe(async result => {
-      if (result) {
-        this.ssearch.reset();
-        this.loadTable("");
-      }
-    });
 
   }
 
@@ -379,7 +234,7 @@ export class EmployeeComponent {
               Object.values(this.form.controls).forEach(control => {
                 control.markAsTouched();
               });
-              this.loadTable("");
+              // loadTable("");
             }
 
             const stsmsg = this.dg.open(MessageComponent, {
@@ -469,11 +324,11 @@ export class EmployeeComponent {
 
     if (errors != "") {
 
-        const errmsg = this.dg.open(MessageComponent, {
-          width: '500px',
-          data: {heading: "Errors - Employee Update ", message: "You have following Errors <br> " + errors}
-        });
-        errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+      const errmsg = this.dg.open(MessageComponent, {
+        width: '500px',
+        data: {heading: "Errors - Employee Update ", message: "You have following Errors <br> " + errors}
+      });
+      errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
 
     } else {
 
@@ -501,7 +356,7 @@ export class EmployeeComponent {
 
             this.es.update(this.employee).then((responce: [] | undefined) => {
               //console.log("Res-" + responce);
-             // console.log("Un-" + responce == undefined);
+              // console.log("Un-" + responce == undefined);
               if (responce != undefined) { // @ts-ignore
                 //console.log("Add-" + responce['id'] + "-" + responce['url'] + "-" + (responce['errors'] == ""));
                 // @ts-ignore
@@ -520,8 +375,8 @@ export class EmployeeComponent {
                 updmessage = "Successfully Updated";
                 this.form.reset();
                 this.clearImage();
-                 Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-                this.loadTable("");
+                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
+                // this.loadTable("");
               }
 
               const stsmsg = this.dg.open(MessageComponent, {
@@ -533,7 +388,7 @@ export class EmployeeComponent {
             });
           }
         });
-    }
+      }
       else {
 
         const updmsg = this.dg.open(MessageComponent, {
@@ -544,83 +399,23 @@ export class EmployeeComponent {
 
       }
     }
-
-
   }
 
 
-
-  delete() {
-
-        const confirm = this.dg.open(ConfirmComponent, {
-          width: '500px',
-          data: {
-            heading: "Confirmation - Employee Delete",
-            message: "Are you sure to Delete following Employee? <br> <br>" + this.employee.callingname
-          }
-        });
-
-        confirm.afterClosed().subscribe(async result => {
-          if (result) {
-            let delstatus: boolean = false;
-            let delmessage: string = "Server Not Found";
-
-            this.es.delete(this.employee.id).then((responce: [] | undefined) => {
-
-                if (responce != undefined) { // @ts-ignore
-                  delstatus = responce['errors'] == "";
-                if (!delstatus) { // @ts-ignore
-                  delmessage = responce['errors'];
-                }
-              } else {
-                delstatus = false;
-                delmessage = "Content Not Found"
-              }
-            } ).finally(() => {
-              if (delstatus) {
-                delmessage = "Successfully Deleted";
-                this.form.reset();
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-                this.loadTable("");
-              }
-
-              const stsmsg = this.dg.open(MessageComponent, {
-                width: '500px',
-                data: {heading: "Status - Employee Delete ", message: delmessage}
-              });
-              stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
-            });
-          }
-        });
+  clear():void{
+    const confirm = this.dg.open(ConfirmComponent, {
+      width: '500px',
+      data: {
+        heading: "Confirmation - Employee Clear",
+        message: "Are you sure to Clear following Details ? <br> <br>"
       }
+    });
 
-      clear():void{
-        const confirm = this.dg.open(ConfirmComponent, {
-          width: '500px',
-          data: {
-            heading: "Confirmation - Employee Clear",
-            message: "Are you sure to Clear following Details ? <br> <br>"
-          }
-        });
-
-        confirm.afterClosed().subscribe(async result => {
-          if (result) {
-             this.form.reset()
-          }
-        });
+    confirm.afterClosed().subscribe(async result => {
+      if (result) {
+        this.form.reset()
       }
-
+    });
+  }
 
 }
-
-
-
-
-
-
-
-
-
-
