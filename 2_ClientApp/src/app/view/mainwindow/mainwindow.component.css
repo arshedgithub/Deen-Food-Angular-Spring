@@ -86,25 +86,24 @@ mat-nav-list mat-list-item {
 }
 
 mat-nav-list mat-list-item:hover {
-  background: #97b0fc;
+  background: #bacdff;
 }
 
-mat-nav-list mat-expansion-panel {
+mat-nav-list mat-accordion mat-expansion-panel {
   box-shadow: none;
   border-radius: unset;
 }
 
-mat-nav-list mat-expansion-panel-header {
+mat-nav-list mat-accordion mat-expansion-panel-header {
   height: 35px;
-  padding: 0 20px 0 0;
-  /*margin-top: 10px;*/
+  padding: 5px 20px 5px 0;
 }
 
-mat-nav-list mat-expansion-panel-header:hover {
-  background: #97b0fc !important;
+mat-nav-list mat-accordion mat-expansion-panel-header:hover {
+  background: #bacdff !important;
 }
 
-mat-nav-list mat-expansion-panel mat-list-item {
+mat-nav-list mat-accordion mat-expansion-panel mat-list-item {
   height: 28px;
 }
 
