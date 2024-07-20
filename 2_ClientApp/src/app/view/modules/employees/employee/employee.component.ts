@@ -18,6 +18,7 @@ import {DatePipe} from "@angular/common";
 import {AuthorizationManager} from "../../../../service/authorizationmanager";
 import {Emptype} from "../../../../entity/emptype";
 import {Emptypeservice} from "../../../../service/emptypeservice";
+import {EmployeeFormComponent} from "../employee-form/employee-form.component";
 
 
 @Component({
@@ -34,7 +35,7 @@ export class EmployeeComponent {
 
   cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname', 'csmodi'];
   csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender',
-    'Search by Designation', 'Search by Full Name', 'Search by Modi'];
+    'Search by Designation', 'Search by Full Name', 'modi'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -254,6 +255,13 @@ export class EmployeeComponent {
         });
       }
     });
+  }
+
+  openDialog(employee: Employee): void {
+    this.dg.open(EmployeeFormComponent, {
+      width: '400px',
+      data: employee
+    })
   }
 
 }

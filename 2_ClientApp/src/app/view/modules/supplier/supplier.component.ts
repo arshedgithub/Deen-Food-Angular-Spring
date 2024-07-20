@@ -373,7 +373,7 @@ export class SupplierComponent {
       this.supplier.supplierstatus = this.supplierStatuses.find(s => s.id === this.supplier.supplierstatus.id);
       // @ts-ignore
       this.supplier.employee = this.employees.find(e => e.id === this.supplier.employee.id);
-
+      this.supplier.doregister
       this.form.patchValue(this.supplier);
       this.form.markAsPristine();
 

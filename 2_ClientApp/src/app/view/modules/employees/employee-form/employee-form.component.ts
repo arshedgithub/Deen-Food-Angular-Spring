@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {Gender} from "../../../../entity/gender";
 import {Designation} from "../../../../entity/designation";
 import {Empstatus} from "../../../../entity/empstatus";
@@ -12,7 +12,7 @@ import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.componen
 import {Employee} from "../../../../entity/employee";
 import {UiAssist} from "../../../../util/ui/ui.assist";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MatDialog} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {RegexService} from "../../../../service/regexservice";
 import {DatePipe} from "@angular/common";
 import {EmployeeService} from "../../../../service/employeeservice";
@@ -76,7 +76,9 @@ export class EmployeeFormComponent {
       private dg: MatDialog,
       private rs: RegexService,
       private fb: FormBuilder,
-      private dp: DatePipe
+      private dp: DatePipe,
+      public dialogRef: MatDialogRef<EmployeeFormComponent>,
+      @Inject(MAT_DIALOG_DATA) public data: any
   ){
 
     this.uiassist = new UiAssist(this);
@@ -416,6 +418,10 @@ export class EmployeeFormComponent {
         this.form.reset()
       }
     });
+  }
+
+  onCloseForm(): void {
+    this.dialogRef.close();
   }
 
 }

@@ -91,7 +91,7 @@
 
           <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
           <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: columns;"></mat-row>
+          <mat-row *matRowDef="let row; columns: columns;" (click)="openDialog(row)"></mat-row>
 
         </mat-table>
 
