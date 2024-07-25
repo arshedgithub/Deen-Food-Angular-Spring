@@ -257,11 +257,23 @@ export class EmployeeComponent {
     });
   }
 
-  openDialog(employee: Employee): void {
-    this.dg.open(EmployeeFormComponent, {
+  openPopup(employee: any, title: any): void {
+    var popup = this.dg.open(EmployeeFormComponent, {
       width: '400px',
-      data: employee
-    })
+      data: {
+        title: title,
+        employee: employee
+      }
+    });
+    popup.afterClosed().subscribe(item => this.loadTable(""));
+  }
+
+  editEmployee(employee: Employee){
+    this.openPopup(employee, "Edit Employee")
+  }
+
+  addEmployee(){
+    this.openPopup(0, "Add Employee")
   }
 
 }

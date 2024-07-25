@@ -70,6 +70,8 @@
 
       <mat-card-content>
 
+        <button mat-raised-button color="primary" (click)="addEmployee()"><mat-icon>personAdd</mat-icon> Add employee</button>
+
         <mat-table [dataSource]="data">
 
           <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
@@ -91,7 +93,7 @@
 
           <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
           <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: columns;" (click)="openDialog(row)"></mat-row>
+          <mat-row *matRowDef="let row; columns: columns;" (click)="editEmployee(row)"></mat-row>
 
         </mat-table>
 
