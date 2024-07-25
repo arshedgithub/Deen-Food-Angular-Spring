@@ -1,20 +1,20 @@
 import {Component, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Supplier} from "../../../entity/supplier";
-import {UiAssist} from "../../../util/ui/ui.assist";
-import {AuthorizationManager} from "../../../service/authorizationmanager";
-import {SupplierService} from "../../../service/supplierservice";
+import {Supplier} from "../../../../entity/supplier";
+import {UiAssist} from "../../../../util/ui/ui.assist";
+import {AuthorizationManager} from "../../../../service/authorizationmanager";
+import {SupplierService} from "../../../../service/supplierservice";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
-import {SupplierStatus} from "../../../entity/supplierstatus";
-import {Employee} from "../../../entity/employee";
-import {SupplierstatusService} from "../../../service/supplierstatusservice";
-import {EmployeeService} from "../../../service/employeeservice";
+import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.component";
+import {SupplierStatus} from "../../../../entity/supplierstatus";
+import {Employee} from "../../../../entity/employee";
+import {SupplierstatusService} from "../../../../service/supplierstatusservice";
+import {EmployeeService} from "../../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
-import {MessageComponent} from "../../../util/dialog/message/message.component";
-import {RegexService} from "../../../service/regexservice";
+import {MessageComponent} from "../../../../util/dialog/message/message.component";
+import {RegexService} from "../../../../service/regexservice";
 
 @Component({
   selector: 'app-supplier',

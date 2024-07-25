@@ -43,8 +43,9 @@ import { PaymentComponent } from './view/modules/payment/payment.component';
 import { IngredientComponent } from './view/modules/ingredient/ingredient.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { IngredientcountbycategoryComponent } from './report/view/ingredientcountbycategory/ingredientcountbycategory.component';
-import { SupplierComponent } from './view/modules/supplier/supplier.component';
+import { SupplierComponent } from './view/modules/suppliers/supplier/supplier.component';
 import { EmployeeFormComponent } from './view/modules/employees/employee-form/employee-form.component';
+import { SupplierFormComponent } from './view/modules/suppliers/supplier-form/supplier-form.component';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { EmployeeFormComponent } from './view/modules/employees/employee-form/em
     IngredientcountbycategoryComponent,
     SupplierComponent,
     EmployeeFormComponent,
+    SupplierFormComponent,
   ],
     imports: [
         MatDatepickerModule,

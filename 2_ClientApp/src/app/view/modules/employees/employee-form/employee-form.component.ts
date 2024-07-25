@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Gender} from "../../../../entity/gender";
 import {Designation} from "../../../../entity/designation";
 import {Empstatus} from "../../../../entity/empstatus";
@@ -22,7 +22,7 @@ import {EmployeeService} from "../../../../service/employeeservice";
   templateUrl: './employee-form.component.html',
   styleUrls: ['./employee-form.component.css']
 })
-export class EmployeeFormComponent {
+export class EmployeeFormComponent implements OnInit{
 
   public form!: FormGroup;
   employee!: Employee;
@@ -44,14 +44,15 @@ export class EmployeeFormComponent {
 
   uiassist: UiAssist;
 
-  ngOnInit(){
+  ngOnInit() {
+    this.initialize();
+  }
+
+  initialize(){
 
     this.gs.getAllList().then((gens: Gender[]) => {
       this.genders = gens;
-      console.log(this.genders)
     });
-
-    console.log(this.genders);
 
     this.ds.getAllList().then((dess: Designation[]) => {
       this.designations = dess;
@@ -286,7 +287,7 @@ export class EmployeeFormComponent {
   fillForm(employee: Employee) {
 
     // this.enableButtons(false,true,true);
-
+    this.selectedrow = employee;
     console.log(employee)
     this.employee = JSON.parse(JSON.stringify(employee));
     this.oldemployee = JSON.parse(JSON.stringify(employee));
