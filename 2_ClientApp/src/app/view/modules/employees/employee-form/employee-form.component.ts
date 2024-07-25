@@ -29,6 +29,7 @@ export class EmployeeFormComponent {
   oldemployee!: Employee;
   imageempurl: string = 'assets/default.png'
 
+  popupTitle: any;
   selectedrow!: Employee;
 
   // enaadd:boolean = false;
@@ -44,9 +45,13 @@ export class EmployeeFormComponent {
   uiassist: UiAssist;
 
   ngOnInit(){
+
     this.gs.getAllList().then((gens: Gender[]) => {
       this.genders = gens;
+      console.log(this.genders)
     });
+
+    console.log(this.genders);
 
     this.ds.getAllList().then((dess: Designation[]) => {
       this.designations = dess;
@@ -64,6 +69,9 @@ export class EmployeeFormComponent {
       this.regexes = regs;
       this.createForm();
     });
+
+    this.popupTitle = this.data.title;
+    if (this.popupTitle == "Edit Employee") this.fillForm(this.data.employee);
 
   }
 
@@ -279,8 +287,7 @@ export class EmployeeFormComponent {
 
     // this.enableButtons(false,true,true);
 
-    this.selectedrow=employee;
-
+    console.log(employee)
     this.employee = JSON.parse(JSON.stringify(employee));
     this.oldemployee = JSON.parse(JSON.stringify(employee));
 
@@ -291,6 +298,8 @@ export class EmployeeFormComponent {
       this.clearImage();
     }
     this.employee.photo = "";
+
+    console.log(this.designations, this.genders)
 
     //@ts-ignore
     this.employee.gender = this.genders.find(g => g.id === this.employee.gender.id);

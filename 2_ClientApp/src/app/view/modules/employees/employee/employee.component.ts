@@ -209,7 +209,6 @@ export class EmployeeComponent {
         this.loadTable("");
       }
     });
-
   }
 
 
