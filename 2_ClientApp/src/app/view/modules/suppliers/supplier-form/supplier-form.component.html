@@ -1,1 +1,101 @@
-<p>supplier-form works!</p>
+<div id="supplierDialog">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{popupTitle}}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content id="supplierform">
+
+      <mat-form  [formGroup]="form" >
+
+        <mat-form-field appearance="outline">
+          <mat-label>Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Reg. No</mat-label>
+          <input matInput formControlName="regno">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Reg. Year</mat-label>
+          <input matInput formControlName="regyear">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="address">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Telephone</mat-label>
+          <input matInput formControlName="telephone">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>FAX</mat-label>
+          <input matInput formControlName="fax">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contact Person</mat-label>
+          <input matInput formControlName="contactperson">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contact Mobile</mat-label>
+          <input matInput formControlName="contactmobile">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Credit Limit</mat-label>
+          <input matInput formControlName="creditlimit">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date Of Reg.</mat-label>
+          <input matInput [matDatepicker]="doregister" formControlName="doregister">
+          <mat-datepicker-toggle matIconSuffix [for]="doregister"></mat-datepicker-toggle>
+          <mat-datepicker #doregister></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Supplier Status</mat-label>
+          <mat-select formControlName="supplierstatus">
+            <mat-option [value]="null" selected>Not Selected</mat-option>
+            <mat-option *ngFor="let status of supplierStatuses" [value]="status">{{status.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Employee</mat-label>
+          <mat-select formControlName="employee">
+            <mat-option [value]="null" selected>Not Selected</mat-option>
+            <mat-option *ngFor="let employee of employees" [value]="employee">{{employee.callingname}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div id="butpanel">
+          <button mat-raised-button (click)="add()" [disabled]="false">Add</button>
+          <button mat-raised-button (click)="clear()">Clear</button>
+          <button mat-raised-button (click)="update()" [disabled]="false">Update</button>
+<!--          <button mat-raised-button (click)="delete()" [disabled]="!enadel">Delete</button>-->
+        </div>
+
+      </mat-form>
+    </mat-card-content>
+
+
+  </mat-card>
+</div>
