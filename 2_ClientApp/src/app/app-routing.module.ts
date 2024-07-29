@@ -2,19 +2,19 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {LoginComponent} from "./view/login/login.component";
 import {MainwindowComponent} from "./view/mainwindow/mainwindow.component";
-import {EmployeeComponent} from "./view/modules/employees/employee/employee.component";
+import {EmployeeComponent} from "./view/modules/employeeModule/employee/employee.component";
 import {HomeComponent} from "./view/home/home.component";
 import {UserComponent} from "./view/modules/user/user.component";
 import {ArrearsByProgramComponent} from "./report/view/arrearsbyprogram/arrearsbyprogram.component";
 import {PaymentComponent} from "./view/modules/payment/payment.component";
-import {IngredientComponent} from "./view/modules/ingredient/ingredient.component";
+import {IngredientComponent} from "./view/modules/ingredientModule/ingredient/ingredient.component";
 import {OperationComponent} from "./view/modules/operation/operation.component";
 import {PrivilageComponent} from "./view/modules/privilage/privilage.component";
 import {CountByDesignationComponent} from "./report/view/countbydesignation/countbydesignation.component";
 import {
   IngredientcountbycategoryComponent
 } from "./report/view/ingredientcountbycategory/ingredientcountbycategory.component";
-import {SupplierComponent} from "./view/modules/suppliers/supplier/supplier.component";
+import {SupplierComponent} from "./view/modules/supplierModule/supplier/supplier.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
