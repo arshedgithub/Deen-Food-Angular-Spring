@@ -1,16 +1,66 @@
-mat-card {  width: 100%;  height:100%;  margin: 10px 10px -10px 10px ; }
+mat-card {
+  width: 100%;
+  margin: 10px 10px -10px 10px;
+}
 
-mat-card-content { overflow: auto; height: 100%; }
+mat-card-content {
+  overflow: auto;
+}
 
-mat-card-header { background: #c0d9c3; }
+mat-card-header {
+  background: #fff3ee;
+  color: #000000;
+  padding: 16px;
+  padding-left: 20px;
+}
 
-#loading img{ width: 30px; height: 25px; margin-left: 200px;}
+button#new_sup {
+  background: #444481;
+  color: white;
+  margin-top: 15px;
+  padding: 20px;
+  margin-left: 15px;
+  border: 1px solid #4444f8;
+}
 
-.csearch{   height: 40px;   width: 100%;  margin-top: 5px;    }
+button#new_sup:hover {
+  color: #4444f8;
+  background: white;
+  border: 1px solid #4444f8;
 
-#ssearch mat-card-content{   padding-top: 30px; }
+}
 
-#ssearch mat-form-field { padding-left: 15px; width: 200px; }
+#loading img {
+  width: 30px;
+  height: 25px;
+  margin-left: 200px;
+}
 
-#ssearch button{ width: 195px; margin-left:10px; margin-top: 5px; background-color: #435f3b;   }
+.csearch {
+  height: 40px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+#ssearch mat-card-content {
+  padding-top: 30px;
+}
+
+#ssearch mat-form-field {
+  padding-left: 15px;
+  width: 200px;
+}
+
+#ssearch button {
+  width: 195px;
+  margin-left: 10px;
+  margin-top: 5px;
+  background-color: #6472d5;
+}
+
+.selected-row {
+  background-color: #c9e6ff !important;
+}
+
+
 

@@ -8,24 +8,25 @@ mat-card-content {
 }
 
 mat-card-header {
-  background: #dee2f3;
+  background: #fff3ee;
   color: #000000;
   padding: 16px;
   padding-left: 20px;
 }
 
 button#new_emp {
-  background: #2a2a60;
+  background: #444481;
   color: white;
   margin-top: 15px;
   padding: 20px;
   margin-left: 15px;
+  border: 1px solid #4444f8;
 }
 
 button#new_emp:hover {
-  color: #2a2a60;
+  color: #4444f8;
   background: white;
-  border: 2px solid #2a2a60;
+  border: 1px solid #4444f8;
 
 }
 
@@ -54,12 +55,9 @@ button#new_emp:hover {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #3f50a2;
+  background-color: #6472d5;
 }
 
 .selected-row {
   background-color: #c9e6ff !important;
 }
-
-
-
