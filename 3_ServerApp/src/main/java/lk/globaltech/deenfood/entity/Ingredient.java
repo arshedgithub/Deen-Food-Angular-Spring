@@ -7,6 +7,7 @@ import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -56,6 +57,8 @@ public class Ingredient {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
+    @OneToMany(mappedBy = "ingredient")
+    private Collection<Poitem> poitems;
 
     public Integer getId() {
         return id;
@@ -174,5 +177,13 @@ public class Ingredient {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Collection<Poitem> getPoitems() {
+        return poitems;
+    }
+
+    public void setPoitems(Collection<Poitem> poitems) {
+        this.poitems = poitems;
     }
 }
