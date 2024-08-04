@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {Employee} from "../../../../entity/employee";
 import {EmployeeService} from "../../../../service/employeeservice";
 import {MatPaginator} from "@angular/material/paginator";
@@ -29,17 +29,19 @@ import {EmployeeFormComponent} from "../employee-form/employee-form.component";
 
 export class EmployeeComponent {
 
-  columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname', 'modi'];
-  headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name', 'Modification'];
-  binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname', 'getModi()'];
+  columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname', 'edit','del'];
+  headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name', '', ''];
+  binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname', '',''];
 
-  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname', 'csmodi'];
+  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname','csempty1','csempty2'];
   csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender',
-    'Search by Designation', 'Search by Full Name', 'modi'];
+    'Search by Designation', 'Search by Full Name'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
   public form!: FormGroup;
+
+  @Input() selectedRow!: any;
 
   employee!: Employee;
   employees: Array<Employee> = [];
@@ -76,8 +78,7 @@ export class EmployeeComponent {
       "cscallingname": new FormControl(),
       "csgender": new FormControl(),
       "csdesignation": new FormControl(),
-      "csname": new FormControl(),
-      "csmodi": new FormControl(),
+      "csname": new FormControl()
     });
 
     this.ssearch = this.fb.group({
@@ -117,17 +118,18 @@ export class EmployeeComponent {
 
   }
 
+  editSelectedEmployee(row: any) {
+    this.editEmployee(row);
+  }
+
+  deleteSelectedEmployee(row: any) {
+    this.delete(row);
+  }
+
   createView() {
     this.imageurl = 'assets/pending.gif';
     this.loadTable("");
   }
-
-
-  // enableButtons(add:boolean, upd:boolean, del:boolean){
-  //   this.enaadd=add;
-  //   this.enaupd=upd;
-  //   this.enadel=del;
-  // }
 
 
   loadTable(query: string) {
@@ -148,11 +150,9 @@ export class EmployeeComponent {
 
   }
 
-
   getModi(element: Employee) {
     return element.number + '(' + element.callingname + ')';
   }
-
 
   filterTable(): void {
 
@@ -213,7 +213,9 @@ export class EmployeeComponent {
   }
 
 
-  delete() {
+  delete(employee:Employee) {
+
+    this.employee = employee;
 
     const confirm = this.dg.open(ConfirmComponent, {
       width: '500px',
@@ -262,7 +264,7 @@ export class EmployeeComponent {
       width: '400px',
       data: {
         title: title,
-        employee: employee
+        employee: employee,
       }
     });
     popup.afterClosed().subscribe(item => this.loadTable(""));
@@ -273,7 +275,8 @@ export class EmployeeComponent {
   }
 
   addEmployee(){
-    this.openPopup(0, "Add Employee")
+   this.openPopup(0, "Add Employee");
+
   }
 
 }
