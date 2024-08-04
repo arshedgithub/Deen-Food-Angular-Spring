@@ -84,6 +84,7 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Supplier> suppliers;
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Purchaseorder> purchaseorders;
 

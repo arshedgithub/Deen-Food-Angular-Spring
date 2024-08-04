@@ -1,5 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -15,6 +17,7 @@ public class Poitem {
     @Basic
     @Column(name = "expected_linecost")
     private BigDecimal expectedLinecost;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "purchaseorder_id", referencedColumnName = "id", nullable = false)
     private Purchaseorder purchaseorder;

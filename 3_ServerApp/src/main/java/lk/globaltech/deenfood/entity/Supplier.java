@@ -70,6 +70,7 @@ public class Supplier {
     @JsonIgnore
     @OneToMany(mappedBy = "supplier")
     private Collection<Supplieringcategory> supplieringcategories;
+    @JsonIgnore
     @OneToMany(mappedBy = "supplier")
     private Collection<Purchaseorder> purchaseorders;
 

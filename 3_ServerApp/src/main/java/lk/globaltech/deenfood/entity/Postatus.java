@@ -1,5 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -12,6 +14,7 @@ public class Postatus {
     @Basic
     @Column(name = "name")
     private String name;
+    @JsonIgnore
     @OneToMany(mappedBy = "postatus")
     private Collection<Purchaseorder> purchaseorders;
 
