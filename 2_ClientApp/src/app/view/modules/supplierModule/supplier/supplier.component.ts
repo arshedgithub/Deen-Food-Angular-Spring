@@ -22,11 +22,11 @@ import {SupplierFormComponent} from "../supplier-form/supplier-form.component";
 })
 export class SupplierComponent {
 
-  columns: string[] = ['regno', 'name', 'telephone', 'supplierstatus', 'employee', 'action'];
-  headers: string[] = ['Reg. No', 'Name', 'Telephone', 'Supplier Status', 'Employee', 'Action'];
-  binders: string[] = ['regno', 'name', 'telephone', 'supplierstatus.name', 'employee.fullname', '<td>edit</td>'];
+  columns: string[] = ['regno', 'name', 'telephone', 'supplierstatus', 'employee', 'edit', 'delete'];
+  headers: string[] = ['Reg. No', 'Name', 'Telephone', 'Supplier Status', 'Employee', '', ''];
+  binders: string[] = ['regno', 'name', 'telephone', 'supplierstatus.name', 'employee.fullname', '', ''];
 
-  cscolumns: string[] = ['csRegNo', 'csName', 'csTelephone', 'csSupplierStatus', 'csEmployee'];
+  cscolumns: string[] = ['csRegNo', 'csName', 'csTelephone', 'csSupplierStatus', 'csEmployee', 'csempty1', 'csempty2'];
   csprompts: string[] = ['Search by Registration Number', 'Search by Name', 'Search by Telephone',
     'Search by Supplier Status', 'Search by Employee'];
 
@@ -183,7 +183,9 @@ export class SupplierComponent {
   }
 
 
-  delete() {
+  delete(supplier: Supplier) {
+
+    this.supplier = supplier;
 
     const confirm = this.dialog.open(ConfirmComponent, {
       width: '500px',

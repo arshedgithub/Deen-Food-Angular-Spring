@@ -21,6 +21,9 @@ import {EmployeeService} from "../../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
 import {MessageComponent} from "../../../../util/dialog/message/message.component";
 import {Subscription} from "rxjs";
+import {SupplierFormComponent} from "../../supplierModule/supplier-form/supplier-form.component";
+import {Supplier} from "../../../../entity/supplier";
+import {IngredientFormComponent} from "../ingredient-form/ingredient-form.component";
 
 @Component({
   selector: 'app-ingredient',
@@ -29,12 +32,12 @@ import {Subscription} from "rxjs";
 })
 export class IngredientComponent {
 
-  columns: string[] = ['id', 'name', 'brand_id', 'qoh', 'rop', 'cost'];
-  headers: string[] = ['Id', 'Name', 'Brand', 'Quantity', 'Re-Order Point', 'Cost'];
-  binders: string[] = ['id', 'name', 'brand.name', 'qoh', 'rop', 'cost'];
+  columns: string[] = ['id', 'name', 'brand_id', 'qoh', 'cost', 'edit', 'delete'];
+  headers: string[] = ['Id', 'Name', 'Brand', 'Quantity', 'Cost', '', ''];
+  binders: string[] = ['id', 'name', 'brand.name', 'qoh', 'cost', '', ''];
 
-  cscolumns: string[] = ['csid', 'csname', 'csbrand', 'csqoh', 'csrop', 'cscost' ];
-  csprompts: string[] = ['Search by Id', 'Search by Name', 'Search By Brand', 'Search by quantity', 'Search by Reorder Point ', 'Search by Cost'];
+  cscolumns: string[] = ['csid', 'csname', 'csbrand', 'csqoh', 'cscost', 'csempty1', 'csempty2' ];
+  csprompts: string[] = ['Search by Id', 'Search by Name', 'Search By Brand', 'Search by quantity', 'Search by Cost'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -45,38 +48,26 @@ export class IngredientComponent {
   enadel: boolean = false;
 
   ingredient!: Ingredient;
-  oldingredient!: Ingredient;
 
   ingredients: Array<Ingredient> = [];
   data!: MatTableDataSource<Ingredient>;
   imageurl: string = '';
-  imageingurl: string = 'assets/default.png';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  regexes!: any;
   uiassist: UiAssist;
-  col!: {[p: string]: any;}
-  itemNameSubs!: Subscription;
-  selectedRow!: any;
 
   ingredientStatuses: Array<Ingstatus> = [];
   ingredientCategories: Array<Ingcategory> = [];
   brands: Array<Brand> = [];
-  unittypes: Array<Unittype> = [];
-  employees: Array<Employee> = [];
 
   constructor(
     private is: IngredientService,
     private fb: FormBuilder,
     private ingStat: IngredientStatusService,
-    private ingcat: IngredientCategoryService,
-    private br: BrandService,
-    private uns: UnittypeService,
-    private rxs: RegexService,
-    private emps: EmployeeService,
+    private ingCat: IngredientCategoryService,
+    private ingBrand: BrandService,
     private dialog: MatDialog,
-    private dp: DatePipe,
   ){
 
     this.uiassist = new UiAssist(this);
@@ -86,7 +77,6 @@ export class IngredientComponent {
       'csname': new FormControl(),
       'csbrand': new FormControl(),
       'csqoh': new FormControl(),
-      'csrop': new FormControl(),
       'cscost': new FormControl(),
     });
 
@@ -96,21 +86,6 @@ export class IngredientComponent {
       'ssingcategory': new FormControl(),
       'ssingstatus': new FormControl()
     });
-
-    this.form = this.fb.group({
-      'ingcategory': new FormControl('', Validators.required),
-      'brand': new FormControl('', Validators.required),
-      'name': new FormControl('', Validators.required),
-      'description': new FormControl('', Validators.required),
-      'photo': new FormControl('', Validators.required),
-      'unittype': new FormControl('', Validators.required),
-      'qoh': new FormControl('', Validators.required),
-      'rop': new FormControl('', Validators.required),
-      'cost': new FormControl('', Validators.required),
-      'ingstatus': new FormControl('', Validators.required),
-      'dointroduced': new FormControl({value: new Date(), disabled: false}, Validators.required),
-      'employee': new FormControl('', Validators.required),
-    });
   }
 
   ngOnInit() {
@@ -119,69 +94,15 @@ export class IngredientComponent {
 
   initialize() {
     this.createView();
-
+    //
     this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
-    this.ingcat.getAllList("").then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
-    this.uns.getAllList("").then((units: Unittype[]) => {this.unittypes = units});
-    this.emps.getAll("").then((employees: Employee[]) => {this.employees = employees});
-
-    this.rxs.get("ingredients").then((regexs: []) => {
-      this.regexes = regexs;
-      this.createForm();
-    });
-
-    this.filterBrands();
-    this.getItemName();
-    this.changeRadioColor();
+    this.ingCat.getAllList("").then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
+    this.ingBrand.getAllList("").then((ingBrands: Brand[]) => {this.brands = ingBrands});
   }
 
   createView() {
     this.imageurl = 'assets/pending.gif';
     this.loadTable("");
-  }
-
-  createForm(): void {
-    this.form.controls['ingcategory'].setValidators([Validators.required]);
-    this.form.controls['brand'].setValidators([Validators.required]);
-    this.form.controls['name'].setValidators([Validators.required, Validators.pattern(this.regexes['name']['regex'])]);
-    this.form.controls['unittype'].setValidators([Validators.required]);
-    this.form.controls['description'].setValidators([Validators.required]);
-    this.form.controls['photo'].setValidators([Validators.required]);
-    this.form.controls['qoh'].setValidators([Validators.required, Validators.pattern(this.regexes['qoh']['regex'])]);
-    this.form.controls['rop'].setValidators([Validators.required, Validators.pattern(this.regexes['rop']['regex'])]);
-    this.form.controls['cost'].setValidators([Validators.required, Validators.pattern(this.regexes['cost']['regex'])]);
-    this.form.controls['ingstatus'].setValidators([Validators.required]);
-    this.form.controls['dointroduced'].setValidators([Validators.required, Validators.pattern(this.regexes['dointroduced']['regex'])]);
-    this.form.controls['employee'].setValidators([Validators.required]);
-
-    Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
-
-    for (const controlName in this.form.controls) {
-      const control = this.form.controls[controlName];
-      control.valueChanges.subscribe(value => {
-          // @ts-ignore
-          if (controlName == "dointroduced")
-            value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
-
-          if (this.oldingredient != undefined && control.valid) {
-            // @ts-ignore
-            if (value === this.ingredient[controlName]) {
-              control.markAsPristine();
-            } else {
-              control.markAsDirty();
-            }
-          } else {
-            control.markAsPristine();
-          }
-      });
-    }
-    this.enableButtons(true,false,false);
-  }
-
-  enableButtons(add:boolean, upd:boolean, del:boolean){
-    this.enaadd=add;
-    this.enaupd=upd;
-    this.enadel=del;
   }
 
   loadTable(query: string) {
@@ -202,7 +123,7 @@ export class IngredientComponent {
 
   }
 
-  filterTable():void {
+  filterTable(): void {
     const cssearchdata = this.csearch.getRawValue();
 
     console.log(cssearchdata);
@@ -255,306 +176,9 @@ export class IngredientComponent {
     });
   }
 
-  filterBrands(): void {
-    this.form.get("ingcategory")?.valueChanges.subscribe((cat: Ingcategory) => {
-      let qry = '?categoryid=' + cat.id;
-      this.br.getAllList(qry).then((brands: Brand[]) => {this.brands = brands});
-    });
-  }
+  delete(ingredient: Ingredient) {
 
-  getItemName(): void {
-    // @ts-ignore
-    this.itemNameSubs = this.form.get("brand")?.valueChanges.subscribe((brand: Brand) => {
-      this.form.get("name")?.setValue(brand.name);
-    });
-  }
-
-  changeRadioColor(): void {
-    this.form.get("unittype")?.valueChanges.subscribe(() => {
-      let sts = this.form.get("unittype")?.invalid;
-      if (!sts) this.col = {"border": "1px solid grey"}
-      else this.col = {"border": "1px solid #e15959"}
-    });
-  }
-
-  selectImage(e: any): void {
-    if (e.target.files) {
-      let reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (event: any) => {
-        this.imageingurl = event.target.result;
-        this.form.controls['photo'].clearValidators();
-      }
-    }
-  }
-
-  clearImage(): void {
-    this.imageingurl = 'assets/default.png';
-    this.form.controls['photo'].setErrors({'required': true});
-  }
-
-  getErrors(): string {
-    let errors: string = "";
-
-    for (const controlName in this.form.controls) {
-      const control = this.form.controls[controlName];
-      if (control.errors) {
-        if (this.regexes[controlName] != undefined) {
-          errors = errors + "<br>" + this.regexes[controlName]['message'];
-        } else {
-          errors = errors + "<br>Invalid " + controlName;
-        }
-      }
-    }
-    return errors;
-  }
-
-  add() {
-
-    let errors = this.getErrors();
-
-    if (errors != "") {
-      const errmsg = this.dialog.open(MessageComponent, {
-        width: '500px',
-        data: {heading: "Errors - Ingredient Add ", message: "You have following Errors <br> " + errors}
-      });
-      errmsg.afterClosed().subscribe(async result => {
-        if (!result) {
-          return;
-        }
-      });
-    } else {
-
-      this.ingredient = this.form.getRawValue();
-      this.ingredient.photo = btoa(this.imageingurl);
-
-      let ingdata: string = "";
-
-      ingdata = ingdata + "<br>Name is : " + this.ingredient.name;
-      ingdata = ingdata + "<br>" + this.ingredient.description;
-
-      const confirm = this.dialog.open(ConfirmComponent, {
-        width: '500px',
-        data: {
-          heading: "Confirmation - Ingredient Add",
-          message: "Are you sure to Add the following Ingredient? <br> <br>" + ingdata
-        }
-      });
-
-      let addstatus: boolean = false;
-      let addmessage: string = "Server Not Found";
-
-      confirm.afterClosed().subscribe(async result => {
-        if (result) {
-          // console.log("EmployeeService.add(emp)");
-
-          this.is.add(this.ingredient).then((response: [] | undefined) => {
-            //console.log("Res-" + response);
-            //console.log("Un-" + response == undefined);
-            if (response != undefined) { // @ts-ignore
-              console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
-              // @ts-ignore
-              addstatus = response['errors'] == "";
-              console.log("Add Sta-" + addstatus);
-              if (!addstatus) { // @ts-ignore
-                addmessage = response['errors'];
-              }
-            } else {
-              console.log("undefined");
-              addstatus = false;
-              addmessage = "Content Not Found"
-            }
-          }).finally(() => {
-
-            if (addstatus) {
-              addmessage = "Successfully Saved";
-              this.form.reset();
-              this.clearImage();
-              Object.values(this.form.controls).forEach(control => {
-                control.markAsTouched();
-              });
-              this.loadTable("");
-            }
-
-            const stsmsg = this.dialog.open(MessageComponent, {
-              width: '500px',
-              data: {heading: "Status -Ingredient Add", message: addmessage}
-            });
-
-            stsmsg.afterClosed().subscribe(async result => {
-              if (!result) {
-                return;
-              }
-            });
-          });
-        }
-      });
-    }
-  }
-  clear():void{
-    const confirm = this.dialog.open(ConfirmComponent, {
-      width: '500px',
-      data: {
-        heading: "Confirmation - Ingredient Clear",
-        message: "Are you sure to Clear following Details ? <br> <br>"
-      }
-    });
-
-    confirm.afterClosed().subscribe(async result => {
-      if (result) {
-        this.form.reset()
-      }
-    });
-  }
-
-  fillForm(ingredient: Ingredient) {
-
-    this.selectedRow=ingredient;
-    this.ingredient = JSON.parse(JSON.stringify(ingredient));
-    this.oldingredient = JSON.parse(JSON.stringify(ingredient));
-
-    console.log("Row : ", this.selectedRow);
-    console.log(this.ingredient);
-
-    if (this.ingredient.photo != null) {
-      this.imageingurl = atob(this.ingredient.photo);
-      this.form.controls['photo'].clearValidators();
-    } else {
-      this.clearImage();
-    }
-    this.ingredient.photo = "";
-    this.itemNameSubs.unsubscribe();
-
-    this.form.get("ingcategory")?.valueChanges.subscribe((category: Ingcategory) => {
-      let qry  = "?categoryid=" + category.id;
-      this.br.getAllList(qry).then((brands: Brand[]) => {
-        // console.log(brands)
-        this.brands = brands;
-        // @ts-ignore
-        // this.ingredient.brand = this.brands.find(b => {
-        //   console.log(b, this.ingredient)
-        //   b.id === this.ingredient.brand.id   // brand undefined
-        // });
-        // @ts-ignore
-        this.ingredient.unittype = this.unittypes.find(u => u.id === this.ingredient.unittype.id);
-        // @ts-ignore
-        this.ingredient.ingstatus = this.ingredientStatuses.find(i => i.id === this.ingredient.ingstatus.id);
-        // @ts-ignore
-        this.ingredient.employee = this.employees.find(e => e.id === this.ingredient.employee.id);
-        // @ts-ignore
-        this.ingredient.brand = this.brands.find(e => e.id === this.ingredient.brand.id);
-
-        this.form.patchValue(this.ingredient);
-        this.form.markAsPristine();
-
-        this.enableButtons(false,true,true);
-
-      });
-    });
-    // @ts-ignore
-    this.ingredient.ingcategory = this.ingredientCategories.find(c => c.id === this.ingredient.ingcategory.id);
-    this.form.controls['ingcategory'].setValue(this.ingredient.ingcategory);
-  }
-
-  getUpdates(): string {
-
-    let updates: string = "";
-    for (const controlName in this.form.controls) {
-      const control = this.form.controls[controlName];
-      if (control.dirty) {
-        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
-      }
-    }
-    return updates;
-  }
-
-
-  update() {
-
-    let errors = this.getErrors();
-
-    if (errors != "") {
-
-      const errmsg = this.dialog.open(MessageComponent, {
-        width: '500px',
-        data: {heading: "Errors - Ingredient Update ", message: "You have following Errors <br> " + errors}
-      });
-      errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
-    } else {
-
-      let updates: string = this.getUpdates();
-
-      if (updates != "") {
-
-        let updstatus: boolean = false;
-        let updmessage: string = "Server Not Found";
-
-        const confirm = this.dialog.open(ConfirmComponent, {
-          width: '500px',
-          data: {
-            heading: "Confirmation - Ingredient Update",
-            message: "Are you sure to Save folowing Updates? <br> <br>" + updates
-          }
-        });
-        confirm.afterClosed().subscribe(async result => {
-          if (result) {
-            //console.log("EmployeeService.update()");
-            this.ingredient = this.form.getRawValue();
-            if (this.form.controls['photo'].dirty) this.ingredient.photo = btoa(this.imageingurl);
-            else this.ingredient.photo = this.oldingredient.photo;
-            this.ingredient.id = this.oldingredient.id;
-
-            this.is.update(this.ingredient).then((response: [] | undefined) => {
-              if (response != undefined) { // @ts-ignore
-                //console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
-                // @ts-ignore
-                updstatus = response['errors'] == "";
-                //console.log("Upd Sta-" + updstatus);
-                if (!updstatus) { // @ts-ignore
-                  updmessage = response['errors'];
-                }
-              } else {
-                //console.log("undefined");
-                updstatus = false;
-                updmessage = "Content Not Found"
-              }
-            } ).finally(() => {
-              if (updstatus) {
-                updmessage = "Successfully Updated";
-                this.form.reset();
-                this.clearImage();
-                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-                this.loadTable("");
-              }
-
-              const stsmsg = this.dialog.open(MessageComponent, {
-                width: '500px',
-                data: {heading: "Status -Ingredient Add", message: updmessage}
-              });
-              stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
-            });
-          }
-        });
-      }
-      else {
-
-        const updmsg = this.dialog.open(MessageComponent, {
-          width: '500px',
-          data: {heading: "Confirmation - Ingredient Update", message: "Nothing Changed"}
-        });
-        updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
-      }
-    }
-
-
-  }
-
-
-
-  delete() {
+    this.ingredient = ingredient;
 
     const confirm = this.dialog.open(ConfirmComponent, {
       width: '500px',
@@ -584,7 +208,7 @@ export class IngredientComponent {
           if (delstatus) {
             delmessage = "Successfully Deleted";
             this.form.reset();
-            this.clearImage();
+            // this.clearImage();
             Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
             this.loadTable("");
           }
@@ -600,5 +224,23 @@ export class IngredientComponent {
     });
   }
 
+  openPopup(ingredient: any, title: any): void {
+    var popup = this.dialog.open(IngredientFormComponent, {
+      width: '400px',
+      data: {
+        title: title,
+        ingredient: ingredient
+      }
+    });
+    popup.afterClosed().subscribe(item => this.loadTable(""));
+  }
+
+  addIngredient(){
+    this.openPopup(0, "Add Ingredient");
+  }
+
+  editIngredient(ingredient: Ingredient){
+    this.openPopup(ingredient, "Edit Ingredient");
+  }
 
 }

@@ -6,7 +6,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {SupplierstatusService} from "../../../../service/supplierstatusservice";
 import {EmployeeService} from "../../../../service/employeeservice";
 import {DatePipe} from "@angular/common";
-import {MAT_DIALOG_DATA, MatDialog} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {RegexService} from "../../../../service/regexservice";
 import {AuthorizationManager} from "../../../../service/authorizationmanager";
 import {UiAssist} from "../../../../util/ui/ui.assist";
@@ -43,6 +43,7 @@ export class SupplierFormComponent {
     private datePipe: DatePipe,
     private dialog: MatDialog,
     public authService:AuthorizationManager,
+    public dialogRef: MatDialogRef<SupplierFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.uiassist = new UiAssist(this);
@@ -71,21 +72,21 @@ export class SupplierFormComponent {
 
   initialize() {
 
-    this.supStatusService.getAllList().then((statuses: SupplierStatus[]) => {
-      this.supplierStatuses = statuses;
-    });
-
-    this.employeeService.getAllListNameId().then((employees: Employee[]) => {
-      this.employees = employees;
-    });
-
     this.rxs.get('suppliers').then((regs: []) => {
       this.regexes = regs;
       this.createForm();
     });
 
+    const loadStatuses = this.supStatusService.getAllList().then((statuses: SupplierStatus[]) => {
+      this.supplierStatuses = statuses;
+    });
+
+    const loadEmployees = this.employeeService.getAllListNameId().then((employees: Employee[]) => {
+      this.employees = employees;
+    });
+
     this.popupTitle = this.data.title;
-    if (this.popupTitle == "Edit Supplier") this.fillForm(this.data.supplier);
+    if (this.popupTitle == "Edit Supplier") Promise.all([loadEmployees, loadStatuses]).then(() => this.fillForm(this.data.supplier));
 
   }
 
@@ -210,6 +211,7 @@ export class SupplierFormComponent {
             if (addstatus) {
               addmessage = "Successfully Saved";
               this.form.reset();
+              this.onCloseForm();
               Object.values(this.form.controls).forEach(control => {
                 control.markAsTouched();
               });
@@ -315,6 +317,8 @@ export class SupplierFormComponent {
               if (updstatus) {
                 updmessage = "Successfully Updated";
                 this.form.reset();
+                this.onCloseForm();
+
                 Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
                 // this.loadTable("");
               }
@@ -353,8 +357,13 @@ export class SupplierFormComponent {
     confirm.afterClosed().subscribe(async result => {
       if (result) {
         this.form.reset();
+        this.onCloseForm();
       }
     });
+  }
+
+  onCloseForm(): void {
+    this.dialogRef.close();
   }
 
 }

@@ -69,30 +69,37 @@
 
       <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
         <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
-        <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+        <mat-cell *matCellDef="let element">
+          <div *ngIf="i < binders.length - 2" [innerHTML]="uiassist.getProperty(element, binders[i])"></div>
+          <div *ngIf="i >= binders.length - 2 && i < binders.length - 1 ">
+            <button mat-raised-button id="editBtn" (click)="editEmployee(element)">
+              <mat-icon>edit</mat-icon>Edit
+            </button>
+          </div>
+          <div *ngIf="i >= binders.length - 1">
+            <button mat-raised-button id="delBtn" (click)="delete(element)">
+              <mat-icon>delete</mat-icon>Delete
+            </button>
+          </div>
+        </mat-cell>
       </ng-container>
-
-      <!--          <ng-container matColumnDef="edit">-->
-      <!--            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>-->
-      <!--            <mat-cell *matCellDef="let element">{{element.edit}}</mat-cell>-->
-      <!--          </ng-container>-->
 
       <ng-container *ngFor="let cscolumn of cscolumns;let i = index;" [matColumnDef]="cscolumn">
         <mat-header-cell *matHeaderCellDef>
           <mat-form [formGroup]="csearch" class="csearch">
-            <mat-form-field appearance="outline">
-              <mat-label>{{csprompts[i]}}</mat-label>
-              <input matInput [formControlName]="cscolumn"
-                     (keyup)="filterTable()">
-            </mat-form-field>
+            <div *ngIf="i<cscolumns.length-2">
+              <mat-form-field appearance="outline">
+                <mat-label>{{csprompts[i]}}</mat-label>
+                <input matInput [formControlName]="cscolumn" (keyup)="filterTable()">
+              </mat-form-field>
+            </div>
           </mat-form>
         </mat-header-cell>
       </ng-container>
 
       <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
       <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>
-      <mat-row *matRowDef="let row; columns: columns;" (click)="editEmployee(row)"
-               [ngClass]="{'selected-row': row === selectedrow}"></mat-row>
+      <mat-row *matRowDef="let row; columns: columns;"></mat-row>
 
     </mat-table>
 

@@ -1,0 +1,97 @@
+<div id="ingredientDialog">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{popupTitle}}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content id="ingform">
+      <form [formGroup]="form">
+        <mat-form-field appearance="outline">
+          <mat-label>Select a Category</mat-label>
+          <mat-select formControlName="ingcategory">
+            <mat-option value="null">Not Selected</mat-option>
+            <mat-option *ngFor="let category of ingredientCategories" [value]="category">{{category.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Select a Brand</mat-label>
+          <mat-select formControlName="brand">
+            <mat-option value="null">Not Selected</mat-option>
+            <mat-option *ngFor="let brand of brands" [value]="brand">{{brand.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Ingredient Name</mat-label>
+          <input matInput formControlName="name">
+        </mat-form-field>
+
+        <div id="radio">
+          <mat-radio-group formControlName="unittype">
+            <mat-radio-button *ngFor="let unit of unittypes" [value]="unit">{{unit.name}}</mat-radio-button>
+          </mat-radio-group>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description">
+        </mat-form-field>
+
+        <div id="imgpanel">
+          <img [src]="imageingurl">
+          <input id="userImage" hidden="hidden" (change)="selectImage($event)" Select type="file"
+                 formControlName="photo">
+          <label for="userImage" id="selectbutton">Select</label>
+          <label id="clearbutton" (click)="clearImage()">Clear</label>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Qunatity</mat-label>
+          <input matInput formControlName="qoh">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>ROP</mat-label>
+          <input matInput formControlName="rop">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cost</mat-label>
+          <input matInput formControlName="cost">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Select Ingredient Status</mat-label>
+          <mat-select formControlName="ingstatus">
+            <mat-option value="null">Not Selected</mat-option>
+            <mat-option *ngFor="let status of ingredientStatuses" [value]="status">{{status.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Introduced Date</mat-label>
+          <input matInput [matDatepicker]="dateintro" formControlName="dointroduced">
+          <mat-datepicker-toggle matIconSuffix [for]="dateintro"></mat-datepicker-toggle>
+          <mat-datepicker #dateintro></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Select an Employee</mat-label>
+          <mat-select formControlName="employee">
+            <mat-option value="null">Not Selected</mat-option>
+            <mat-option *ngFor="let employee of employees" [value]="employee">{{employee.fullname}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div id="butpanel">
+          <button mat-raised-button (click)="add()" [disabled]="!true">Add</button>
+          <button mat-raised-button (click)="clear()">Clear</button>
+          <button mat-raised-button (click)="update()" [disabled]="!true">Update</button>
+        </div>
+
+      </form>
+    </mat-card-content>
+
+  </mat-card>
+</div>
