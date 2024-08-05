@@ -1,97 +1,68 @@
-mat-card {  width: 100%;  height:100%;  margin: 10px 10px -10px 10px ; }
-
-mat-card-content { overflow: auto; height: 100%; }
-
-mat-card-header { background: #c0d9c3; }
-
-#loading img{ width: 30px; height: 25px; margin-left: 200px;}
-
-.csearch{   height: 40px;   width: 100%;  margin-top: 5px;    }
-
-#ssearch mat-card-content{   padding-top: 30px; }
-
-#ssearch mat-form-field { padding-left: 15px; width: 200px; }
-
-#ssearch button{ width: 195px; margin-left:10px; margin-top: 5px; background-color: #435f3b;   }
-
-
-
-/* Ingredient Form */
-#ingform {
-  padding-top: 20px;
+mat-card {
+  width: 100%;
+  margin: 10px 10px -10px 10px;
 }
 
-#radio {
-  border: 1px solid #e15959;
-  border-radius: 5px;
-  padding: 2%;
-  width: 95%;
-  margin-left: -4px;
-  margin-bottom: 7%;
+mat-card-content {
+  overflow: auto;
 }
 
-/* Ingredient Form > Photo Panel  */
-#imgpanel {
-  height: 100px;
-  margin-bottom: 30px;
+mat-card-header {
+  background: #bbdefb;
+  padding: 16px;
+  padding-left: 20px;
 }
 
-#imgpanel img{
-  height: 100px;
-  width: 100px;
-}
-
-#selectbutton, #clearbutton{
-  width: 150px;
-  display: block;
-  margin-left: 150px;
-  margin-bottom: 5px;
-  background-color: darkolivegreen;
+button#new_ing {
+  background: #1565c0;
   color: white;
-  padding: 8px;
-  border-radius: 5px;
-  text-align: center;
+  margin-top: 15px;
+  padding: 20px;
+  margin-left: 15px;
 }
 
-#selectbutton{
-  margin-top: -100px;
+#loading img {
+  width: 30px;
+  height: 25px;
+  margin-left: 200px;
 }
 
-
-/* Employee Form > Button Panel  */
-#butpanel{  margin-top: 30px;
-  margin-bottom: 30px;
+.csearch {
+  height: 40px;
+  width: 100%;
+  margin-top: 5px;
 }
 
-#butpanel button{
-  width: 82px;
-  margin:3px;
-  background-color: #435f3b;
-  color: white;
+#ssearch mat-card-content {
+  padding-top: 30px;
 }
 
-
-.selected-row{
-  background-color: #c9e6ff!important;
+#ssearch mat-form-field {
+  padding-left: 15px;
+  width: 200px;
 }
 
-.mat-row:hover {
-  background-color: inherit!important;
+#ssearch button {
+  width: 195px;
+  margin-left: 10px;
+  margin-top: 5px;
+  background-color: #1565c0;
 }
 
-#ingform mat-form-field .ng-dirty{
-  background-color: gold;
+.selected-row {
+  background-color: #c9e6ff !important;
 }
 
-
-button:disabled {
-  opacity: 0.5;
+#editBtn {
+  color: blue;
+  border: 1px solid blue;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
-#ingform mat-form-field .ng-valid,
-.ng-valid.required {
-  background-color: lightgreen;
+#delBtn {
+  border: 1px solid red;
+  color: red;
+  margin-left: 0px;
+  margin-right: 0px;
 }
-
-
-

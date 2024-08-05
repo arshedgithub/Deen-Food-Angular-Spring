@@ -84,11 +84,6 @@
         </mat-cell>
       </ng-container>
 
-      <!--          <ng-container matColumnDef="edit">-->
-      <!--            <mat-header-cell *matHeaderCellDef>Edit</mat-header-cell>-->
-      <!--            <mat-cell *matCellDef="let element">{{element.edit}}</mat-cell>-->
-      <!--          </ng-container>-->
-
       <ng-container *ngFor="let cscolumn of cscolumns;let i = index;" [matColumnDef]="cscolumn">
         <mat-header-cell *matHeaderCellDef>
           <mat-form [formGroup]="csearch" class="csearch">

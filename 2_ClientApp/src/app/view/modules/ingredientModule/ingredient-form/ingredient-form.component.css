@@ -1,0 +1,73 @@
+#ingredientDialog {
+  height: 400px !important;
+  position: relative;
+  overflow: hidden;
+}
+
+mat-card {
+  height: 100%;
+  position: absolute;
+  overflow-y: auto;
+}
+
+/* Ingredient Form */
+#ingform {
+  padding: 30px;
+}
+
+/* Ingredient Form > Photo Panel  */
+#imgpanel {
+  height: 100px;
+  margin-bottom: 30px;
+}
+
+#imgpanel img{
+  height: 100px;
+  width: 100px;
+}
+
+#selectbutton, #clearbutton{
+  width: 150px;
+  display: block;
+  margin-left: 150px;
+  margin-bottom: 5px;
+  background-color: #1976d2;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+#selectbutton{
+  margin-top: -100px;
+}
+
+
+/* Supplier Form > Button Panel  */
+#butpanel{  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+#butpanel button{
+  width: 82px;
+  margin:3px;
+  background-color: #1976d2;
+  color: white;
+}
+
+.mat-row:hover {
+  background-color: inherit!important;
+}
+
+#ingform mat-form-field .ng-dirty{
+  background-color: gold;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+#ingform mat-form-field .ng-valid,
+.ng-valid.required {
+  background-color: lightgreen;
+}

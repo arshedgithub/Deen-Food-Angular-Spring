@@ -23,7 +23,7 @@ import {SupplierFormComponent} from "../supplier-form/supplier-form.component";
 export class SupplierComponent {
 
   columns: string[] = ['regno', 'name', 'telephone', 'supplierstatus', 'employee', 'edit', 'delete'];
-  headers: string[] = ['Reg. No', 'Name', 'Telephone', 'Supplier Status', 'Employee', 'Edit', 'Delete'];
+  headers: string[] = ['Reg. No', 'Name', 'Telephone', 'Supplier Status', 'Employee', '', ''];
   binders: string[] = ['regno', 'name', 'telephone', 'supplierstatus.name', 'employee.fullname', '', ''];
 
   cscolumns: string[] = ['csRegNo', 'csName', 'csTelephone', 'csSupplierStatus', 'csEmployee', 'csempty1', 'csempty2'];

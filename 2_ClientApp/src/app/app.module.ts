@@ -46,6 +46,7 @@ import { IngredientcountbycategoryComponent } from './report/view/ingredientcoun
 import { SupplierComponent } from './view/modules/supplierModule/supplier/supplier.component';
 import { EmployeeFormComponent } from './view/modules/employeeModule/employee-form/employee-form.component';
 import { SupplierFormComponent } from './view/modules/supplierModule/supplier-form/supplier-form.component';
+import { IngredientFormComponent } from './view/modules/ingredientModule/ingredient-form/ingredient-form.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { SupplierFormComponent } from './view/modules/supplierModule/supplier-fo
     SupplierComponent,
     EmployeeFormComponent,
     SupplierFormComponent,
+    IngredientFormComponent,
   ],
     imports: [
         MatDatepickerModule,
