@@ -8,26 +8,17 @@ mat-card-content {
 }
 
 mat-card-header {
-  background: #fff3ee;
-  color: #000000;
+  background: #bbdefb;
   padding: 16px;
   padding-left: 20px;
 }
 
 button#new_emp {
-  background: #444481;
+  background: #1565c0;
   color: white;
   margin-top: 15px;
   padding: 20px;
   margin-left: 15px;
-  border: 1px solid #4444f8;
-}
-
-button#new_emp:hover {
-  color: #4444f8;
-  background: white;
-  border: 1px solid #4444f8;
-
 }
 
 #loading img {
@@ -55,9 +46,23 @@ button#new_emp:hover {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #6472d5;
+  background-color: #1565c0;
 }
 
 .selected-row {
   background-color: #c9e6ff !important;
+}
+
+#editBtn {
+  color: blue;
+  border: 1px solid blue;
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+#delBtn {
+  border: 1px solid red;
+  color: red;
+  margin-left: 0px;
+  margin-right: 0px;
 }
