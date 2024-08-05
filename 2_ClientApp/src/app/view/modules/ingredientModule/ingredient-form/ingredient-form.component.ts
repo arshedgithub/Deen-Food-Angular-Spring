@@ -1,61 +1,48 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, Inject, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Ingredient} from "../../../../entity/ingredient";
+import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.component";
+import {Ingcategory} from "../../../../entity/ingcategory";
+import {Brand} from "../../../../entity/brand";
+import {MessageComponent} from "../../../../util/dialog/message/message.component";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {Ingstatus} from "../../../../entity/ingstatus";
+import {Unittype} from "../../../../entity/unittype";
+import {Employee} from "../../../../entity/employee";
+import {IngredientService} from "../../../../service/ingredientservice";
+import {IngredientStatusService} from "../../../../service/ingredientstatusservice";
+import {IngredientCategoryService} from "../../../../service/ingredientcategoryservice";
+import {BrandService} from "../../../../service/brandservice";
+import {UnittypeService} from "../../../../service/unittypeservice";
+import {RegexService} from "../../../../service/regexservice";
+import {EmployeeService} from "../../../../service/employeeservice";
+import {DatePipe} from "@angular/common";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
-import {UiAssist} from "../../../util/ui/ui.assist";
-import {IngredientService} from "../../../service/ingredientservice";
-import {Ingredient} from "../../../entity/ingredient";
-import {Ingstatus} from "../../../entity/ingstatus";
-import {Brand} from "../../../entity/brand";
-import {Ingcategory} from "../../../entity/ingcategory";
-import {IngredientStatusService} from "../../../service/ingredientstatusservice";
-import {IngredientCategoryService} from "../../../service/ingredientcategoryservice";
-import {BrandService} from "../../../service/brandservice";
-import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
-import {MatDialog} from "@angular/material/dialog";
-import {RegexService} from "../../../service/regexservice";
-import {UnittypeService} from "../../../service/unittypeservice";
-import {Unittype} from "../../../entity/unittype";
-import {Employee} from "../../../entity/employee";
-import {EmployeeService} from "../../../service/employeeservice";
-import {DatePipe} from "@angular/common";
-import {MessageComponent} from "../../../util/dialog/message/message.component";
+import {UiAssist} from "../../../../util/ui/ui.assist";
 import {Subscription} from "rxjs";
 
 @Component({
-  selector: 'app-ingredient',
-  templateUrl: './ingredient.component.html',
-  styleUrls: ['./ingredient.component.css']
+  selector: 'app-ingredient-form',
+  templateUrl: './ingredient-form.component.html',
+  styleUrls: ['./ingredient-form.component.css']
 })
-export class IngredientComponent {
+export class IngredientFormComponent {
 
-  columns: string[] = ['id', 'name', 'brand_id', 'qoh', 'rop', 'cost'];
-  headers: string[] = ['Id', 'Name', 'Brand', 'Quantity', 'Re-Order Point', 'Cost'];
-  binders: string[] = ['id', 'name', 'brand.name', 'qoh', 'rop', 'cost'];
-
-  cscolumns: string[] = ['csid', 'csname', 'csbrand', 'csqoh', 'csrop', 'cscost' ];
-  csprompts: string[] = ['Search by Id', 'Search by Name', 'Search By Brand', 'Search by quantity', 'Search by Reorder Point ', 'Search by Cost'];
-
-  public csearch!: FormGroup;
-  public ssearch!: FormGroup;
   public form!: FormGroup;
 
-  enaadd: boolean = false;
-  enaupd: boolean = false;
-  enadel: boolean = false;
+  // enaadd: boolean = false;
+  // enaupd: boolean = false;
+  // enadel: boolean = false;
 
   ingredient!: Ingredient;
   oldingredient!: Ingredient;
 
   ingredients: Array<Ingredient> = [];
-  data!: MatTableDataSource<Ingredient>;
-  imageurl: string = '';
   imageingurl: string = 'assets/default.png';
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  popupTitle: any;
   regexes!: any;
-  uiassist: UiAssist;
   col!: {[p: string]: any;}
   itemNameSubs!: Subscription;
   selectedRow!: any;
@@ -65,6 +52,39 @@ export class IngredientComponent {
   brands: Array<Brand> = [];
   unittypes: Array<Unittype> = [];
   employees: Array<Employee> = [];
+
+  ngOnInit() {
+    this.initialize();
+  }
+
+  initialize() {
+
+    const loadStatus = this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {
+      this.ingredientStatuses = ingstats
+    });
+    const loadCategories = this.ingcat.getAllList("").then((ingcats: Ingcategory[]) => {
+      this.ingredientCategories = ingcats
+    });
+    const loadUnits = this.uns.getAllList("").then((units: Unittype[]) => {
+      this.unittypes = units
+    });
+    const loadEmployees = this.emps.getAll("").then((employees: Employee[]) => {
+      this.employees = employees
+    });
+
+    this.rxs.get("ingredients").then((regexs: []) => {
+      this.regexes = regexs;
+      this.createForm();
+    });
+
+    this.popupTitle = this.data.title;
+    if (this.popupTitle == "Edit Ingredient") Promise.all([loadStatus, loadEmployees, loadCategories, loadUnits]).then(() => this.fillForm(this.data.ingredient))
+
+
+    this.filterBrands();
+    this.getItemName();
+    this.changeRadioColor();
+  }
 
   constructor(
     private is: IngredientService,
@@ -77,25 +97,8 @@ export class IngredientComponent {
     private emps: EmployeeService,
     private dialog: MatDialog,
     private dp: DatePipe,
-  ){
-
-    this.uiassist = new UiAssist(this);
-
-    this.csearch = this.fb.group({
-      'csid': new FormControl(),
-      'csname': new FormControl(),
-      'csbrand': new FormControl(),
-      'csqoh': new FormControl(),
-      'csrop': new FormControl(),
-      'cscost': new FormControl(),
-    });
-
-    this.ssearch = this.fb.group({
-      'ssname': new FormControl(),
-      'ssbrand': new FormControl(),
-      'ssingcategory': new FormControl(),
-      'ssingstatus': new FormControl()
-    });
+    public dialogRef: MatDialogRef<IngredientFormComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.form = this.fb.group({
       'ingcategory': new FormControl('', Validators.required),
@@ -113,33 +116,6 @@ export class IngredientComponent {
     });
   }
 
-  ngOnInit() {
-    this.initialize();
-  }
-
-  initialize() {
-    this.createView();
-
-    this.ingStat.getAllList().then((ingstats: Ingstatus[]) => {this.ingredientStatuses = ingstats});
-    this.ingcat.getAllList("").then((ingcats: Ingcategory[]) => {this.ingredientCategories = ingcats});
-    this.uns.getAllList("").then((units: Unittype[]) => {this.unittypes = units});
-    this.emps.getAll("").then((employees: Employee[]) => {this.employees = employees});
-
-    this.rxs.get("ingredients").then((regexs: []) => {
-      this.regexes = regexs;
-      this.createForm();
-    });
-
-    this.filterBrands();
-    this.getItemName();
-    this.changeRadioColor();
-  }
-
-  createView() {
-    this.imageurl = 'assets/pending.gif';
-    this.loadTable("");
-  }
-
   createForm(): void {
     this.form.controls['ingcategory'].setValidators([Validators.required]);
     this.form.controls['brand'].setValidators([Validators.required]);
@@ -154,111 +130,45 @@ export class IngredientComponent {
     this.form.controls['dointroduced'].setValidators([Validators.required, Validators.pattern(this.regexes['dointroduced']['regex'])]);
     this.form.controls['employee'].setValidators([Validators.required]);
 
-    Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
+    Object.values(this.form.controls).forEach(control => {
+      control.markAsTouched();
+    });
 
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       control.valueChanges.subscribe(value => {
-          // @ts-ignore
-          if (controlName == "dointroduced")
-            value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
+        // @ts-ignore
+        if (controlName == "dointroduced")
+          value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
 
-          if (this.oldingredient != undefined && control.valid) {
-            // @ts-ignore
-            if (value === this.ingredient[controlName]) {
-              control.markAsPristine();
-            } else {
-              control.markAsDirty();
-            }
-          } else {
+        if (this.oldingredient != undefined && control.valid) {
+          // @ts-ignore
+          if (value === this.ingredient[controlName]) {
             control.markAsPristine();
+          } else {
+            control.markAsDirty();
           }
+        } else {
+          control.markAsPristine();
+        }
       });
     }
-    this.enableButtons(true,false,false);
+    // this.enableButtons(true, false, false);
   }
 
-  enableButtons(add:boolean, upd:boolean, del:boolean){
-    this.enaadd=add;
-    this.enaupd=upd;
-    this.enadel=del;
-  }
+  // enableButtons(add: boolean, upd: boolean, del: boolean) {
+  //   this.enaadd = add;
+  //   this.enaupd = upd;
+  //   this.enadel = del;
+  // }
 
-  loadTable(query: string) {
-
-    this.is.getAll(query)
-      .then((ings: Ingredient[]) => {
-        this.ingredients = ings;
-        this.imageurl = 'assets/fullfilled.png';
-      })
-      .catch((error) => {
-        console.log(error);
-        this.imageurl = 'assets/rejected.png';
-      })
-      .finally(() => {
-        this.data = new MatTableDataSource(this.ingredients);
-        this.data.paginator = this.paginator;
-      });
-
-  }
-
-  filterTable():void {
-    const cssearchdata = this.csearch.getRawValue();
-
-    console.log(cssearchdata);
-
-    this.data.filterPredicate = ((ingredient: Ingredient, filter: string) => {
-      return (cssearchdata.csid == null || ingredient.id.toString().includes(cssearchdata.csid)) &&
-        (cssearchdata.csname == null || ingredient.name.includes(cssearchdata.csname)) &&
-        (cssearchdata.csbrand == null || ingredient.brand.name.includes(cssearchdata.csbrand)) &&
-        (cssearchdata.csqoh == null || ingredient.qoh.toString().includes(cssearchdata.csqoh)) &&
-        (cssearchdata.csrop == null || ingredient.rop.toString().includes(cssearchdata.csrop)) &&
-        (cssearchdata.cscost == null || ingredient.cost.toString().includes(cssearchdata.cscost));
-    });
-    this.data.filter = "xx";
-  }
-
-  btnSearchMc(): void {
-
-    const ssearchdata = this.ssearch.getRawValue();
-
-    let name = ssearchdata.ssname;
-    let brandid = ssearchdata.ssbrand;
-    let categoryid = ssearchdata.ssingcategory;
-    let ingstatusid = ssearchdata.ssingstatus;
-
-    let query = "";
-
-    if (name != null && name.trim() != "") query = query + "&ingredientname=" + name;
-    if (categoryid != null) query = query + "&categoryid=" + categoryid;
-    if (ingstatusid != null) query = query + "&ingredientstatusid=" + ingstatusid;
-    if (brandid != null) query = query + "&ingredientbrandid=" + brandid;
-
-    if (query != "") query = query.replace(/^./, "?")
-
-    this.loadTable(query);
-
-  }
-
-  btnSearchClearMc(): void {
-
-    const confirm = this.dialog.open(ConfirmComponent, {
-      width: '500px',
-      data: {heading: "Search Clear", message: "Are you sure to Clear the Search?"}
-    });
-
-    confirm.afterClosed().subscribe(async result => {
-      if (result) {
-        this.ssearch.reset();
-        this.loadTable("");
-      }
-    });
-  }
 
   filterBrands(): void {
     this.form.get("ingcategory")?.valueChanges.subscribe((cat: Ingcategory) => {
       let qry = '?categoryid=' + cat.id;
-      this.br.getAllList(qry).then((brands: Brand[]) => {this.brands = brands});
+      this.br.getAllList(qry).then((brands: Brand[]) => {
+        this.brands = brands
+      });
     });
   }
 
@@ -346,11 +256,8 @@ export class IngredientComponent {
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          // console.log("EmployeeService.add(emp)");
 
           this.is.add(this.ingredient).then((response: [] | undefined) => {
-            //console.log("Res-" + response);
-            //console.log("Un-" + response == undefined);
             if (response != undefined) { // @ts-ignore
               console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
               // @ts-ignore
@@ -370,10 +277,11 @@ export class IngredientComponent {
               addmessage = "Successfully Saved";
               this.form.reset();
               this.clearImage();
+              this.onCloseForm();
+
               Object.values(this.form.controls).forEach(control => {
                 control.markAsTouched();
               });
-              this.loadTable("");
             }
 
             const stsmsg = this.dialog.open(MessageComponent, {
@@ -391,7 +299,8 @@ export class IngredientComponent {
       });
     }
   }
-  clear():void{
+
+  clear(): void {
     const confirm = this.dialog.open(ConfirmComponent, {
       width: '500px',
       data: {
@@ -409,7 +318,7 @@ export class IngredientComponent {
 
   fillForm(ingredient: Ingredient) {
 
-    this.selectedRow=ingredient;
+    this.selectedRow = ingredient;
     this.ingredient = JSON.parse(JSON.stringify(ingredient));
     this.oldingredient = JSON.parse(JSON.stringify(ingredient));
 
@@ -426,7 +335,7 @@ export class IngredientComponent {
     this.itemNameSubs.unsubscribe();
 
     this.form.get("ingcategory")?.valueChanges.subscribe((category: Ingcategory) => {
-      let qry  = "?categoryid=" + category.id;
+      let qry = "?categoryid=" + category.id;
       this.br.getAllList(qry).then((brands: Brand[]) => {
         // console.log(brands)
         this.brands = brands;
@@ -447,7 +356,7 @@ export class IngredientComponent {
         this.form.patchValue(this.ingredient);
         this.form.markAsPristine();
 
-        this.enableButtons(false,true,true);
+        // this.enableButtons(false, true, true);
 
       });
     });
@@ -462,12 +371,11 @@ export class IngredientComponent {
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
       if (control.dirty) {
-        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1)+" Changed";
+        updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1) + " Changed";
       }
     }
     return updates;
   }
-
 
   update() {
 
@@ -479,7 +387,11 @@ export class IngredientComponent {
         width: '500px',
         data: {heading: "Errors - Ingredient Update ", message: "You have following Errors <br> " + errors}
       });
-      errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+      errmsg.afterClosed().subscribe(async result => {
+        if (!result) {
+          return;
+        }
+      });
 
     } else {
 
@@ -519,85 +431,49 @@ export class IngredientComponent {
                 updstatus = false;
                 updmessage = "Content Not Found"
               }
-            } ).finally(() => {
+            }).finally(() => {
               if (updstatus) {
                 updmessage = "Successfully Updated";
                 this.form.reset();
                 this.clearImage();
-                Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-                this.loadTable("");
+                this.onCloseForm();
+                Object.values(this.form.controls).forEach(control => {
+                  control.markAsTouched();
+                });
+                // this.loadTable("");
               }
 
               const stsmsg = this.dialog.open(MessageComponent, {
                 width: '500px',
                 data: {heading: "Status -Ingredient Add", message: updmessage}
               });
-              stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+              stsmsg.afterClosed().subscribe(async result => {
+                if (!result) {
+                  return;
+                }
+              });
 
             });
           }
         });
-      }
-      else {
+      } else {
 
         const updmsg = this.dialog.open(MessageComponent, {
           width: '500px',
           data: {heading: "Confirmation - Ingredient Update", message: "Nothing Changed"}
         });
-        updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+        updmsg.afterClosed().subscribe(async result => {
+          if (!result) {
+            return;
+          }
+        });
 
       }
     }
-
-
   }
 
-
-
-  delete() {
-
-    const confirm = this.dialog.open(ConfirmComponent, {
-      width: '500px',
-      data: {
-        heading: "Confirmation - Ingredient Delete",
-        message: "Are you sure to Delete following Employee? <br> <br>" + this.ingredient.name
-      }
-    });
-
-    confirm.afterClosed().subscribe(async result => {
-      if (result) {
-        let delstatus: boolean = false;
-        let delmessage: string = "Server Not Found";
-
-        this.is.delete(this.ingredient.id).then((response: [] | undefined) => {
-
-          if (response != undefined) { // @ts-ignore
-            delstatus = response['errors'] == "";
-            if (!delstatus) { // @ts-ignore
-              delmessage = response['errors'];
-            }
-          } else {
-            delstatus = false;
-            delmessage = "Content Not Found"
-          }
-        } ).finally(() => {
-          if (delstatus) {
-            delmessage = "Successfully Deleted";
-            this.form.reset();
-            this.clearImage();
-            Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
-            this.loadTable("");
-          }
-
-          const stsmsg = this.dialog.open(MessageComponent, {
-            width: '500px',
-            data: {heading: "Status - Ingredient Delete ", message: delmessage}
-          });
-          stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
-
-        });
-      }
-    });
+  onCloseForm(){
+    this.dialogRef.close();
   }
 
 

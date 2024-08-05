@@ -7,7 +7,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {HomeComponent} from './view/home/home.component';
 import {LoginComponent} from './view/login/login.component';
 import {MainwindowComponent} from './view/mainwindow/mainwindow.component';
-import {EmployeeComponent} from './view/modules/employees/employee/employee.component';
+import {EmployeeComponent} from './view/modules/employeeModule/employee/employee.component';
 import {UserComponent} from './view/modules/user/user.component';
 import {MatGridListModule} from "@angular/material/grid-list";
 import {MatCardModule} from "@angular/material/card";
@@ -40,12 +40,13 @@ import {AuthorizationManager} from "./service/authorizationmanager";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { OperationComponent } from './view/modules/operation/operation.component';
 import { PaymentComponent } from './view/modules/payment/payment.component';
-import { IngredientComponent } from './view/modules/ingredient/ingredient.component';
+import { IngredientComponent } from './view/modules/ingredientModule/ingredient/ingredient.component';
 import {MatRadioModule} from "@angular/material/radio";
 import { IngredientcountbycategoryComponent } from './report/view/ingredientcountbycategory/ingredientcountbycategory.component';
-import { SupplierComponent } from './view/modules/suppliers/supplier/supplier.component';
-import { EmployeeFormComponent } from './view/modules/employees/employee-form/employee-form.component';
-import { SupplierFormComponent } from './view/modules/suppliers/supplier-form/supplier-form.component';
+import { SupplierComponent } from './view/modules/supplierModule/supplier/supplier.component';
+import { EmployeeFormComponent } from './view/modules/employeeModule/employee-form/employee-form.component';
+import { SupplierFormComponent } from './view/modules/supplierModule/supplier-form/supplier-form.component';
+import { IngredientFormComponent } from './view/modules/ingredientModule/ingredient-form/ingredient-form.component';
 
 
 @NgModule({
@@ -68,6 +69,7 @@ import { SupplierFormComponent } from './view/modules/suppliers/supplier-form/su
     SupplierComponent,
     EmployeeFormComponent,
     SupplierFormComponent,
+    IngredientFormComponent,
   ],
     imports: [
         MatDatepickerModule,

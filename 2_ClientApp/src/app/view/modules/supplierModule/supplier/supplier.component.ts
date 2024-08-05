@@ -11,10 +11,8 @@ import {SupplierStatus} from "../../../../entity/supplierstatus";
 import {Employee} from "../../../../entity/employee";
 import {SupplierstatusService} from "../../../../service/supplierstatusservice";
 import {EmployeeService} from "../../../../service/employeeservice";
-import {DatePipe} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {MessageComponent} from "../../../../util/dialog/message/message.component";
-import {RegexService} from "../../../../service/regexservice";
 import {SupplierFormComponent} from "../supplier-form/supplier-form.component";
 
 @Component({
@@ -24,11 +22,11 @@ import {SupplierFormComponent} from "../supplier-form/supplier-form.component";
 })
 export class SupplierComponent {
 
-  columns: string[] = ['regno', 'name', 'telephone', 'supplierstatus', 'employee'];
-  headers: string[] = ['Reg. No', 'Name', 'Telephone', 'Supplier Status', 'Employee'];
-  binders: string[] = ['regno', 'name', 'telephone', 'supplierstatus.name', 'employee.fullname'];
+  columns: string[] = ['regno', 'name', 'telephone', 'supplierstatus', 'employee', 'edit', 'delete'];
+  headers: string[] = ['Reg. No', 'Name', 'Telephone', 'Supplier Status', 'Employee', '', ''];
+  binders: string[] = ['regno', 'name', 'telephone', 'supplierstatus.name', 'employee.fullname', '', ''];
 
-  cscolumns: string[] = ['csRegNo', 'csName', 'csTelephone', 'csSupplierStatus', 'csEmployee'];
+  cscolumns: string[] = ['csRegNo', 'csName', 'csTelephone', 'csSupplierStatus', 'csEmployee', 'csempty1', 'csempty2'];
   csprompts: string[] = ['Search by Registration Number', 'Search by Name', 'Search by Telephone',
     'Search by Supplier Status', 'Search by Employee'];
 
@@ -37,8 +35,6 @@ export class SupplierComponent {
   public form!: FormGroup;
 
   supplier!: Supplier;
-  oldSupplier!: Supplier;
-
   selectedrow: any;
 
   suppliers: Array<Supplier> = [];
@@ -53,8 +49,6 @@ export class SupplierComponent {
   supplierStatuses: Array<SupplierStatus> = [];
   employees: Array<Employee> = [];
 
-  regexes: any;
-
   uiassist: UiAssist;
 
   constructor(
@@ -62,9 +56,7 @@ export class SupplierComponent {
     private fb: FormBuilder,
     private supStatusService: SupplierstatusService,
     private employeeService: EmployeeService,
-    private datePipe: DatePipe,
     private dialog: MatDialog,
-    private rxs: RegexService,
     public authService:AuthorizationManager) {
 
     this.uiassist = new UiAssist(this);
@@ -191,7 +183,9 @@ export class SupplierComponent {
   }
 
 
-  delete() {
+  delete(supplier: Supplier) {
+
+    this.supplier = supplier;
 
     const confirm = this.dialog.open(ConfirmComponent, {
       width: '500px',

@@ -1,14 +1,6 @@
-<!--<mat-grid-list [cols]="12" rowHeight="4rem">-->
-
-<!--  <mat-grid-tile [colspan]="4" [rowspan]="10">-->
-
-<!--  </mat-grid-tile>-->
-
-
-<!--  <mat-grid-tile [colspan]="8" [rowspan]="4">-->
     <mat-card id="ssearch">
       <mat-card-header>
-        <mat-card-title>Supplier Search</mat-card-title>
+        <mat-card-title>Employee Search</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -16,28 +8,33 @@
         <mat-form [formGroup]="ssearch">
 
           <mat-form-field appearance="outline">
-            <mat-label>Search by Reg. Number</mat-label>
-            <input matInput formControlName="ssRegNo">
+            <mat-label>Search by Number</mat-label>
+            <input matInput formControlName="ssnumber">
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Search by Name</mat-label>
-            <input matInput formControlName="ssName">
+            <mat-label>Search by Fullname</mat-label>
+            <input matInput formControlName="ssfullname">
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Supplier Status</mat-label>
-            <mat-select formControlName="ssSupStatus">
+            <mat-label>Search by NIC</mat-label>
+            <input matInput formControlName="ssnic">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Gender</mat-label>
+            <mat-select formControlName="ssgender">
               <mat-option [value]="null" selected>Not Selected</mat-option>
-              <mat-option *ngFor="let status of supplierStatuses" [value]="status.id">{{status.name}}</mat-option>
+              <mat-option *ngFor="let gender of genders" [value]="gender.id">{{gender.name}}</mat-option>
             </mat-select>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Employee</mat-label>
-            <mat-select formControlName="ssEmployee">
+            <mat-label>Designation</mat-label>
+            <mat-select formControlName="ssdesignation">
               <mat-option [value]="null" selected >Not Selected</mat-option>
-              <mat-option *ngFor="let employee of employees" [value]="employee.id">{{employee.callingname}}</mat-option>
+              <mat-option *ngFor="let designation of designations" [value]="designation.id">{{designation.name}}</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -51,13 +48,11 @@
       </mat-card-content>
 
     </mat-card>
-<!--  </mat-grid-tile>-->
 
 
-<!--  <mat-grid-tile [colspan]="8" [rowspan]="6">-->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Suppliers Table</mat-card-title>
+        <mat-card-title>Employee Table</mat-card-title>
         <div id="loading">
           <img [src]="imageurl">
         </div>
@@ -65,7 +60,7 @@
 
       <mat-card-content>
 
-        <button mat-raised-button color="primary" (click)="addEmployee()"><mat-icon>person_add</mat-icon> New Supplier</button>
+        <button id="new_sup" mat-raised-button (click)="addEmployee()"><mat-icon fontIcon="person_add"></mat-icon>Add employee</button>
 
         <mat-table [dataSource]="data">
 
@@ -88,7 +83,7 @@
 
           <mat-header-row *matHeaderRowDef="columns"></mat-header-row>
           <mat-header-row *matHeaderRowDef="cscolumns"></mat-header-row>
-          <mat-row *matRowDef="let row; columns: columns;" (click)="editEmployee(row)" [ngClass]="{'selected-row': row === selectedrow}"></mat-row>
+          <mat-row *matRowDef="let row; columns: columns;" (click)="editEmployee(row)"></mat-row>
 
         </mat-table>
 
@@ -97,6 +92,3 @@
       </mat-card-content>
 
     </mat-card>
-<!--  </mat-grid-tile>-->
-
-<!--</mat-grid-list>-->
