@@ -1,6 +1,9 @@
 import {Component, ViewChild} from '@angular/core';
 import {EmployeeService} from "../../../service/employeeservice";
 import {SupplierService} from "../../../service/supplierservice";
+import {IngredientService} from "../../../service/ingredientservice";
+import {PoStatusService} from "../../../service/poStatusService";
+import {PurchaseOrderService} from "../../../service/purhchaseOrderService";
 import {RegexService} from "../../../service/regexservice";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
@@ -15,9 +18,9 @@ import {PurchaseOrder} from "../../../entity/purchaseOrder";
 import {Poitem} from "../../../entity/poitem";
 import {Ingredient} from "../../../entity/ingredient";
 import {Postatus} from "../../../entity/postatus";
-import {IngredientService} from "../../../service/ingredientservice";
 import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {MessageComponent} from "../../../util/dialog/message/message.component";
+
 
 @Component({
   selector: 'app-purchase-order',
@@ -73,8 +76,8 @@ export class PurchaseOrderComponent {
 
 
   constructor(
-    private pos: PurorderService,
-    private poss: Postatusservice,
+    private pos: PurchaseOrderService,
+    private poStatusService: PoStatusService,
     private ings: IngredientService,
     private emps: EmployeeService,
     private sups: SupplierService,
@@ -127,20 +130,20 @@ export class PurchaseOrderComponent {
 
     this.createView();
 
-    this.poss.getAllList().then((vsts: Postatus[]) => {
-      this.postatuses = vsts;
+    this.poStatusService.getAllList().then((statuses: Postatus[]) => {
+      this.postatuses = statuses;
     });
 
-    this.emps.getAll('').then((vsts: Employee[]) => {
-      this.employees = vsts;
+    this.emps.getAll('').then((emps: Employee[]) => {
+      this.employees = emps;
     });
 
-    this.sups.getAll('').then((vsts: Supplier[]) => {
-      this.suppliers = vsts;
+    this.sups.getAll('').then((sups: Supplier[]) => {
+      this.suppliers = sups;
     });
 
-    this.ings.getAll('').then((vsts: Ingredient[]) => {
-      this.ingredients = vsts;
+    this.ings.getAll('').then((ings: Ingredient[]) => {
+      this.ingredients = ings;
     });
 
     this.rs.get('purorder').then((regs: []) => {

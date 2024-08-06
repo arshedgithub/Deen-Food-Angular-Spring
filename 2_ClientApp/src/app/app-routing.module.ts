@@ -15,6 +15,7 @@ import {
   IngredientcountbycategoryComponent
 } from "./report/view/ingredientcountbycategory/ingredientcountbycategory.component";
 import {SupplierComponent} from "./view/modules/supplierModule/supplier/supplier.component";
+import {PurchaseOrderComponent} from "./view/modules/purchase-order/purchase-order.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -25,16 +26,16 @@ const routes: Routes = [
     children: [
       {path: "home", component: HomeComponent},
       {path: "employee", component: EmployeeComponent},
-      {path: "supplier", component: SupplierComponent},
       {path: "user", component: UserComponent},
       {path: "privilege", component: PrivilageComponent},
       {path: "operation", component: OperationComponent},
-      {path:"payments",component:PaymentComponent},
-      {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
       {path: "ingredient", component: IngredientComponent},
-      {path:"reports/countbydesignation", component: CountByDesignationComponent},
-      {path:"reports/ingredientcountbycategory", component: IngredientcountbycategoryComponent},
-
+      {path: "supplier", component: SupplierComponent},
+      {path: "purchase", component: PurchaseOrderComponent},
+      {path: "payments",component:PaymentComponent},
+      {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
+      {path: "reports/countbydesignation", component: CountByDesignationComponent},
+      {path: "reports/ingredientcountbycategory", component: IngredientcountbycategoryComponent},
     ]
   }];
 

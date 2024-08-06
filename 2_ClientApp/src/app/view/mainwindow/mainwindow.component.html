@@ -57,25 +57,41 @@
           </ng-container>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <mat-expansion-panel *ngIf="isMenuVisible('Purchase')">
           <mat-expansion-panel-header>
-            <mat-list-item>
-              <a><mat-icon>poll</mat-icon>
-                Reports</a>
-            </mat-list-item>
+            <mat-list-item><a>
+              <mat-icon>paid</mat-icon>
+              Purchase</a></mat-list-item>
           </mat-expansion-panel-header>
-          <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>
+          <ng-container *ngFor="let menuItem of purchMenuItems">
+            <mat-list-item *ngIf="menuItem.accessFlag">
+              <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null"><a>{{ menuItem.name }}</a></mat-list-item>
+            </mat-list-item>
+          </ng-container>
         </mat-expansion-panel>
 
-        <mat-expansion-panel>
+        <mat-expansion-panel *ngIf="isMenuVisible('Report')">
           <mat-expansion-panel-header>
-            <mat-list-item>
-              <a><mat-icon>paid</mat-icon>
-                Payment</a>
-            </mat-list-item>
+            <mat-list-item><a>
+              <mat-icon>poll</mat-icon>
+              Reports</a></mat-list-item>
           </mat-expansion-panel-header>
-          <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>
+          <ng-container *ngFor="let menuItem of reportMenuItems">
+            <mat-list-item *ngIf="menuItem.accessFlag">
+              <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null"><a>{{ menuItem.name }}</a></mat-list-item>
+            </mat-list-item>
+          </ng-container>
         </mat-expansion-panel>
+
+<!--        <mat-expansion-panel>-->
+<!--          <mat-expansion-panel-header>-->
+<!--            <mat-list-item>-->
+<!--              <a><mat-icon>paid</mat-icon>-->
+<!--                Payment</a>-->
+<!--            </mat-list-item>-->
+<!--          </mat-expansion-panel-header>-->
+<!--          <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>-->
+<!--        </mat-expansion-panel>-->
       </mat-accordion>
 
     </mat-nav-list>
