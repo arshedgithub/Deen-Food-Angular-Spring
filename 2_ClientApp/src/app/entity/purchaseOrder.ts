@@ -1,6 +1,7 @@
 import {Postatus} from "./postatus";
 import {Poitem} from "./poitem";
 import {Supplier} from "./supplier";
+import {Employee} from "./employee";
 
 export class PurchaseOrder {
 
@@ -10,22 +11,24 @@ export class PurchaseOrder {
   public dorequested !: string;
   public expectedTotal !: number;
   public description !: string;
-  public poitem !: Poitem;
+  public poitems !: Array<Poitem>;
   public poStatus !: Postatus;
   public supplier !: Supplier;
+  public employee !: Employee;
 
-  constructor(id: number, number: number, doplaced: string, dorequested: string, expectedTotal: number, description: string, poitem: Poitem, poStatus: Postatus, supplier: Supplier) {
+  constructor(id: number, number: number, doplaced: string, dorequested: string, expectedTotal: number, description: string, poitems: Array<Poitem>, poStatus: Postatus, supplier: Supplier, employee: Employee) {
     this.id = id;
     this.number = number;
     this.doplaced = doplaced;
     this.dorequested = dorequested;
     this.expectedTotal = expectedTotal;
     this.description = description;
-    this.poitem = poitem;
+    this.poitems = poitems;
     this.poStatus = poStatus;
     this.supplier = supplier;
+    this.employee = employee;
   }
-  
+
 }
 
 
