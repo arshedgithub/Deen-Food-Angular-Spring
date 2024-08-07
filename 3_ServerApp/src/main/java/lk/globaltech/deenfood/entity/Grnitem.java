@@ -41,7 +41,7 @@ public class Grnitem {
         this.unitcost = unitcost;
     }
 
-    public String getQuantity() {
+    public long getQuantity() {
         return quantity;
     }
 

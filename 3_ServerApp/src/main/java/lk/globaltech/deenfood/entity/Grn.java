@@ -30,6 +30,9 @@ public class Grn {
     private Employee employee;
     @OneToMany(mappedBy = "grn")
     private Collection<Grnitem> grnitems;
+    @Basic
+    @Column(name = "grnnumber")
+    private String grnnumber;
 
     public Integer getId() {
         return id;
@@ -117,5 +120,13 @@ public class Grn {
 
     public void setGrnitems(Collection<Grnitem> grnitems) {
         this.grnitems = grnitems;
+    }
+
+    public String getGrnnumber() {
+        return grnnumber;
+    }
+
+    public void setGrnnumber(String grnnumber) {
+        this.grnnumber = grnnumber;
     }
 }
