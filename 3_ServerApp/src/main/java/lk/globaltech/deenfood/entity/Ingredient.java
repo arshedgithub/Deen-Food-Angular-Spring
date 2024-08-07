@@ -61,6 +61,9 @@ public class Ingredient {
     @JsonIgnore
     @OneToMany(mappedBy = "ingredient")
     private Collection<Poitem> poitems;
+    @JsonIgnore
+    @OneToMany(mappedBy = "ingredient")
+    private Collection<Grnitem> grnitems;
 
     public Integer getId() {
         return id;
@@ -187,5 +190,13 @@ public class Ingredient {
 
     public void setPoitems(Collection<Poitem> poitems) {
         this.poitems = poitems;
+    }
+
+    public Collection<Grnitem> getGrnitems() {
+        return grnitems;
+    }
+
+    public void setGrnitems(Collection<Grnitem> grnitems) {
+        this.grnitems = grnitems;
     }
 }
