@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/purchaseorders")
+    @RequestMapping(value = "/purchaseorders")
 public class PurchaseorderController {
 
     @Autowired
@@ -58,8 +58,7 @@ public class PurchaseorderController {
             poitems.setPurchaseorder(purorder);
         }
 
-        if(errors=="")
-            purchaseOrderDao.save(purorder);
+        if(errors=="") purchaseOrderDao.save(purorder);
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(purorder.getId()));

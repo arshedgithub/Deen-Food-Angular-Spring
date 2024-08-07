@@ -1,6 +1,9 @@
 package lk.globaltech.deenfood.entity;
 
+import lk.globaltech.deenfood.util.RegexPattern;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Collection;
@@ -16,17 +19,22 @@ public class Purchaseorder {
     private String number;
     @Basic
     @Column(name = "doplaced")
+    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date Format")
     private Date doplaced;
     @Basic
     @Column(name = "dorequested")
+    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date Format")
     private Date dorequested;
     @Basic
     @Column(name = "expectedtotal")
+    @RegexPattern(reg = "^[0-9]+(\\.[0-9]{1,2})?$", msg = "Invalid cost format.")
     private BigDecimal expectedtotal;
     @Basic
     @Column(name = "description")
+    @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
     @OneToMany(mappedBy = "purchaseorder")
+
     private Collection<Poitem> poitems;
     @ManyToOne
     @JoinColumn(name = "postatus_id", referencedColumnName = "id", nullable = false)

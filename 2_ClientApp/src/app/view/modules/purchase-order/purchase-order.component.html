@@ -3,7 +3,7 @@
   <mat-grid-tile [colspan]="4" [rowspan]="10">
     <mat-card>
       <mat-card-header>
-        <mat-card-title id="left">Purorder Detail</mat-card-title>
+        <mat-card-title id="left">Purchase Order Detail</mat-card-title>
       </mat-card-header>
 
       <mat-card-content id="purorderform">
@@ -12,14 +12,14 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Number</mat-label>
-            <input matInput formControlName="ponumber" readonly>
+            <input matInput formControlName="number"  >
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Purorder Status</mat-label>
             <mat-select formControlName="postatus" >
               <mat-option [value]="null" selected>Not Selected</mat-option>
-              <mat-option *ngFor="let postatuse of postatuses" [value]="postatuse">{{postatuse.name}}</mat-option>
+              <mat-option *ngFor="let po_status of postatuses" [value]="po_status">{{po_status.name}}</mat-option>
             </mat-select>
           </mat-form-field>
 
@@ -41,7 +41,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="date" [min]="today" [max]="today" formControlName="date">
+            <input matInput [matDatepicker]="date" [min]="today" [max]="today" formControlName="dorequested">
             <mat-datepicker-toggle matIconSuffix [for]="date"></mat-datepicker-toggle>
             <mat-datepicker #date></mat-datepicker>
           </mat-form-field>
@@ -56,24 +56,24 @@
             <mat-form [formGroup]="innerform">
 
               <mat-form-field appearance="outline">
-                <mat-label>Item</mat-label>
-                <mat-select formControlName="item" (selectionChange)="filterlinecost()">
-                  <mat-option [value]="null" selected>Not Selected</mat-option>
-                  <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient">{{ingredient.name}}</mat-option>
+                <mat-label>Ingredient</mat-label>
+                <mat-select formControlName="ingredient">
+                  <mat-option [value]="null" selected >Not Selected</mat-option>
+                  <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient" (onSelectionChange)="changeToInitQuantity()">{{ingredient.name}}</mat-option>
                 </mat-select>
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>QTY</mat-label>
-                <input matInput formControlName="qty">
+                <mat-label>Quantity</mat-label>
+                <input matInput formControlName="quantity" (selectionchange)="calculateLinecost()">
               </mat-form-field>
 
               <mat-form-field appearance="outline">
-                <mat-label>Explinetotal</mat-label>
-                <input matInput  formControlName="explinetotal" readonly >
+                <mat-label>Line Total</mat-label>
+                <input matInput formControlName="expected_linecost" readonly>
               </mat-form-field>
 
-              <button mat-raised-button id="btnAdd" (click)="btnaddMc()" ><mat-icon>add_circle</mat-icon>Add</button>
+              <button mat-raised-button id="btnAdd" (click)="btnAddLine()"><mat-icon>add_circle</mat-icon>Add</button>
             </mat-form>
 
             <mat-table [dataSource]="indata">
@@ -95,7 +95,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Expected Cost</mat-label>
-            <input matInput formControlName="expectedcost" readonly>
+            <input matInput formControlName="expectedtotal" readonly>
           </mat-form-field>
 
           <div id="butpanel">
@@ -116,7 +116,7 @@
   <mat-grid-tile [colspan]="8" [rowspan]="4">
     <mat-card id="ssearch">
       <mat-card-header>
-        <mat-card-title id="right">Purorder Search</mat-card-title>
+        <mat-card-title id="right">Purchase Order Search</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
@@ -125,7 +125,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Search by Number</mat-label>
-            <input matInput formControlName="ssponumber">
+            <input matInput formControlName="ssnumber">
           </mat-form-field>
 
           <mat-form-field appearance="outline">
@@ -153,7 +153,7 @@
   <mat-grid-tile [colspan]="8" [rowspan]="6">
     <mat-card>
       <mat-card-header>
-        <mat-card-title id="right">Purorder Table</mat-card-title>
+        <mat-card-title id="right">Purchase Order Table</mat-card-title>
         <div id="loading">
           <img [src]="imageurl">
         </div>

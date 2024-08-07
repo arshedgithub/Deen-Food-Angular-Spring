@@ -1,9 +1,6 @@
 package lk.globaltech.deenfood.controller;
 
-import lk.globaltech.deenfood.entity.Employee;
-import lk.globaltech.deenfood.entity.Ingredient;
-import lk.globaltech.deenfood.entity.Supplier;
-import lk.globaltech.deenfood.entity.User;
+import lk.globaltech.deenfood.entity.*;
 import lk.globaltech.deenfood.util.RegexProvider;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +31,11 @@ public class RegexController {
     @GetMapping(path ="/suppliers", produces = "application/json")
     public HashMap<String, HashMap<String, String>> supplier() {
         return RegexProvider.get(new Supplier());
+    }
+
+    @GetMapping(path ="/purchaseorders", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> purchaseorder() {
+        return RegexProvider.get(new Purchaseorder());
     }
 
 }

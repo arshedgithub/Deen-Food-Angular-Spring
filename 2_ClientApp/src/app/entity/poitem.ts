@@ -5,15 +5,13 @@ export class Poitem {
 
   public id !: number;
   public quantity !: number;
-  public expectedLinecost !: number;
-  // public ingredient!: Ingredient;
-  public purchaseOrder!: PurchaseOrder;
+  public expected_linecost !: number;
+  public ingredient!: Ingredient;
 
-  constructor(id: number, quantity: number, expectedLinecost: number, purchaseOrder: PurchaseOrder) {
+  constructor(id: number, quantity: number, expected_linecost: number, ingredient: Ingredient) {
     this.id = id;
     this.quantity = quantity;
-    this.expectedLinecost = expectedLinecost;
-    // this.ingredient = ingredient;
-    this.purchaseOrder = purchaseOrder;
+    this.expected_linecost = expected_linecost;
+    this.ingredient = ingredient;
   }
 }
