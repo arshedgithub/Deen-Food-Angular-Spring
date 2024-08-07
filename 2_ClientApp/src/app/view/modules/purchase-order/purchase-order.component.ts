@@ -305,9 +305,6 @@ export class PurchaseOrderComponent {
         this.purchaseOrder = JSON.parse(JSON.stringify(purorder));
         this.oldPurchaseOrder = JSON.parse(JSON.stringify(purorder));
 
-        console.log(this.purchaseOrder)
-        console.log(purorder)
-
         //@ts-ignore
         this.purchaseOrder.postatus = this.postatuses.find(s => s.id === this.purchaseOrder.postatus.id);
         //@ts-ignore
@@ -316,7 +313,8 @@ export class PurchaseOrderComponent {
         this.purchaseOrder.supplier = this.suppliers.find(e => e.id === this.purchaseOrder.supplier.id);
 
         this.indata = new MatTableDataSource(this.purchaseOrder.poitems);
-        this.form.patchValue(this.purchaseOrder);
+        console.log(this.indata, this.purchaseOrder.poitems)
+        console.log(this.purchaseOrder)
         this.form.markAsPristine();
         this.calculateGrandTotal();
 
@@ -338,7 +336,6 @@ export class PurchaseOrderComponent {
             });
         } else {
 
-
             this.purchaseOrder = this.form.getRawValue();
             this.purchaseOrder.poitems = this.poitems;
             // @ts-ignore
@@ -346,13 +343,13 @@ export class PurchaseOrderComponent {
 
             let purchaseOrderData: string = "";
 
-            purchaseOrderData = purchaseOrderData + "<br>Ponumber is : " + this.purchaseOrder.number;
+            purchaseOrderData = purchaseOrderData + "<br>Purchase Order Number is : " + this.purchaseOrder.number;
 
             const confirm = this.dg.open(ConfirmComponent, {
                 width: '500px',
                 data: {
-                    heading: "Confirmation - Purorder Add",
-                    message: "Are you sure to Add the following Purorder? <br> <br>" + purchaseOrderData
+                    heading: "Confirmation - Purchase Order Add",
+                    message: "Are you sure to Add the following Purchase Order? <br> <br>" + purchaseOrderData
                 }
             });
 
@@ -386,7 +383,7 @@ export class PurchaseOrderComponent {
 
                         const stsmsg = this.dg.open(MessageComponent, {
                             width: '500px',
-                            data: {heading: "Status -Purorder Add", message: addmessage}
+                            data: {heading: "Status -Purchase Order Add", message: addmessage}
                         });
                         stsmsg.afterClosed().subscribe(async result => {
                             if (!result) {
@@ -515,8 +512,8 @@ export class PurchaseOrderComponent {
         const confirm = this.dg.open(ConfirmComponent, {
             width: '500px',
             data: {
-                heading: "Confirmation - Purorder Delete",
-                message: "Are you sure to Delete following Purorder? <br> <br>" + this.purchaseOrder.number
+                heading: "Confirmation - Purchase Order Delete",
+                message: "Are you sure to Delete following Purorder? <br> <br>Purchase Order Number: " + this.purchaseOrder.number
             }
         });
 
@@ -549,12 +546,10 @@ export class PurchaseOrderComponent {
 
                     const stsmsg = this.dg.open(MessageComponent, {
                         width: '500px',
-                        data: {heading: "Status - Purorder Delete ", message: delmessage}
+                        data: {heading: "Status - Purchase Order Delete ", message: delmessage}
                     });
                     stsmsg.afterClosed().subscribe(async result => {
-                        if (!result) {
-                            return;
-                        }
+                        if (!result) return;
                     });
 
                 });

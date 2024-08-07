@@ -34,7 +34,6 @@ public class Purchaseorder {
     @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
     @OneToMany(mappedBy = "purchaseorder")
-
     private Collection<Poitem> poitems;
     @ManyToOne
     @JoinColumn(name = "postatus_id", referencedColumnName = "id", nullable = false)

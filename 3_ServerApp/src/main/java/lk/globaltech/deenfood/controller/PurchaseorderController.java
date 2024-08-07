@@ -46,16 +46,18 @@ public class PurchaseorderController {
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAuthority('Employee-Insert')")
     public HashMap<String,String> add(@RequestBody Purchaseorder purorder){
-
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         Purchaseorder grn1 = purchaseOrderDao.findByMyId(purorder.getId());
+//        System.out.println("Id" + grn1.getId());
         if(grn1!=null && purorder.getId()!=grn1.getId())
             errors = errors+"<br>Purchase Order Not Found";
 
-        for (Poitem poitems : purorder.getPoitems()) {
-            poitems.setPurchaseorder(purorder);
+        System.out.println(grn1);
+        for (Poitem poitem : purorder.getPoitems()) {
+            poitem.setPurchaseorder(purorder);
+            System.out.println(poitem.getIngredient().getName() + " $ " + poitem.getExpectedLinecost() + " $ "  + poitem.getQuantity());
         }
 
         if(errors=="") purchaseOrderDao.save(purorder);
@@ -80,8 +82,10 @@ public class PurchaseorderController {
         if (itm != null && purorder.getId() != itm.getId())
             errors = errors + "<br> Existing Number";
 
-        for (Poitem poItem : purorder.getPoitems()) {
-            poItem.setPurchaseorder(purorder);
+        for (Poitem poItems : purorder.getPoitems()) {
+            poItems.setPurchaseorder(purorder);
+            System.out.println(poItems);
+            System.out.println(purorder);
         }
 
         if (errors == "") purchaseOrderDao.save(purorder);
