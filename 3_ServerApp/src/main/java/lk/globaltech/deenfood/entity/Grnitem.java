@@ -1,5 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
+import lk.globaltech.deenfood.util.RegexPattern;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -11,10 +13,12 @@ public class Grnitem {
     private Integer id;
     @Basic
     @Column(name = "unitcost")
+    @RegexPattern(reg = "^[0-9]+(\\.[0-9]{1,2})?$", msg = "Invalid price format.")
     private BigDecimal unitcost;
     @Basic
     @Column(name = "quantity")
-    private String quantity;
+    @RegexPattern(reg = "^[0-9]+$", msg = "Invalid Quantity")
+    private BigDecimal quantity;
     @Basic
     @Column(name = "linecost")
     private BigDecimal linecost;
@@ -41,11 +45,11 @@ public class Grnitem {
         this.unitcost = unitcost;
     }
 
-    public long getQuantity() {
+    public BigDecimal getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(String quantity) {
+    public void setQuantity(BigDecimal quantity) {
         this.quantity = quantity;
     }
 

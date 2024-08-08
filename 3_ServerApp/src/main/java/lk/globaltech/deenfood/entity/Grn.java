@@ -1,6 +1,9 @@
 package lk.globaltech.deenfood.entity;
 
+import lk.globaltech.deenfood.util.RegexPattern;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.util.Collection;
 
@@ -12,12 +15,15 @@ public class Grn {
     private Integer id;
     @Basic
     @Column(name = "date")
+    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date Format")
     private String date;
     @Basic
     @Column(name = "description")
+    @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
     @Basic
     @Column(name = "grandTotal")
+    @RegexPattern(reg = "^[0-9]+(\\.[0-9]{1,2})?$", msg = "Invalid price format.")
     private BigDecimal grandTotal;
     @ManyToOne
     @JoinColumn(name = "grnstatus_id", referencedColumnName = "id", nullable = false)

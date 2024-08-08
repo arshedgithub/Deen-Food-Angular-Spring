@@ -71,7 +71,7 @@ public class GrnController {
             for (Grnitem grnItem : grn.getGrnitems()) {
                 Ingredient ingredient = grnItem.getIngredient();
                 BigDecimal unitCost = grnItem.getUnitcost();
-                BigDecimal qtyToIncrease = BigDecimal.valueOf(grnItem.getQuantity());
+                BigDecimal qtyToIncrease = grnItem.getQuantity();
 
                 // Find the existing item or create a new one if not found
                 Ingredient existingIngredient = ingredientDao.findById(ingredient.getId()).orElse(ingredient);
@@ -134,7 +134,7 @@ public class GrnController {
                 List<Grnitem> oldGrnItems = grndao.findByGrnItemId(grn.getId());
                 for (Grnitem oldgrnitm : oldGrnItems){
                     if (oldgrnitm.getIngredient().getId()==grnItem.getIngredient().getId()){
-                        newqty = BigDecimal.valueOf(oldgrnitm.getQuantity()).subtract(BigDecimal.valueOf(grnItem.getQuantity()));
+                        newqty = oldgrnitm.getQuantity().subtract(grnItem.getQuantity());
                     }
                 }
 
@@ -185,7 +185,7 @@ public class GrnController {
             for (Grnitem grnitem : grnitems) {
                 Ingredient itemToUpdate = grnitem.getIngredient();
                 BigDecimal currentQty = itemToUpdate.getQoh();
-                BigDecimal grnitemQty = BigDecimal.valueOf(grnitem.getQuantity());
+                BigDecimal grnitemQty = grnitem.getQuantity();
                 BigDecimal accQty =currentQty.subtract(grnitemQty);
                 itemToUpdate.setQoh(accQty);
 
