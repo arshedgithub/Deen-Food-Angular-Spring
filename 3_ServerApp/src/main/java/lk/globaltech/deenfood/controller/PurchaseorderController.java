@@ -50,14 +50,11 @@ public class PurchaseorderController {
         String errors="";
 
         Purchaseorder grn1 = purchaseOrderDao.findByMyId(purorder.getId());
-//        System.out.println("Id" + grn1.getId());
         if(grn1!=null && purorder.getId()!=grn1.getId())
             errors = errors+"<br>Purchase Order Not Found";
 
-        System.out.println(grn1);
         for (Poitem poitem : purorder.getPoitems()) {
             poitem.setPurchaseorder(purorder);
-            System.out.println(poitem.getIngredient().getName() + " $ " + poitem.getExpectedLinecost() + " $ "  + poitem.getQuantity());
         }
 
         if(errors=="") purchaseOrderDao.save(purorder);
@@ -102,13 +99,10 @@ public class PurchaseorderController {
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String,String> delete(@PathVariable Integer id){
 
-        System.out.println(id);
-
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         Purchaseorder itm = purchaseOrderDao.findByMyId(id);
-
         if(itm==null)
             errors = errors+"<br> Employee Does Not Existed";
 

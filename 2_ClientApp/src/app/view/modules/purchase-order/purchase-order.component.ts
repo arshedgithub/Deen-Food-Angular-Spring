@@ -35,9 +35,9 @@ export class PurchaseOrderComponent {
     cscolumns: string[] = ['csnumber', 'csemployee', 'cspostatus', 'csdate', 'csdescription', 'csexpectedcost'];
     csprompts: string[] = ['Search by Ponumber', 'Search by Employee', 'Search by Status', 'Search by Date', 'Search by Description', 'Search by Expected Cost'];
 
-    incolumns: string[] = ['ingredient', 'quantity', 'expected_linecost', 'remove'];
-    inheaders: string[] = ['Ingredient', 'Quantity', 'Line Total', 'Remove'];
-    inbinders: string[] = ['ingredient.name', 'quantity', 'expected_linecost', 'getBtn()'];
+    incolumns: string[] = ['ingredient', 'quantity', 'expectedLinecost', 'remove'];
+    inheaders: string[] = ['Ingredient', 'Quantity', 'Line Total', ''];
+    inbinders: string[] = ['ingredient.name', 'quantity', 'expectedLinecost', 'getBtn()'];
 
     innerdata: any;
     oldinnerdata: any;
@@ -115,7 +115,7 @@ export class PurchaseOrderComponent {
         this.innerform = this.fb.group({
             "ingredient": new FormControl('', [Validators.required]),
             "quantity": new FormControl('', [Validators.required]),
-            "expected_linecost": new FormControl('', [Validators.required]),
+            "expectedLinecost": new FormControl('', [Validators.required]),
         }, {updateOn: 'change'});
 
     }
@@ -167,7 +167,7 @@ export class PurchaseOrderComponent {
 
         this.innerform.controls['ingredient'].setValidators([Validators.required]);
         this.innerform.controls['quantity'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-        this.innerform.controls['expected_linecost'].setValidators([Validators.required]);
+        this.innerform.controls['expectedLinecost'].setValidators([Validators.required]);
 
         Object.values(this.form.controls).forEach(control => {
             control.markAsTouched();
@@ -611,7 +611,7 @@ export class PurchaseOrderComponent {
 
         let expectedcost = 0;
         this.indata.data.forEach((m) => {
-            expectedcost = expectedcost + m.expected_linecost
+            expectedcost = expectedcost + m.expectedLinecost
         });
         let roundedValue = parseFloat(expectedcost.toString()).toFixed(2);
         this.form.controls['expectedtotal'].setValue(roundedValue);
@@ -637,14 +637,14 @@ export class PurchaseOrderComponent {
         console.log(ingredientCost)
         let roundedValue = parseFloat(ingredientCost).toFixed(2);
         // @ts-ignore
-        this.innerform.controls['expected_linecost'].setValue(roundedValue * qnty);
+        this.innerform.controls['expectedLinecost'].setValue(roundedValue * qnty);
         console.log(roundedValue)
 
     }
 
     changeToInitQuantity() {
         this.innerform.controls['quantity'].setValue(0);
-        this.innerform.controls['expected_linecost'].setValue(0);
+        this.innerform.controls['expectedLinecost'].setValue(0);
     }
 
     // generateNumber(): void {

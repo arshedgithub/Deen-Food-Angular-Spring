@@ -16,7 +16,7 @@ public class Poitem {
     private BigDecimal quantity;
     @Basic
     @Column(name = "expected_linecost")
-    private BigDecimal expected_linecost;
+    private BigDecimal expectedLinecost;
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "purchaseorder_id", referencedColumnName = "id", nullable = false)
@@ -42,11 +42,11 @@ public class Poitem {
     }
 
     public BigDecimal getExpectedLinecost() {
-        return expected_linecost;
+        return expectedLinecost;
     }
 
     public void setExpectedLinecost(BigDecimal expectedLinecost) {
-        this.expected_linecost = expectedLinecost;
+        this.expectedLinecost = expectedLinecost;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class Poitem {
 
         if (id != null ? !id.equals(poitem.id) : poitem.id != null) return false;
         if (quantity != null ? !quantity.equals(poitem.quantity) : poitem.quantity != null) return false;
-        if (expected_linecost != null ? !expected_linecost.equals(poitem.expected_linecost) : poitem.expected_linecost != null)
+        if (expectedLinecost != null ? !expectedLinecost.equals(poitem.expectedLinecost) : poitem.expectedLinecost != null)
             return false;
 
         return true;
@@ -68,7 +68,7 @@ public class Poitem {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
-        result = 31 * result + (expected_linecost != null ? expected_linecost.hashCode() : 0);
+        result = 31 * result + (expectedLinecost != null ? expectedLinecost.hashCode() : 0);
         return result;
     }
 

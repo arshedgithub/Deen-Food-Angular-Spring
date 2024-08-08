@@ -33,7 +33,7 @@ public class Purchaseorder {
     @Column(name = "description")
     @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
-    @OneToMany(mappedBy = "purchaseorder")
+    @OneToMany(mappedBy = "purchaseorder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Poitem> poitems;
     @ManyToOne
     @JoinColumn(name = "postatus_id", referencedColumnName = "id", nullable = false)
