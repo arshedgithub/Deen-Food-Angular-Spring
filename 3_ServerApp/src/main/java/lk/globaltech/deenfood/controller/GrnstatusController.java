@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/grnstatuses")
-public class grnstatusController {
+public class GrnstatusController {
 
     @Autowired
     private GrnStatusDao grnStatusDao;

@@ -5,7 +5,6 @@ import {MainwindowComponent} from "./view/mainwindow/mainwindow.component";
 import {EmployeeComponent} from "./view/modules/employeeModule/employee/employee.component";
 import {HomeComponent} from "./view/home/home.component";
 import {UserComponent} from "./view/modules/user/user.component";
-import {ArrearsByProgramComponent} from "./report/view/arrearsbyprogram/arrearsbyprogram.component";
 import {PaymentComponent} from "./view/modules/payment/payment.component";
 import {IngredientComponent} from "./view/modules/ingredientModule/ingredient/ingredient.component";
 import {OperationComponent} from "./view/modules/operation/operation.component";
@@ -16,6 +15,7 @@ import {
 } from "./report/view/ingredientcountbycategory/ingredientcountbycategory.component";
 import {SupplierComponent} from "./view/modules/supplierModule/supplier/supplier.component";
 import {PurchaseOrderComponent} from "./view/modules/purchase-order/purchase-order.component";
+import {GrnComponent} from "./view/modules/grn/grn.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -32,6 +32,7 @@ const routes: Routes = [
       {path: "ingredient", component: IngredientComponent},
       {path: "supplier", component: SupplierComponent},
       {path: "purchase", component: PurchaseOrderComponent},
+      {path: "grn", component: GrnComponent},
       {path: "payments",component:PaymentComponent},
       {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
       {path: "reports/countbydesignation", component: CountByDesignationComponent},

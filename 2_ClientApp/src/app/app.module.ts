@@ -48,6 +48,7 @@ import { EmployeeFormComponent } from './view/modules/employeeModule/employee-fo
 import { SupplierFormComponent } from './view/modules/supplierModule/supplier-form/supplier-form.component';
 import { IngredientFormComponent } from './view/modules/ingredientModule/ingredient-form/ingredient-form.component';
 import { PurchaseOrderComponent } from './view/modules/purchase-order/purchase-order.component';
+import { GrnComponent } from './view/modules/grn/grn.component';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { PurchaseOrderComponent } from './view/modules/purchase-order/purchase-o
     SupplierFormComponent,
     IngredientFormComponent,
     PurchaseOrderComponent,
+    GrnComponent,
   ],
     imports: [
         MatDatepickerModule,

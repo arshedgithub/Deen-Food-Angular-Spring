@@ -30,6 +30,7 @@ export class AuthorizationManager {
 
     purchMenuItems = [
         {name: 'Purchase Order', accessFlag: true, routerLink: 'purchase'},
+        {name: 'GRN', accessFlag: true, routerLink: 'grn'},
         {name: 'Supplier', accessFlag: true, routerLink: 'supplier'}
     ];
 
