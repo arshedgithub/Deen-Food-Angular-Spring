@@ -11,7 +11,9 @@ import {DarkModeService} from "../../service/DarkModeService";
 })
 export class MainwindowComponent {
 
-  opened: boolean = true;
+  opened: boolean = false;
+  profileOpened: boolean = false;
+  
 
   constructor(private router: Router,public authService: AuthorizationManager,public darkModeSevice:DarkModeService) {
   }
