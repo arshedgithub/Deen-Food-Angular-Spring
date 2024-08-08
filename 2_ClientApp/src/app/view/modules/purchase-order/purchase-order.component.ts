@@ -35,9 +35,9 @@ export class PurchaseOrderComponent {
     cscolumns: string[] = ['csnumber', 'csemployee', 'cspostatus', 'csdate', 'csdescription', 'csexpectedcost'];
     csprompts: string[] = ['Search by Ponumber', 'Search by Employee', 'Search by Status', 'Search by Date', 'Search by Description', 'Search by Expected Cost'];
 
-    incolumns: string[] = ['ingredient', 'quantity', 'expected_linecost', 'remove'];
-    inheaders: string[] = ['Ingredient', 'Quantity', 'Line Total', 'Remove'];
-    inbinders: string[] = ['ingredient.name', 'quantity', 'expected_linecost', 'getBtn()'];
+    incolumns: string[] = ['ingredient', 'quantity', 'expectedLinecost', 'remove'];
+    inheaders: string[] = ['Ingredient', 'Quantity', 'Line Total', ''];
+    inbinders: string[] = ['ingredient.name', 'quantity', 'expectedLinecost', 'getBtn()'];
 
     innerdata: any;
     oldinnerdata: any;
@@ -115,7 +115,7 @@ export class PurchaseOrderComponent {
         this.innerform = this.fb.group({
             "ingredient": new FormControl('', [Validators.required]),
             "quantity": new FormControl('', [Validators.required]),
-            "expected_linecost": new FormControl('', [Validators.required]),
+            "expectedLinecost": new FormControl('', [Validators.required]),
         }, {updateOn: 'change'});
 
     }
@@ -156,7 +156,6 @@ export class PurchaseOrderComponent {
     }
 
     createForm() {
-
         this.form.controls['number'].setValidators([Validators.required]);
         this.form.controls['postatus'].setValidators([Validators.required]);
         this.form.controls['dorequested'].setValidators([Validators.required, Validators.pattern(this.regexes['dorequested']['regex'])]);
@@ -167,7 +166,7 @@ export class PurchaseOrderComponent {
 
         this.innerform.controls['ingredient'].setValidators([Validators.required]);
         this.innerform.controls['quantity'].setValidators([Validators.required, Validators.pattern(/^\d+$/)]);
-        this.innerform.controls['expected_linecost'].setValidators([Validators.required]);
+        this.innerform.controls['expectedLinecost'].setValidators([Validators.required]);
 
         Object.values(this.form.controls).forEach(control => {
             control.markAsTouched();
@@ -194,7 +193,6 @@ export class PurchaseOrderComponent {
             );
 
         }
-
         this.enableButtons(true, false, false);
     }
 
@@ -225,20 +223,17 @@ export class PurchaseOrderComponent {
 
     filterTable(): void {
 
-        const cserchdata = this.csearch.getRawValue();
-
+        const csearchData = this.csearch.getRawValue();
         this.data.filterPredicate = (purorder: PurchaseOrder, filter: string) => {
             // @ts-ignore
-            return (cserchdata.csnumber == null || purorder.number.toLowerCase().includes(cserchdata.csnumber.toLowerCase())) &&
-                (cserchdata.csemployee == null || purorder.employee.fullname.toLowerCase().includes(cserchdata.csemployee.toLowerCase())) &&
-                (cserchdata.cspostatus == null || purorder.postatus.name.toLowerCase().includes(cserchdata.cspostatus.toLowerCase())) &&
-                (cserchdata.csdescription == null || purorder.description.toLowerCase().includes(cserchdata.csdescription.toLowerCase())) &&
-                (cserchdata.csexpectedcost == null || purorder.expectedtotal == cserchdata.csexpectedcost) &&
-                (cserchdata.csdate == null || purorder.dorequested.includes(cserchdata.csitem.toLowerCase()));
+            return (csearchData.csnumber == null || purorder.number.toLowerCase().includes(csearchData.csnumber.toLowerCase())) &&
+                (csearchData.csemployee == null || purorder.employee.fullname.toLowerCase().includes(csearchData.csemployee.toLowerCase())) &&
+                (csearchData.cspostatus == null || purorder.postatus.name.toLowerCase().includes(csearchData.cspostatus.toLowerCase())) &&
+                (csearchData.csdescription == null || purorder.description.toLowerCase().includes(csearchData.csdescription.toLowerCase())) &&
+                (csearchData.csexpectedcost == null || purorder.expectedtotal == csearchData.csexpectedcost) &&
+                (csearchData.csdate == null || purorder.dorequested.includes(csearchData.csitem.toLowerCase()));
         };
-
         this.data.filter = 'xx';
-
     }
 
     btnSearchMc(): void {
@@ -250,12 +245,9 @@ export class PurchaseOrderComponent {
         let postatusid = sserchdata.sspostatus;
 
         let query = "";
-
         if (number != null && number.trim() != "") query = query + "&number=" + number;
         if (postatusid != null) query = query + "&postatusid=" + postatusid;
-
         if (query != "") query = query.replace(/^./, "?")
-
         this.loadTable(query);
 
     }
@@ -274,7 +266,6 @@ export class PurchaseOrderComponent {
                 this.loadTable("");
             }
         });
-
     }
 
     getErrors(): string {
@@ -292,7 +283,6 @@ export class PurchaseOrderComponent {
                 }
             }
         }
-
         return errors;
     }
 
@@ -301,7 +291,6 @@ export class PurchaseOrderComponent {
         this.enableButtons(false, true, true);
 
         this.selectedrow = purorder;
-
         this.purchaseOrder = JSON.parse(JSON.stringify(purorder));
         this.oldPurchaseOrder = JSON.parse(JSON.stringify(purorder));
 
@@ -313,11 +302,9 @@ export class PurchaseOrderComponent {
         this.purchaseOrder.supplier = this.suppliers.find(e => e.id === this.purchaseOrder.supplier.id);
 
         this.indata = new MatTableDataSource(this.purchaseOrder.poitems);
-        console.log(this.indata, this.purchaseOrder.poitems)
-        console.log(this.purchaseOrder)
+        this.form.patchValue(this.purchaseOrder);
         this.form.markAsPristine();
         this.calculateGrandTotal();
-
     }
 
     add() {
@@ -561,7 +548,7 @@ export class PurchaseOrderComponent {
         const confirm = this.dg.open(ConfirmComponent, {
             width: '500px',
             data: {
-                heading: "Confirmation - Purorder Clear",
+                heading: "Confirmation - Purchase Order Clear",
                 message: "Are you sure to Clear following Details ? <br> <br>"
             }
         });
@@ -585,33 +572,28 @@ export class PurchaseOrderComponent {
         console.log(this.innerdata);
 
         if (this.innerdata != null) {
-
             let expectedLineTotal = this.innerdata.quantity * this.innerdata.ingredient.cost;
             let poitem = new Poitem(this.id, this.innerdata.quantity, expectedLineTotal, this.innerdata.ingredient);
-
             let poitems: Poitem[] = [];
             if (this.indata != null) this.indata.data.forEach((i) => poitems.push(i));
 
             this.poitems = [];
             poitems.forEach((i) => this.poitems.push(i));
-
             this.poitems.push(poitem);
             this.indata = new MatTableDataSource(this.poitems);
 
             this.id++;
-
             this.calculateGrandTotal();
             this.innerform.reset();
 
         }
-
     }
 
     calculateGrandTotal() {
 
         let expectedcost = 0;
         this.indata.data.forEach((m) => {
-            expectedcost = expectedcost + m.expected_linecost
+            expectedcost = expectedcost + m.expectedLinecost
         });
         let roundedValue = parseFloat(expectedcost.toString()).toFixed(2);
         this.form.controls['expectedtotal'].setValue(roundedValue);
@@ -637,14 +619,14 @@ export class PurchaseOrderComponent {
         console.log(ingredientCost)
         let roundedValue = parseFloat(ingredientCost).toFixed(2);
         // @ts-ignore
-        this.innerform.controls['expected_linecost'].setValue(roundedValue * qnty);
+        this.innerform.controls['expectedLinecost'].setValue(roundedValue * qnty);
         console.log(roundedValue)
 
     }
 
     changeToInitQuantity() {
         this.innerform.controls['quantity'].setValue(0);
-        this.innerform.controls['expected_linecost'].setValue(0);
+        this.innerform.controls['expectedLinecost'].setValue(0);
     }
 
     // generateNumber(): void {

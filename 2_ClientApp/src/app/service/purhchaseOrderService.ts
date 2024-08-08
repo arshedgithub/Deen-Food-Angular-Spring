@@ -20,6 +20,7 @@ export class PurchaseOrderService {
 
   async add(purorder: PurchaseOrder): Promise<[] | undefined> {
     console.log(purorder)
+    console.log(JSON.stringify(purorder.poitems[0]))
     return this.http.post<[]>('http://localhost:8080/purchaseorders', purorder).toPromise();
   }
 

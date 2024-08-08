@@ -121,3 +121,11 @@ mat-card-title {
     color: black;
     /*font-weight: bold;*/
 }
+
+#lineDelete {
+    color: #c70303;
+}
+
+#totalFormField {
+    margin-top: 20px !important;
+}

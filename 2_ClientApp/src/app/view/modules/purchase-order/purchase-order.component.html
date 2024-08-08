@@ -70,7 +70,7 @@
 
               <mat-form-field appearance="outline">
                 <mat-label>Line Total</mat-label>
-                <input matInput formControlName="expected_linecost" readonly>
+                <input matInput formControlName="expectedLinecost" readonly>
               </mat-form-field>
 
               <button mat-raised-button id="btnAdd" (click)="btnAddLine()"><mat-icon>add_circle</mat-icon>Add</button>
@@ -82,18 +82,18 @@
                 <mat-cell *matCellDef="let element" >
                   <div *ngIf="i<inbinders.length-1" [innerHTML]="uiassist.getProperty(element, inbinders[i])"></div>
                   <div *ngIf="i>=inbinders.length-1">
-                    <button mat-raised-button (click)="deleteRaw(element)">Remove</button>
+                    <button mat-icon-button id="lineDelete" (click)="deleteRaw(element)"><mat-icon>delete</mat-icon></button>
                   </div>
                 </mat-cell>
               </ng-container>
 
               <mat-header-row *matHeaderRowDef="incolumns"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: incolumns" ></mat-row>
+              <mat-row *matRowDef="let row; columns: incolumns" (click)="filteritem()"></mat-row>
             </mat-table>
 
           </div>
 
-          <mat-form-field appearance="outline">
+          <mat-form-field id="totalFormField" appearance="outline">
             <mat-label>Expected Cost</mat-label>
             <input matInput formControlName="expectedtotal" readonly>
           </mat-form-field>
@@ -116,7 +116,7 @@
   <mat-grid-tile [colspan]="8" [rowspan]="4">
     <mat-card id="ssearch">
       <mat-card-header>
-        <mat-card-title>Purchase Order Search</mat-card-title>
+        <mat-card-title >Purchase Order Search</mat-card-title>
       </mat-card-header>
 
       <mat-card-content>
