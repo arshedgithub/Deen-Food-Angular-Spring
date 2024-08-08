@@ -11,7 +11,8 @@ import {DarkModeService} from "../../service/DarkModeService";
 })
 export class MainwindowComponent {
 
-  opened: boolean = true;
+  opened: boolean = false;
+  profileOpened: boolean = false;
   reportGroup: any = [
     {name: "Count By Designation", routerlink: "reports/countbydesignation"},
     {name: "Ingredient Count By Category", routerlink: "reports/ingredientcountbycategory"}
@@ -31,7 +32,6 @@ export class MainwindowComponent {
   }
     admMenuItems = this.authService.admMenuItems;
     invMenuItems = this.authService.invMenuItems;
-    acdMenuItems = this.authService.acdMenuItems;
     regMenuItems = this.authService.regMenuItems;
     clsMenuItems = this.authService.clsMenuItems;
 
