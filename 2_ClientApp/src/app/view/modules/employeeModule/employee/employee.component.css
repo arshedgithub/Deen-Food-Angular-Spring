@@ -8,14 +8,14 @@ mat-card-content {
 }
 
 mat-card-header {
-  background: #fff3ee;
+  background: #bbdefb;
   color: #000000;
   padding: 16px;
   padding-left: 20px;
 }
 
 button#new_sup {
-  background: #444481;
+  background: #1565c0;
   color: white;
   margin-top: 15px;
   padding: 20px;
@@ -55,12 +55,19 @@ button#new_sup:hover {
   width: 195px;
   margin-left: 10px;
   margin-top: 5px;
-  background-color: #6472d5;
+  background-color: #1976d2;
 }
 
 .selected-row {
   background-color: #c9e6ff !important;
 }
 
+#editBtn {
+  color: blue;
+  border: 1px solid blue;
+}
 
-
+#delBtn {
+  border: 1px solid red;
+  color: red;
+}

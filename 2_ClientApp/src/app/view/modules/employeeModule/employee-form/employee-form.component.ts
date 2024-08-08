@@ -16,6 +16,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 import {RegexService} from "../../../../service/regexservice";
 import {DatePipe} from "@angular/common";
 import {EmployeeService} from "../../../../service/employeeservice";
+import {finalize} from "rxjs";
 
 @Component({
   selector: 'app-employee-form',
@@ -32,8 +33,6 @@ export class EmployeeFormComponent implements OnInit{
   popupTitle: any;
   selectedrow!: Employee;
 
-  // enaadd:boolean = false;
-  // enaupd:boolean = false;
 
   genders: Array<Gender> = [];
   designations: Array<Designation> = [];
@@ -48,33 +47,39 @@ export class EmployeeFormComponent implements OnInit{
     this.initialize();
   }
 
-  initialize(){
-
-    this.gs.getAllList().then((gens: Gender[]) => {
-      this.genders = gens;
-    });
-
-    this.ds.getAllList().then((dess: Designation[]) => {
-      this.designations = dess;
-    });
-
-    this.ss.getAllList().then((stes: Empstatus[]) => {
-      this.employeestatuses = stes;
-    });
-
-    this.ts.getAllList().then((types: Emptype[]) => {
-      this.employeetypes = types;
-    });
-
+  initialize() {
     this.rs.get('employee').then((regs: []) => {
       this.regexes = regs;
       this.createForm();
     });
 
     this.popupTitle = this.data.title;
-    if (this.popupTitle == "Edit Employee") this.fillForm(this.data.employee);
+    if (this.popupTitle == "Edit Employee") {
 
+      const genderLoad = this.gs.getAllList().then((gens: Gender[]) => {
+        this.genders = gens;
+        console.log(this.genders);
+      });
+
+      const designationLoad = this.ds.getAllList().then((dess: Designation[]) => {
+        this.designations = dess;
+      });
+
+      const statusLoad = this.ss.getAllList().then((stes: Empstatus[]) => {
+        this.employeestatuses = stes;
+      });
+
+      const typeLoad = this.ts.getAllList().then((types: Emptype[]) => {
+        this.employeetypes = types;
+      });
+
+      Promise.all([genderLoad, designationLoad, statusLoad, typeLoad])
+        .then(() => {
+          this.fillForm(this.data.employee);
+        });
+    }
   }
+
 
   constructor(
       private es: EmployeeService,
@@ -114,6 +119,8 @@ export class EmployeeFormComponent implements OnInit{
   }
 
   createForm() {
+
+
 
     this.form.controls['number'].setValidators([Validators.required, Validators.pattern(this.regexes['number']['regex'])]);
     this.form.controls['fullname'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
@@ -286,9 +293,9 @@ export class EmployeeFormComponent implements OnInit{
 
   fillForm(employee: Employee) {
 
-    // this.enableButtons(false,true,true);
+    console.log(this.genders);
+
     this.selectedrow = employee;
-    console.log(employee)
     this.employee = JSON.parse(JSON.stringify(employee));
     this.oldemployee = JSON.parse(JSON.stringify(employee));
 
@@ -300,10 +307,9 @@ export class EmployeeFormComponent implements OnInit{
     }
     this.employee.photo = "";
 
-    console.log(this.designations, this.genders)
-
-    //@ts-ignore
+    // @ts-ignore
     this.employee.gender = this.genders.find(g => g.id === this.employee.gender.id);
+
     //@ts-ignore
     this.employee.designation = this.designations.find(d => d.id === this.employee.designation.id);
     //@ts-ignore
@@ -382,7 +388,7 @@ export class EmployeeFormComponent implements OnInit{
                 updstatus = false;
                 updmessage = "Content Not Found"
               }
-            } ).finally(() => {
+            }).finally(() => {
               if (updstatus) {
                 updmessage = "Successfully Updated";
                 this.form.reset();
@@ -425,7 +431,8 @@ export class EmployeeFormComponent implements OnInit{
 
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        this.form.reset()
+        this.form.reset();
+        this.onCloseForm();
       }
     });
   }

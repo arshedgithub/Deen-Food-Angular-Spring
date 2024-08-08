@@ -45,6 +45,7 @@ export class IngredientFormComponent {
   regexes!: any;
   col!: {[p: string]: any;}
   itemNameSubs!: Subscription;
+  intcatsub!: Subscription;
   selectedRow!: any;
 
   ingredientStatuses: Array<Ingstatus> = [];
@@ -164,7 +165,8 @@ export class IngredientFormComponent {
 
 
   filterBrands(): void {
-    this.form.get("ingcategory")?.valueChanges.subscribe((cat: Ingcategory) => {
+   // @ts-ignore
+    this.intcatsub = this.form.get("ingcategory")?.valueChanges.subscribe((cat: Ingcategory) => {
       let qry = '?categoryid=' + cat.id;
       this.br.getAllList(qry).then((brands: Brand[]) => {
         this.brands = brands
@@ -317,6 +319,7 @@ export class IngredientFormComponent {
   }
 
   fillForm(ingredient: Ingredient) {
+    this.intcatsub.unsubscribe();
 
     this.selectedRow = ingredient;
     this.ingredient = JSON.parse(JSON.stringify(ingredient));
@@ -334,32 +337,28 @@ export class IngredientFormComponent {
     this.ingredient.photo = "";
     this.itemNameSubs.unsubscribe();
 
+  // @ts-ignore
     this.form.get("ingcategory")?.valueChanges.subscribe((category: Ingcategory) => {
       let qry = "?categoryid=" + category.id;
       this.br.getAllList(qry).then((brands: Brand[]) => {
-        // console.log(brands)
         this.brands = brands;
-        // @ts-ignore
-        // this.ingredient.brand = this.brands.find(b => {
-        //   console.log(b, this.ingredient)
-        //   b.id === this.ingredient.brand.id   // brand undefined
-        // });
-        // @ts-ignore
-        this.ingredient.unittype = this.unittypes.find(u => u.id === this.ingredient.unittype.id);
-        // @ts-ignore
-        this.ingredient.ingstatus = this.ingredientStatuses.find(i => i.id === this.ingredient.ingstatus.id);
-        // @ts-ignore
-        this.ingredient.employee = this.employees.find(e => e.id === this.ingredient.employee.id);
+
         // @ts-ignore
         this.ingredient.brand = this.brands.find(e => e.id === this.ingredient.brand.id);
+
 
         this.form.patchValue(this.ingredient);
         this.form.markAsPristine();
 
-        // this.enableButtons(false, true, true);
 
       });
     });
+    // @ts-ignore
+    this.ingredient.unittype = this.unittypes.find(u => u.id === this.ingredient.unittype.id);
+    // @ts-ignore
+    this.ingredient.ingstatus = this.ingredientStatuses.find(i => i.id === this.ingredient.ingstatus.id);
+    // @ts-ignore
+    this.ingredient.employee = this.employees.find(e => e.id === this.ingredient.employee.id);
     // @ts-ignore
     this.ingredient.ingcategory = this.ingredientCategories.find(c => c.id === this.ingredient.ingcategory.id);
     this.form.controls['ingcategory'].setValue(this.ingredient.ingcategory);

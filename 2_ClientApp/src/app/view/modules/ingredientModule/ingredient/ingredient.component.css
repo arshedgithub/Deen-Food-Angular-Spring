@@ -56,13 +56,9 @@ button#new_ing {
 #editBtn {
   color: blue;
   border: 1px solid blue;
-  margin-left: 0px;
-  margin-right: 0px;
 }
 
 #delBtn {
   border: 1px solid red;
   color: red;
-  margin-left: 0px;
-  margin-right: 0px;
 }
