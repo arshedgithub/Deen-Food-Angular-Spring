@@ -125,3 +125,12 @@ mat-card {
 mat-grid-tile {
     margin: 10px 10px 300px 10px;
 }
+
+#innertable {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#lineDelete {
+    color: #c70303;
+}

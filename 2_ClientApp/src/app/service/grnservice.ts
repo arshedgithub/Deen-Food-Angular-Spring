@@ -19,6 +19,7 @@ export class GrnService {
   }
 
   async add(grn: Grn): Promise<[]|undefined>{
+    console.log(grn )
     return this.http.post<[]>('http://localhost:8080/grns', grn).toPromise();
   }
 

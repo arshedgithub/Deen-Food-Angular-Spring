@@ -38,6 +38,16 @@ public class RegexController {
         return RegexProvider.get(new Purchaseorder());
     }
 
+    @GetMapping(path ="/grns", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> grn() {
+        return RegexProvider.get(new Grn());
+    }
+
+    @GetMapping(path ="/grnitems", produces = "application/json")
+    public HashMap<String, HashMap<String, String>> grnitems() {
+        return RegexProvider.get(new Grnitem());
+    }
+
 }
 
 

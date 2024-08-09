@@ -12,7 +12,7 @@ export class Grn{
   public grandtotal !: number;
   public employee !: Employee;
   public grnstatus !: Grnstatus;
-  public purorder !: PurchaseOrder;
+  public purchaseorder !: PurchaseOrder;
   public grnitems !: Array<Grnitem>;
 
   constructor(id: number, date: string, description: string,grnnumber: string, grandtotal: number, employee:Employee, grnstatus:Grnstatus, purorder:PurchaseOrder, grnitems: Array<Grnitem>) {
@@ -23,7 +23,7 @@ export class Grn{
     this.grandtotal = grandtotal;
     this.grnstatus = grnstatus;
     this.grnitems = grnitems;
-    this.purorder = purorder;
+    this.purchaseorder = purorder;
     this.employee = employee;
   }
 

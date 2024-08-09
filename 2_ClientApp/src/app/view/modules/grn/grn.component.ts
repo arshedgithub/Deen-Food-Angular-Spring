@@ -27,16 +27,16 @@ import {MessageComponent} from "../../../util/dialog/message/message.component";
     styleUrls: ['./grn.component.css']
 })
 export class GrnComponent {
-    columns: string[] = ['employee', 'grnstatus', 'purorder', 'date', 'grnnumber', 'description'];
-    headers: string[] = ['Employee', 'Status', 'Purorder No', 'Date', 'Number', 'Description'];
-    binders: string[] = ['employee.fullname', 'grnstatus.name', 'purorder.ponumber', 'date', 'grnnumber', 'description'];
+    columns: string[] = ['employee', 'grnstatus', 'purchaseorder', 'date', 'grnnumber', 'description'];
+    headers: string[] = ['Employee', 'Status', 'Purchase Order No.', 'Date', 'Number', 'Description'];
+    binders: string[] = ['employee.fullname', 'grnstatus.name', 'purchaseorder.number', 'date', 'grnnumber', 'description'];
 
     cscolumns: string[] = ['csemployee', 'csgrnstatus', 'cspurorder', 'csdate', 'csgrnnumber', 'csdescription'];
     csprompts: string[] = ['Search by Employee', 'Search by Status', 'Search by Purorder No', 'Search by Date', 'Search by Number', 'Search by Description'];
 
-    incolumns: string[] = ['item', 'unitcost', 'qty', 'linecost', 'store', 'remove'];
-    inheaders: string[] = ['Item', 'Unit Cost', 'QTY', 'Line cost', 'Store', 'Remove',];
-    inbinders: string[] = ['item.name', 'unitcost', 'qty', 'linecost', 'store.storenumber', 'getBtn()'];
+    incolumns: string[] = ['ingredient', 'unitcost', 'quantity', 'linecost', 'remove'];
+    inheaders: string[] = ['ingredient', 'Unit Cost', 'Quantity', 'Line cost', ''];
+    inbinders: string[] = ['ingredient.name', 'unitcost', 'quantity', 'linecost', 'getBtn()'];
 
     innerdata: any;
     oldinnerdata: any;
@@ -107,20 +107,17 @@ export class GrnComponent {
             "grnnumber": new FormControl('', [Validators.required],),
             "date": new FormControl(this.today, [Validators.required],),
             "description": new FormControl('', [Validators.required]),
-            "grandtotal": new FormControl('', [Validators.required]),
+            "grandTotal": new FormControl('', [Validators.required]),
             "grnstatus": new FormControl('', [Validators.required]),
             "employee": new FormControl('', [Validators.required]),
-            "purorder": new FormControl('', [Validators.required]),
+            "purchaseorder": new FormControl('', [Validators.required]),
 
         }, {updateOn: 'change'});
 
         this.innerform = this.fb.group({
-
-            "store": new FormControl('', [Validators.required]),
-            "qty": new FormControl('', [Validators.required]),
+            "quantity": new FormControl('', [Validators.required]),
             "unitcost": new FormControl('', [Validators.required]),
-            "item": new FormControl('', [Validators.required]),
-
+            "ingredient": new FormControl('', [Validators.required]),
         }, {updateOn: 'change'});
 
     }
@@ -133,30 +130,29 @@ export class GrnComponent {
 
         this.createView();
 
-        this.grss.getAllList().then((vsts: Grnstatus[]) => {
-            this.grnstatuses = vsts;
+        this.grss.getAllList().then((grnsts: Grnstatus[]) => {
+            this.grnstatuses = grnsts;
         });
 
-        this.emps.getAll('').then((vtys: Employee[]) => {
-            this.employees = vtys;
+        this.emps.getAll('').then((emps: Employee[]) => {
+            this.employees = emps;
         });
 
-        this.pos.getAll('').then((vbrs: PurchaseOrder[]) => {
-            this.purorders = vbrs.filter(po => po.postatus.name != 'Pending');
+        this.pos.getAll('').then((pos: PurchaseOrder[]) => {
+            this.purorders = pos.filter(po => po.postatus.name != 'Pending');
         });
 
-        this.ings.getAll('').then((vbrs: Ingredient[]) => {
-            this.ingredients = vbrs;
+        this.ings.getAll('').then((ings: Ingredient[]) => {
+            this.ingredients = ings;
         });
 
-        this.rs.get('grn').then((regs: []) => {
+        this.rs.get('grns').then((regs: []) => {
             this.regexes = regs;
-            this.rs.get('grnitem').then((regs: []) => {
+            this.rs.get('grnitems').then((regs: []) => {
                 this.innerregexes = regs;
                 this.createForm();
             })
         });
-
     }
 
     filterDates = (date: Date | null): boolean => {
@@ -170,20 +166,17 @@ export class GrnComponent {
     }
 
     createForm() {
-
         this.form.controls['grnnumber'].setValidators([Validators.required]);
         this.form.controls['date'].setValidators([Validators.required]);
         this.form.controls['description'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
-        this.form.controls['grandtotal'].setValidators([Validators.required, Validators.pattern(this.regexes['grandtotal']['regex'])]);
-        this.form.controls['grnstatuse'];
+        this.form.controls['grandTotal'].setValidators([Validators.required, Validators.pattern(this.regexes['grandTotal']['regex'])]);
+        this.form.controls['grnstatus'];
         this.form.controls['employee'].setValidators([Validators.required]);
-        this.form.controls['purorder'].setValidators([Validators.required]);
+        this.form.controls['purchaseorder'].setValidators([Validators.required]);
 
-        this.innerform.controls['store'].setValidators([Validators.required]);
-        this.innerform.controls['qty'].setValidators([Validators.required, Validators.required, Validators.pattern(this.innerregexes['qty']['regex'])]);
+        this.innerform.controls['quantity'].setValidators([Validators.required, Validators.required, Validators.pattern(this.innerregexes['quantity']['regex'])]);
         this.innerform.controls['unitcost'].setValidators([Validators.required, Validators.pattern(this.innerregexes['unitcost']['regex'])]);
-        this.innerform.controls['item'].setValidators([Validators.required]);
-
+        this.innerform.controls['ingredient'].setValidators([Validators.required]);
 
         Object.values(this.form.controls).forEach(control => {
             control.markAsTouched();
@@ -196,22 +189,16 @@ export class GrnComponent {
             const control = this.form.controls[controlName];
             control.valueChanges.subscribe(value => {
                     // @ts-ignore
-                    if (controlName == "date" || controlName == "date")
-                        value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
-
+                    if (controlName == "date") value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
                     if (this.oldgrn != undefined && control.valid) {
                         // @ts-ignore
-                        if (value === this.grn[controlName]) {
-                            control.markAsPristine();
-                        } else {
-                            control.markAsDirty();
-                        }
+                        if (value === this.grn[controlName]) control.markAsPristine();
+                        else control.markAsDirty();
                     } else {
                         control.markAsPristine();
                     }
                 }
             );
-
         }
 
         for (const controlName in this.innerform.controls) {
@@ -230,9 +217,7 @@ export class GrnComponent {
                     }
                 }
             );
-
         }
-
         this.enableButtons(true, false, false);
     }
 
@@ -243,10 +228,9 @@ export class GrnComponent {
     }
 
     loadTable(query: string) {
-
         this.grs.getAll(query)
-            .then((emps: Grn[]) => {
-                this.grns = emps;
+            .then((grns: Grn[]) => {
+                this.grns = grns;
                 // this.ns.setLastSequenceNumber(this.grns[this.grns.length - 1].grnnumber);
                 // this.generateNumber();
                 this.imageurl = 'assets/fullfilled.png';
@@ -255,14 +239,12 @@ export class GrnComponent {
                 this.imageurl = 'assets/rejected.png';
             })
             .finally(() => {
-                this.data = new MatTableDataSource(this.grns.slice().reverse());
+                this.data = new MatTableDataSource(this.grns);
                 this.data.paginator = this.paginator;
             });
-
     }
 
     filterTable(): void {
-
         const csearchdata = this.csearch.getRawValue();
 
         this.data.filterPredicate = (grn: Grn, filter: string) => {
@@ -271,17 +253,14 @@ export class GrnComponent {
                 (csearchdata.csgrnstatus == null || grn.grnstatus.name.toLowerCase().includes(csearchdata.csgrnstatus.toLowerCase())) &&
                 (csearchdata.csgrnnumber == null || grn.grnnumber.toLowerCase().includes(csearchdata.csgrnnumber.toLowerCase())) &&
                 (csearchdata.csemployee == null || grn.employee.fullname.toLowerCase().includes(csearchdata.csemployee.toLowerCase())) &&
-                (csearchdata.cspurorder == null || grn.purorder.number.toLowerCase().includes(csearchdata.cspurorder.toLowerCase()));
+                (csearchdata.cspurorder == null || grn.purchaseorder.number.toLowerCase().includes(csearchdata.cspurorder.toLowerCase()));
         };
         this.data.filter = 'xx';
-
     }
 
     btnSearchMc(): void {
-
         this.csearch.reset();
         const sserchdata = this.ssearch.getRawValue();
-
         let purorderid = sserchdata.sspurorder;
         let grnstatusid = sserchdata.ssgrnstatus;
 
@@ -299,7 +278,6 @@ export class GrnComponent {
             width: '500px',
             data: {heading: "Search Clear", message: "Are you sure to Clear the Search?"}
         });
-
         confirm.afterClosed().subscribe(async result => {
             if (result) {
                 this.csearch.reset();
@@ -312,11 +290,9 @@ export class GrnComponent {
     getErrors(): string {
 
         let errors: string = "";
-
         for (const controlName in this.form.controls) {
             const control = this.form.controls[controlName];
             if (control.errors) {
-
                 if (this.regexes[controlName] != undefined) {
                     errors = errors + "<br>" + this.regexes[controlName]['message'];
                 } else {
@@ -324,7 +300,6 @@ export class GrnComponent {
                 }
             }
         }
-
         return errors;
     }
 
@@ -356,7 +331,7 @@ export class GrnComponent {
         if (errors != "") {
             const errmsg = this.dg.open(MessageComponent, {
                 width: '500px',
-                data: {heading: "Errors - grn Add ", message: "You have following Errors <br> " + errors}
+                data: {heading: "Errors - GRN Add ", message: "You have following Errors <br> " + errors}
             });
             errmsg.afterClosed().subscribe(async result => {
                 if (!result) {
@@ -373,13 +348,14 @@ export class GrnComponent {
 
             let itmdata: string = "";
 
-            itmdata = itmdata + "<br>Date is : " + this.grn.date;
+            itmdata = itmdata + "<br>GRN : " + this.grn.grnnumber;
             itmdata = itmdata + "<br>Description is : " + this.grn.description;
+            itmdata = itmdata + "<br>Date is : " + this.grn.date;
 
             const confirm = this.dg.open(ConfirmComponent, {
                 width: '500px',
                 data: {
-                    heading: "Confirmation - grn Add",
+                    heading: "Confirmation - GRN Add",
                     message: "Are you sure to Add the following grn? <br> <br>" + itmdata
                 }
             });
@@ -390,19 +366,18 @@ export class GrnComponent {
             confirm.afterClosed().subscribe(async result => {
                 if (result) {
                     // @ts-ignore
-                    this.grs.add(this.grn).then((responce: [] | undefined) => {
-                        if (responce != undefined) { // @ts-ignore
+                    this.grs.add(this.grn).then((response: [] | undefined) => {
+                        if (response != undefined) { // @ts-ignore
                             // @ts-ignore
-                            addstatus = responce['errors'] == "";
+                            addstatus = response['errors'] == "";
                             if (!addstatus) { // @ts-ignore
-                                addmessage = responce['errors'];
+                                addmessage = response['errors'];
                             }
                         } else {
                             addstatus = false;
                             addmessage = "Content Not Found"
                         }
                     }).finally(() => {
-
                         if (addstatus) {
                             addmessage = "Successfully Saved";
                             this.form.reset();
@@ -414,13 +389,11 @@ export class GrnComponent {
 
                         const stsmsg = this.dg.open(MessageComponent, {
                             width: '500px',
-                            data: {heading: "Status -grn Add", message: addmessage}
+                            data: {heading: "Status - GRN Add", message: addmessage}
                         });
 
                         stsmsg.afterClosed().subscribe(async result => {
-                            if (!result) {
-                                return;
-                            }
+                            if (!result) return;
                         });
                     });
                 }
@@ -429,11 +402,8 @@ export class GrnComponent {
     }
 
     update() {
-
         let errors = this.getErrors();
-
         if (errors != "") {
-
             const errmsg = this.dg.open(MessageComponent, {
                 width: '500px',
                 data: {heading: "Errors - grn Update ", message: "You have following Errors <br> " + errors}
@@ -445,24 +415,20 @@ export class GrnComponent {
             });
 
         } else {
-
             let updates: string = this.getUpdates();
-
             if (updates != "") {
-
                 let updstatus: boolean = false;
                 let updmessage: string = "Server Not Found";
 
                 const confirm = this.dg.open(ConfirmComponent, {
                     width: '500px',
                     data: {
-                        heading: "Confirmation - grn Update",
+                        heading: "Confirmation - GRN Update",
                         message: "Are you sure to Save folowing Updates? <br> <br>" + updates
                     }
                 });
                 confirm.afterClosed().subscribe(async result => {
                     if (result) {
-
                         this.grn = this.form.getRawValue();
                         this.grn.grnitems = this.grnitems;
                         // @ts-ignore
@@ -474,12 +440,11 @@ export class GrnComponent {
                         // @ts-ignore
                         this.grn.date = this.dp.transform(this.grn.date, "yyyy-MM-dd");
 
-
-                        this.grs.update(this.grn).then((responce: [] | undefined) => {
-                            if (responce != undefined) { // @ts-ignore
-                                updstatus = responce['errors'] == "";
+                        this.grs.update(this.grn).then((response: [] | undefined) => {
+                            if (response != undefined) { // @ts-ignore
+                                updstatus = response['errors'] == "";
                                 if (!updstatus) { // @ts-ignore
-                                    updmessage = responce['errors'];
+                                    updmessage = response['errors'];
                                 }
                             } else {
                                 updstatus = false;
@@ -495,7 +460,6 @@ export class GrnComponent {
                                 this.loadTable("");
                                 this.innerdata.data = [];
                             }
-
                             const stsmsg = this.dg.open(MessageComponent, {
                                 width: '500px',
                                 data: {heading: "Status -grn Add", message: updmessage}
@@ -505,30 +469,24 @@ export class GrnComponent {
                                     return;
                                 }
                             });
-
                         });
                     }
                 });
             } else {
-
                 const updmsg = this.dg.open(MessageComponent, {
                     width: '500px',
-                    data: {heading: "Confirmation - grn Update", message: "Nothing Changed"}
+                    data: {heading: "Confirmation - GRN Update", message: "Nothing Changed"}
                 });
                 updmsg.afterClosed().subscribe(async result => {
                     if (!result) {
                         return;
                     }
                 });
-
             }
         }
-
-
     }
 
     getUpdates(): string {
-
         let updates: string = "";
         for (const controlName in this.form.controls) {
             const control = this.form.controls[controlName];
@@ -544,7 +502,7 @@ export class GrnComponent {
         const confirm = this.dg.open(ConfirmComponent, {
             width: '500px',
             data: {
-                heading: "Confirmation - grn Delete",
+                heading: "Confirmation - GRN Delete",
                 message: "Are you sure to Delete following grn? <br> <br>" + this.grn.date + "id " + this.grn.id
             }
         });
@@ -554,12 +512,12 @@ export class GrnComponent {
                 let delstatus: boolean = false;
                 let delmessage: string = "Server Not Found";
 
-                this.grs.delete(this.grn.id).then((responce: [] | undefined) => {
+                this.grs.delete(this.grn.id).then((response: [] | undefined) => {
 
-                    if (responce != undefined) { // @ts-ignore
-                        delstatus = responce['errors'] == "";
+                    if (response != undefined) { // @ts-ignore
+                        delstatus = response['errors'] == "";
                         if (!delstatus) { // @ts-ignore
-                            delmessage = responce['errors'];
+                            delmessage = response['errors'];
                         }
                     } else {
                         delstatus = false;
@@ -594,7 +552,7 @@ export class GrnComponent {
         const confirm = this.dg.open(ConfirmComponent, {
             width: '500px',
             data: {
-                heading: "Confirmation - grn Clear",
+                heading: "Confirmation - GRN Clear",
                 message: "Are you sure to Clear following Details ? <br> <br>"
             }
         });
@@ -607,8 +565,6 @@ export class GrnComponent {
                 window.location.reload();
             }
         });
-
-
     }
 
     // filterIngredient() {
@@ -627,38 +583,38 @@ export class GrnComponent {
         this.innerdata = this.innerform.getRawValue();
         console.log(this.innerdata);
 
-        if (!this.quantityValidator() && !this.enaupd) {
-            return; // If validation fails, exit the function
-        }
+        // if (!this.quantityValidator() && !this.enaupd) {
+        //     return; // If validation fails, exit the function
+        // }
 
         if (this.innerdata != null) {
 
-            let linecost = this.innerdata.qty * this.innerdata.unitcost;
-            let grnitem = new Grnitem(this.id, this.innerdata.item, this.innerdata.unitcost, this.innerdata.qty, linecost);
-            let tem: Grnitem[] = [];
-            if (this.indata != null) this.indata.data.forEach((i) => tem.push(i));
+            let linecost = this.innerdata.quantity * this.innerdata.unitcost;
+            let grnitem = new Grnitem(this.id, this.innerdata.ingredient, this.innerdata.unitcost, this.innerdata.quantity, linecost);
+            let grnitems: Grnitem[] = [];
+            if (this.indata != null) this.indata.data.forEach((i) => grnitems.push(i));
 
             this.grnitems = [];
-            tem.forEach((t) => this.grnitems.push(t));
+            grnitems.forEach((t) => this.grnitems.push(t));
 
             this.grnitems.push(grnitem);
             this.indata = new MatTableDataSource(this.grnitems);
+            console.log(this.indata)
 
             this.id++;
             this.calculateGrandTotal();
             this.innerform.reset();
-
         }
 
     }
 
     calculateGrandTotal() {
-        let grandtotal = 0;
+        let grandTotal = 0;
         this.indata.data.forEach((m) => {
-            grandtotal = grandtotal + m.linecost
+            grandTotal = grandTotal + m.linecost
         })
 
-        this.form.controls['grandtotal'].setValue(grandtotal);
+        this.form.controls['grandTotal'].setValue(grandTotal);
     }
 
     deleteRaw(x: any) {
@@ -690,14 +646,12 @@ export class GrnComponent {
         this.innerdata.store = this.stores.find((s) => s.id === this.innerdata.store.id);
 
         this.innerform.patchValue(this.innerdata);
-
     }
-
 
     quantityValidator(): boolean {
         if (!this.enaupd) {
             let po = this.form.controls['purorder'].value.poitems;
-            let it = this.innerform.controls['item'].value;
+            let it = this.innerform.controls['ingredient'].value;
             let qy = 0;
 
             if (Array.isArray(po) && it && it.id) {
@@ -709,12 +663,12 @@ export class GrnComponent {
                     }
                 }
             }
-            let q = this.innerform.controls['qty'].value;
+            let q = this.innerform.controls['quantity'].value;
             if (qy < q) {
                 const addmessage = `Required quantity (${q}) exceeds available quantity (${qy}).`;
                 const stsmsg = this.dg.open(MessageComponent, {
                     width: '500px',
-                    data: {heading: "Error -grn Add", message: addmessage}
+                    data: {heading: "Error - GRN Add", message: addmessage}
                 });
                 return false;
             }

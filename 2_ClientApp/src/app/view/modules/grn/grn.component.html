@@ -12,7 +12,7 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Number</mat-label>
-                        <input matInput formControlName="grnnumber" readonly>
+                        <input matInput formControlName="grnnumber">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
@@ -25,16 +25,16 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Date</mat-label>
-                        <input matInput [matDatepicker]="date" [min]="today" [max]="today" readonly formControlName="date">
+                        <input matInput [matDatepicker]="date" readonly formControlName="date">
                         <mat-datepicker-toggle matIconSuffix [for]="date"></mat-datepicker-toggle>
                         <mat-datepicker #date></mat-datepicker>
                     </mat-form-field>
 
-
-<!--                    <mat-form-field appearance="outline">-->
-<!--                        <mat-label>Purorder</mat-label>-->
+                    <mat-form-field appearance="outline">
+                        <mat-label>Purchase Order</mat-label>
 <!--                        <mat-select formControlName="purorder" (selectionChange)="filterIngredient()">-->
-<!--                            <mat-option [value]="null" selected>Not Selected</mat-option>-->
+                        <mat-select formControlName="purchaseorder">
+                            <mat-option [value]="null" selected>Not Selected</mat-option>
 <!--                            <ng-container *ngIf="!enaupd">-->
 <!--                                <ng-container *ngFor="let purorder of purorders">-->
 <!--                                    <mat-option *ngIf="purorder.postatus.name === 'Approved'" [value]="purorder">-->
@@ -43,44 +43,48 @@
 <!--                                </ng-container>-->
 <!--                            </ng-container>-->
 <!--                            <ng-container *ngIf="enaupd">-->
-<!--                                <ng-container *ngFor="let purorder of purorders">-->
-<!--                                    <mat-option [value]="purorder">-->
-<!--                                        {{purorder.number}}-->
-<!--                                    </mat-option>-->
-<!--                                </ng-container>-->
+                                <ng-container *ngFor="let purorder of purorders">
+                                    <mat-option [value]="purorder">
+                                        {{purorder.number}}
+                                    </mat-option>
+                                </ng-container>
 <!--                            </ng-container>-->
-<!--                        </mat-select>-->
-<!--                    </mat-form-field>-->
-
+                        </mat-select>
+                    </mat-form-field>
 
                     <mat-form-field appearance="outline">
                         <mat-label>Description</mat-label>
                         <input matInput formControlName="description">
                     </mat-form-field>
 
+                    <hr>
+
                     <div id="innertable">
 
                         <mat-form [formGroup]="innerform">
 
+                            <h2>Add Ingredients</h2>
+
                             <mat-form-field appearance="outline">
-                                <mat-label>Item</mat-label>
-                                <mat-select formControlName="item" (selectionChange)="quantityValidator()">
+                                <mat-label>Ingredient</mat-label>
+<!--                                <mat-select formControlName="ingredient" (selectionChange)="quantityValidator()">-->
+                                <mat-select formControlName="ingredient">
                                     <mat-option [value]="null" selected>Not Selected</mat-option>
-                                    <mat-option *ngFor="let item of ingredients" [value]="item">{{item.name}}</mat-option>
+                                    <mat-option *ngFor="let ingredient of ingredients" [value]="ingredient">{{ingredient.name}}</mat-option>
                                 </mat-select>
                             </mat-form-field>
 
                             <mat-form-field appearance="outline">
                                 <mat-label>unit Cost</mat-label>
-                                <input matInput   formControlName="unitcost">
+                                <input matInput formControlName="unitcost">
                             </mat-form-field>
 
                             <mat-form-field appearance="outline">
-                                <mat-label>Qty</mat-label>
-                                <input matInput   formControlName="qty">
+                                <mat-label>Quantity</mat-label>
+                                <input matInput   formControlName="quantity">
                             </mat-form-field>
 
-                            <button mat-raised-button id="btnAdd" (click)="btnaddMc()" >Add</button>
+                            <button mat-raised-button id="btnAdd" (click)="btnaddMc()"><mat-icon>add_circle</mat-icon>Add</button>
                         </mat-form>
 
                         <mat-table [dataSource]="indata">
@@ -89,7 +93,7 @@
                                 <mat-cell *matCellDef="let element">
                                     <div *ngIf="i<inbinders.length-1" [innerHTML]="uiassist.getProperty(element, inbinders[i])"></div>
                                     <div *ngIf="i>=inbinders.length-1">
-                                        <button mat-raised-button (click)="deleteRaw(element)">Remove</button>
+                                        <button id="lineDelete" mat-icon-button (click)="deleteRaw(element)"><mat-icon>delete</mat-icon></button>
                                     </div>
                                 </mat-cell>
                             </ng-container>
@@ -101,12 +105,12 @@
                     </div>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Grandtotal</mat-label>
-                        <input matInput formControlName="grandtotal">
+                        <mat-label>Grand Total</mat-label>
+                        <input matInput formControlName="grandTotal">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Status</mat-label>
+                        <mat-label>GRN Status</mat-label>
                         <mat-select formControlName="grnstatus">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let grnstatus of grnstatuses" [value]="grnstatus">{{grnstatus.name}}</mat-option>
@@ -153,7 +157,6 @@
                             <mat-option *ngFor="let purorder of purorders" [value]="purorder.id">{{purorder.number}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-
 
                     <div>
                         <button mat-raised-button color="primary" (click)="btnSearchMc()"><mat-icon>search</mat-icon> Search </button>

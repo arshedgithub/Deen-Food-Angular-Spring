@@ -22,7 +22,7 @@ public class Grn {
     @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
     @Basic
-    @Column(name = "grandTotal")
+    @Column(name = "grand_total")
     @RegexPattern(reg = "^[0-9]+(\\.[0-9]{1,2})?$", msg = "Invalid price format.")
     private BigDecimal grandTotal;
     @ManyToOne
@@ -34,7 +34,7 @@ public class Grn {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
-    @OneToMany(mappedBy = "grn")
+    @OneToMany(mappedBy = "grn",cascade = CascadeType.ALL,orphanRemoval = true)
     private Collection<Grnitem> grnitems;
     @Basic
     @Column(name = "grnnumber")
