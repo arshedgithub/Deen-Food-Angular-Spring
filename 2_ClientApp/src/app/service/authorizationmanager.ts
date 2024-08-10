@@ -25,7 +25,8 @@ export class AuthorizationManager {
     ];
 
     invMenuItems = [
-        {name: 'Ingredient', accessFlag: true, routerLink: 'ingredient'}
+        {name: 'Ingredient', accessFlag: true, routerLink: 'ingredient'},
+        {name: 'Product', accessFlag: true, routerLink: 'product'}
     ];
 
     purchMenuItems = [

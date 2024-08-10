@@ -1,0 +1,30 @@
+import {Productstatus} from "./productstatus";
+import {Productingredient} from "./productingredient";
+
+export class Product {
+
+  public id !: number;
+  public productnumber !: string;
+  public name !: string;
+  public description !: string;
+  public quantity !: number;
+  public price !: number;
+  public photo !: string;
+  public dointroduced !: string;
+  public productstatus ! : Productstatus;
+  public productIngredients !: Array<Productingredient>;
+
+  constructor(id: number, productnumber: string, name: string, description: string, quantity: number, price: number, photo: string, dointroduced: string, productstatus: Productstatus, productIngredients: Array<Productingredient>) {
+    this.id = id;
+    this.productnumber = productnumber;
+    this.name = name;
+    this.description = description;
+    this.quantity = quantity;
+    this.price = price;
+    this.photo = photo;
+    this.dointroduced = dointroduced;
+    this.productstatus = productstatus;
+    this.productIngredients = productIngredients;
+  }
+
+}

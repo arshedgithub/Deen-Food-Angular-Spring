@@ -16,6 +16,7 @@ import {
 import {SupplierComponent} from "./view/modules/supplierModule/supplier/supplier.component";
 import {PurchaseOrderComponent} from "./view/modules/purchase-order/purchase-order.component";
 import {GrnComponent} from "./view/modules/grn/grn.component";
+import {ProductComponent} from "./view/modules/product/product.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -30,6 +31,7 @@ const routes: Routes = [
       {path: "privilege", component: PrivilageComponent},
       {path: "operation", component: OperationComponent},
       {path: "ingredient", component: IngredientComponent},
+      {path: "product", component: ProductComponent},
       {path: "supplier", component: SupplierComponent},
       {path: "purchase", component: PurchaseOrderComponent},
       {path: "grn", component: GrnComponent},

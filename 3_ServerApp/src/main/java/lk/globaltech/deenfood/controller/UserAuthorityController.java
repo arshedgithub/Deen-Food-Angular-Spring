@@ -44,6 +44,7 @@ public class UserAuthorityController {
                     "operations-select","operations-delete","operations-update","operations-insert",
 
                     "ingredient-select","ingredient-delete","ingredient-update","ingredient-insert",
+                    "Product-select","Product-delete","Product-update","Product-insert",
 
                     "supplier-select","supplier-delete","supplier-update","supplier-insert",
                     "purchase order-select","purchase order-delete","purchase order-update","purchase order-insert",
