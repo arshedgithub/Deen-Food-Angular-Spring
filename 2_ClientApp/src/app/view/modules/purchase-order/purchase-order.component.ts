@@ -624,11 +624,6 @@ export class PurchaseOrderComponent {
 
     }
 
-    changeToInitQuantity() {
-        this.innerform.controls['quantity'].setValue(0);
-        this.innerform.controls['expectedLinecost'].setValue(0);
-    }
-
     // generateNumber(): void {
     //   const newNumber = this.ns.generateNumber('POR');
     //   this.form.controls['number'].setValue(newNumber);
@@ -644,4 +639,12 @@ export class PurchaseOrderComponent {
         });
     }
 
+    fillInnerForm(poitem: Poitem) {
+        this.innerdata = JSON.parse(JSON.stringify(poitem));
+        this.oldinnerdata = JSON.parse(JSON.stringify(poitem));
+
+        //@ts-ignore
+        this.innerdata.ingredient = this.ingredients.find((i) => i.id === this.innerdata.ingredient.id);
+        this.innerform.patchValue(this.innerdata);
+    }
 }
