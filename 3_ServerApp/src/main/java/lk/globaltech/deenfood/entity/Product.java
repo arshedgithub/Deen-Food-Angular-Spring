@@ -22,11 +22,12 @@ public class Product {
     @Column(name = "name")
     private String name;
     @Basic
-    @Column(name = "decription")
+    @Column(name = "description")
     @Pattern(regexp = "^.*$", message = "Invalid Description")
-    private String decription;
+    private String description;
     @Basic
     @Column(name = "quantity")
+    @RegexPattern(reg = "^\\d{1,4}", msg = "Invalid Quantity")
     private BigDecimal quantity;
     @Basic
     @Column(name = "price")
@@ -42,8 +43,11 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "product_status_id", referencedColumnName = "id", nullable = false)
     private ProductStatus productStatus;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Collection<ProductIngredient> productIngredients;
+    @ManyToOne
+    @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
+    private Employee employee;
 
     public Integer getId() {
         return id;
@@ -69,12 +73,12 @@ public class Product {
         this.name = name;
     }
 
-    public String getDecription() {
-        return decription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDecription(String decription) {
-        this.decription = decription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getQuantity() {
@@ -120,7 +124,7 @@ public class Product {
         if (productnumber != null ? !productnumber.equals(product.productnumber) : product.productnumber != null)
             return false;
         if (name != null ? !name.equals(product.name) : product.name != null) return false;
-        if (decription != null ? !decription.equals(product.decription) : product.decription != null) return false;
+        if (description != null ? !description.equals(product.description) : product.description != null) return false;
         if (quantity != null ? !quantity.equals(product.quantity) : product.quantity != null) return false;
         if (price != null ? !price.equals(product.price) : product.price != null) return false;
         if (!Arrays.equals(photo, product.photo)) return false;
@@ -135,7 +139,7 @@ public class Product {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (productnumber != null ? productnumber.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (decription != null ? decription.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (quantity != null ? quantity.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + Arrays.hashCode(photo);
@@ -157,5 +161,13 @@ public class Product {
 
     public void setProductIngredients(Collection<ProductIngredient> productIngredients) {
         this.productIngredients = productIngredients;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

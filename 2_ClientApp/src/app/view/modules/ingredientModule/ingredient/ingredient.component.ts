@@ -13,16 +13,7 @@ import {IngredientCategoryService} from "../../../../service/ingredientcategorys
 import {BrandService} from "../../../../service/brandservice";
 import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.component";
 import {MatDialog} from "@angular/material/dialog";
-import {RegexService} from "../../../../service/regexservice";
-import {UnittypeService} from "../../../../service/unittypeservice";
-import {Unittype} from "../../../../entity/unittype";
-import {Employee} from "../../../../entity/employee";
-import {EmployeeService} from "../../../../service/employeeservice";
-import {DatePipe} from "@angular/common";
 import {MessageComponent} from "../../../../util/dialog/message/message.component";
-import {Subscription} from "rxjs";
-import {SupplierFormComponent} from "../../supplierModule/supplier-form/supplier-form.component";
-import {Supplier} from "../../../../entity/supplier";
 import {IngredientFormComponent} from "../ingredient-form/ingredient-form.component";
 
 @Component({

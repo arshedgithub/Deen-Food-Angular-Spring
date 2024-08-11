@@ -3,6 +3,7 @@ package lk.globaltech.deenfood.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "product_ingredient", schema = "deenfood", catalog = "")
@@ -11,9 +12,7 @@ public class ProductIngredient {
     @Id
     @Column(name = "id")
     private Integer id;
-    @Basic
-    @Column(name = "needed_quantity")
-    private String neededQuantity;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
@@ -21,6 +20,9 @@ public class ProductIngredient {
     @ManyToOne
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id", nullable = false)
     private Ingredient ingredient;
+    @Basic
+    @Column(name = "needed_quantity")
+    private BigDecimal quantityratio;
 
     public Integer getId() {
         return id;
@@ -28,14 +30,6 @@ public class ProductIngredient {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getNeededQuantity() {
-        return neededQuantity;
-    }
-
-    public void setNeededQuantity(String neededQuantity) {
-        this.neededQuantity = neededQuantity;
     }
 
     @Override
@@ -46,7 +40,7 @@ public class ProductIngredient {
         ProductIngredient that = (ProductIngredient) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (neededQuantity != null ? !neededQuantity.equals(that.neededQuantity) : that.neededQuantity != null)
+        if (quantityratio != null ? !quantityratio.equals(that.quantityratio) : that.quantityratio != null)
             return false;
 
         return true;
@@ -55,7 +49,7 @@ public class ProductIngredient {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (neededQuantity != null ? neededQuantity.hashCode() : 0);
+        result = 31 * result + (quantityratio != null ? quantityratio.hashCode() : 0);
         return result;
     }
 
@@ -73,5 +67,13 @@ public class ProductIngredient {
 
     public void setIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
+    }
+
+    public BigDecimal getQuantityratio() {
+        return quantityratio;
+    }
+
+    public void setQuantityratio(BigDecimal quantityratio) {
+        this.quantityratio = quantityratio;
     }
 }

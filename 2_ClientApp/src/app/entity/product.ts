@@ -1,5 +1,6 @@
 import {Productstatus} from "./productstatus";
 import {Productingredient} from "./productingredient";
+import {Employee} from "./employee";
 
 export class Product {
 
@@ -13,8 +14,9 @@ export class Product {
   public dointroduced !: string;
   public productstatus ! : Productstatus;
   public productIngredients !: Array<Productingredient>;
+  public employee !: Employee;
 
-  constructor(id: number, productnumber: string, name: string, description: string, quantity: number, price: number, photo: string, dointroduced: string, productstatus: Productstatus, productIngredients: Array<Productingredient>) {
+  constructor(id: number, productnumber: string, name: string, description: string, quantity: number, price: number, photo: string, dointroduced: string, productstatus: Productstatus, productIngredients: Array<Productingredient>, employee: Employee) {
     this.id = id;
     this.productnumber = productnumber;
     this.name = name;

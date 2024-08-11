@@ -29,13 +29,13 @@ public class ProductController {
 
         if(params.isEmpty()) return products;
 
-        String id = params.get("id");
         String productStatusId = params.get("prodstatusid");
+        String employeeId = params.get("employeeid");
 
-        Stream<Product> purstream = products.stream();
-        if(id!=null) purstream = purstream.filter(i -> i.getId()==Integer.parseInt(id));
-        if(productStatusId!=null) purstream = purstream.filter(i -> i.getProductStatus().getId()==Integer.parseInt(productStatusId));
-        return purstream.collect(Collectors.toList());
+        Stream<Product> prodStream = products.stream();
+        if(productStatusId!=null) prodStream = prodStream.filter(i -> i.getProductStatus().getId()==Integer.parseInt(productStatusId));
+        if(employeeId!=null) prodStream = prodStream.filter(i -> i.getId()==Integer.parseInt(employeeId));
+        return prodStream.collect(Collectors.toList());
     }
 
     @PostMapping
@@ -51,14 +51,16 @@ public class ProductController {
             errors = errors+"<br>Purchase Order Not Found";
 
         for (ProductIngredient prodIng : product.getProductIngredients()) {
+//            System.out.println(prodIng.setQuantityratio(););
             prodIng.setProduct(product);
+            System.out.println(prodIng.getIngredient().getName() + prodIng.getQuantityratio() + prodIng.getProduct().getName());
         }
 
         if(errors=="") productDao.save(product);
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(product.getId()));
-        response.put("url","/purchaseorders/"+product.getId());
+        response.put("url","/products/"+product.getId());
         response.put("errors",errors);
 
         return response;
@@ -84,7 +86,7 @@ public class ProductController {
         else errors = "Server Validation Errors : <br> " + errors;
 
         response.put("id", String.valueOf(product.getId()));
-        response.put("url", "/purchaseorders/" + product.getId());
+        response.put("url", "/products/" + product.getId());
         response.put("errors", errors);
         return response;
     }
@@ -103,7 +105,7 @@ public class ProductController {
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(id));
-        response.put("url","/purchaseorders/"+id);
+        response.put("url","/products/"+id);
         response.put("errors",errors);
         return response;
     }
