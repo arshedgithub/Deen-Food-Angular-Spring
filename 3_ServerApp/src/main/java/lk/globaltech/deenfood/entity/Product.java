@@ -48,6 +48,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<ProductionOrderProduct> productionOrderProducts;
 
     public Integer getId() {
         return id;
@@ -169,5 +171,13 @@ public class Product {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Collection<ProductionOrderProduct> getProductionOrderProducts() {
+        return productionOrderProducts;
+    }
+
+    public void setProductionOrderProducts(Collection<ProductionOrderProduct> productionOrderProducts) {
+        this.productionOrderProducts = productionOrderProducts;
     }
 }
