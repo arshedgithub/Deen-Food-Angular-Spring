@@ -1,5 +1,6 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.globaltech.deenfood.util.RegexPattern;
 
 import javax.persistence.*;
@@ -7,6 +8,7 @@ import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
 
 @Entity
@@ -56,6 +58,15 @@ public class Ingredient {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
+    @JsonIgnore
+    @OneToMany(mappedBy = "ingredient")
+    private Collection<Poitem> poitems;
+    @JsonIgnore
+    @OneToMany(mappedBy = "ingredient")
+    private Collection<Grnitem> grnitems;
+    @JsonIgnore
+    @OneToMany(mappedBy = "ingredient")
+    private Collection<ProductIngredient> productIngredients;
 
     public Integer getId() {
         return id;
@@ -174,5 +185,29 @@ public class Ingredient {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Collection<Poitem> getPoitems() {
+        return poitems;
+    }
+
+    public void setPoitems(Collection<Poitem> poitems) {
+        this.poitems = poitems;
+    }
+
+    public Collection<Grnitem> getGrnitems() {
+        return grnitems;
+    }
+
+    public void setGrnitems(Collection<Grnitem> grnitems) {
+        this.grnitems = grnitems;
+    }
+
+    public Collection<ProductIngredient> getProductIngredients() {
+        return productIngredients;
+    }
+
+    public void setProductIngredients(Collection<ProductIngredient> productIngredients) {
+        this.productIngredients = productIngredients;
     }
 }

@@ -1,0 +1,132 @@
+mat-card {
+    width: 100%;
+    height: 100%;
+    margin: 10px 10px -10px 10px;
+    /*border-radius: 40px;*/
+}
+
+mat-card-header {
+    background: #bbdefb;
+    padding: 16px;
+    padding-left: 20px;
+}
+
+mat-card-content {
+    overflow: auto;
+    height: 100%;
+}
+
+#loading img {
+    width: 30px;
+    height: 25px;
+    margin-left: -175px;
+    position: relative;
+    margin-top: 3px;
+}
+
+.csearch {
+    height: 40px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+#ssearch mat-card-content {
+    padding-top: 30px;
+}
+
+#ssearch mat-form-field {
+    padding-left: 15px;
+    width: 200px;
+}
+
+#ssearch button {
+    width: 195px;
+    margin-left: 10px;
+    margin-top: 5px;
+    background-color: #1565c0;
+}
+
+#btnAdd {
+    color: #1565c0;
+    border: 1px solid #1565c0;
+}
+
+#productform {
+    padding-top: 20px;
+
+}
+
+#loading img {
+    width: 30px;
+    height: 25px;
+    margin-left: 200px;
+}
+
+mat-sidenav-container {
+    width: 100px;
+}
+
+.mat-mdc-card-content {
+    padding-top: 10px;
+}
+
+#selectbutton, #clearbutton {
+    width: 150px;
+    display: block;
+    margin-left: 150px;
+    margin-bottom: 5px;
+    background-color: #1565c0;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#selectbutton {
+    margin-top: -100px;
+}
+
+
+/* Employee Form > Button Panel  */
+#butpanel {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#butpanel button {
+    width: 79px;
+    margin: 3px;
+    color: white;
+    background-color: #1565c0;
+}
+
+.selected-row {
+    background-color: #e3f2fd !important;
+}
+
+.mat-row:hover {
+    background-color: inherit !important;
+}
+
+
+button:disabled {
+    opacity: 0.5;
+}
+
+mat-grid-tile {
+    margin: 10px 10px 300px 10px;
+}
+
+mat-card-title {
+    color: black;
+    /*font-weight: bold;*/
+}
+
+#lineDelete {
+    color: #c70303;
+}
+
+#innertable {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

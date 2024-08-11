@@ -1,6 +1,7 @@
 package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.IngredientDao;
+import lk.globaltech.deenfood.entity.Ingcategory;
 import lk.globaltech.deenfood.entity.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -129,6 +130,23 @@ public class IngredientController {
 
         return response;
     }
+
+//    @GetMapping(path ="/supplier/{id}",produces = "application/json")
+//    public List<Ingredient> get(@PathVariable Integer id) {
+//
+//        Ingcategory ingredientCategory = this.ingredientDao.findIngredientCategoryBySupplier(id);
+//        List<Ingredient> ingredients = (List) ingredientCategory.getIngredients();
+//
+//        ingredients = ingredients.stream().map(
+//                ingredient -> {
+//                    Ingredient i = new Ingredient(ingredient.getId(), ingredient.getCallingname());
+//                    return  i;
+//                }
+//        ).collect(Collectors.toList());
+//
+//        return ingredients;
+//
+//    }
 
 }
 

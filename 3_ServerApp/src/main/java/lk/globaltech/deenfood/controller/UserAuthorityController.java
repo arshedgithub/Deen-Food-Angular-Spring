@@ -44,7 +44,14 @@ public class UserAuthorityController {
                     "operations-select","operations-delete","operations-update","operations-insert",
 
                     "ingredient-select","ingredient-delete","ingredient-update","ingredient-insert",
-                    "supplier-select","supplier-delete","supplier-update","supplier-insert"
+                    "Product-select","Product-delete","Product-update","Product-insert",
+
+                    "supplier-select","supplier-delete","supplier-update","supplier-insert",
+                    "purchase order-select","purchase order-delete","purchase order-update","purchase order-insert",
+                    "GRN-select","GRN-delete","GRN-update","GRN-insert",
+
+                    "Count By Designation-select",
+                    "Ingredient Count By Category-select"
 
             );
         }

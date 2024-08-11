@@ -1,88 +1,134 @@
-<mat-toolbar>
-  <mat-toolbar-row style="background-image: url('assets/headerimg.png')">
+<mat-toolbar *ngIf="!opened">
+    <mat-toolbar-row>
 
-    <span class="toolbar-left">
-    <button mat-icon-button (click)="opened=!opened" class="btn-nav"><mat-icon>menu</mat-icon></button>
-      <img src="/assets/small-white-open.png" class="img-logo">
-    </span>
+        <span class="toolbar-left">
+          <button mat-icon-button (click)="opened=!opened" class="btn-nav"><mat-icon>menu</mat-icon></button>
+          <img src="/assets/deenfood_logo.jpeg" class="img-logo">Deen Food
+        </span>
 
-    <span class="toolbar-right">
-      <label clas s="lbl-user">{{authService.getUsername().toUpperCase()}}</label>
-      <img src="assets/user.png" class="img-user"/>
-      <button mat-icon-button (click)="logout()" class="btn-logout"><mat-icon>exit_to_app</mat-icon> </button>
-    </span>
+        <span class="toolbar-right" (click)="profileOpened=!profileOpened">
+          <img src="assets/user.png" class="img-user"/>
+          <label class="lbl-user">{{authService.getUsername()}}</label>
+        </span>
 
-  </mat-toolbar-row>
+    </mat-toolbar-row>
 </mat-toolbar>
+
+<mat-card id=profileDetail *ngIf="profileOpened">
+    <img src="assets/user.png" class="img-user-profile"/>
+    <h2>{{authService.getUsername()}}</h2>
+    <button mat-button (click)="logout()" class="btn-logout">
+        Logout
+    </button>
+    <button mat-button (click)="profileOpened=false" class="btn-profile-close">
+        Close
+    </button>
+    <!--    <button mat-icon-button-->
+</mat-card>
 
 <mat-sidenav-container>
 
-  <mat-sidenav [(opened)]="opened" mode="side">
+    <mat-sidenav [(opened)]="opened" mode="side">
 
-    <mat-nav-list>
+        <mat-icon id="closeSideNav" (click)="opened = false">cancel</mat-icon>
 
-      <mat-list-item>
-        <a routerLink="home"><mat-icon>home</mat-icon>
-          Home</a>
-      </mat-list-item>
+        <div id="logo-sidenav">
+            <img src="/assets/deenfood_logo.jpeg" class="img-logo">
+            <h2>Deen Food</h2>
+        </div>
 
-      <mat-list-item> <a routerLink="dashboard">
-        <mat-icon>widgets</mat-icon>
-        Dashboard</a></mat-list-item>
+        <hr width="90%">
 
-      <mat-accordion>
-        <mat-expansion-panel *ngIf="isMenuVisible('Admin')">
-          <mat-expansion-panel-header>
-            <mat-list-item><a>
-              <mat-icon>person</mat-icon>
-              Admin</a></mat-list-item>
-          </mat-expansion-panel-header>
-          <ng-container *ngFor="let menuItem of admMenuItems">
-            <mat-list-item *ngIf="menuItem.accessFlag">
-              <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null"><a>{{ menuItem.name }}</a></mat-list-item>
-            </mat-list-item>
-          </ng-container>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel *ngIf="isMenuVisible('Inventory')">
-          <mat-expansion-panel-header>
-            <mat-list-item><a>
-              <mat-icon>event_note</mat-icon>
-              Inventory</a></mat-list-item>
-          </mat-expansion-panel-header>
-          <ng-container *ngFor="let menuItem of invMenuItems">
-            <mat-list-item *ngIf="menuItem.accessFlag">
-              <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null"><a>{{ menuItem.name }}</a></mat-list-item>
-            </mat-list-item>
-          </ng-container>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
+        <mat-nav-list>
             <mat-list-item>
-              <a><mat-icon>poll</mat-icon>
-                Reports</a>
+                <a routerLink="home">
+                    <mat-icon>home</mat-icon>
+                    Home</a>
             </mat-list-item>
-          </mat-expansion-panel-header>
-          <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>
-        </mat-expansion-panel>
 
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-list-item>
-              <a><mat-icon>paid</mat-icon>
-                Payment</a>
+            <mat-list-item><a routerLink="dashboard">
+                <mat-icon>widgets</mat-icon>
+                Dashboard</a></mat-list-item>
+
+            <mat-accordion>
+                <mat-expansion-panel *ngIf="isMenuVisible('Admin')">
+                    <mat-expansion-panel-header>
+                        <mat-list-item><a>
+                            <mat-icon>person</mat-icon>
+                            Admin</a></mat-list-item>
+                    </mat-expansion-panel-header>
+                    <ng-container *ngFor="let menuItem of admMenuItems">
+                        <mat-list-item *ngIf="menuItem.accessFlag">
+                            <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null">
+                                <a>{{ menuItem.name }}</a></mat-list-item>
+                        </mat-list-item>
+                    </ng-container>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel *ngIf="isMenuVisible('Inventory')">
+                    <mat-expansion-panel-header>
+                        <mat-list-item><a>
+                            <mat-icon>event_note</mat-icon>
+                            Inventory</a></mat-list-item>
+                    </mat-expansion-panel-header>
+                    <ng-container *ngFor="let menuItem of invMenuItems">
+                        <mat-list-item *ngIf="menuItem.accessFlag">
+                            <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null">
+                                <a>{{ menuItem.name }}</a></mat-list-item>
+                        </mat-list-item>
+                    </ng-container>
+                </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="isMenuVisible('Purchase')">
+                <mat-expansion-panel-header>
+                  <mat-list-item><a>
+                    <mat-icon>paid</mat-icon>
+                    Purchase</a></mat-list-item>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let menuItem of purchMenuItems">
+                  <mat-list-item *ngIf="menuItem.accessFlag">
+                    <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null"><a>{{ menuItem.name }}</a></mat-list-item>
+                  </mat-list-item>
+                </ng-container>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel *ngIf="isMenuVisible('Report')">
+                <mat-expansion-panel-header>
+                  <mat-list-item><a>
+                    <mat-icon>poll</mat-icon>
+                    Reports</a></mat-list-item>
+                </mat-expansion-panel-header>
+                <ng-container *ngFor="let menuItem of reportMenuItems">
+                  <mat-list-item *ngIf="menuItem.accessFlag">
+                    <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null"><a>{{ menuItem.name }}</a></mat-list-item>
+                  </mat-list-item>
+                </ng-container>
+              </mat-expansion-panel>
+
+      <!--        <mat-expansion-panel>-->
+      <!--          <mat-expansion-panel-header>-->
+      <!--            <mat-list-item>-->
+      <!--              <a><mat-icon>paid</mat-icon>-->
+      <!--                Payment</a>-->
+      <!--            </mat-list-item>-->
+      <!--          </mat-expansion-panel-header>-->
+      <!--          <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>-->
+      <!--        </mat-expansion-panel>-->
+               
+            </mat-accordion>
+
+            <mat-list-item (click)="logout()">
+                <a>
+                    <mat-icon>logout</mat-icon>
+                    Logout
+                </a>
             </mat-list-item>
-          </mat-expansion-panel-header>
-          <mat-list-item *ngFor="let menuItem of reportGroup" [routerLink]="menuItem.routerlink"><a>{{ menuItem.name }}</a></mat-list-item>
-        </mat-expansion-panel>
-      </mat-accordion>
 
-    </mat-nav-list>
-  </mat-sidenav>
+        </mat-nav-list>
+    </mat-sidenav>
 
-  <mat-sidenav-content>
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
+    <mat-sidenav-content>
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
 
 </mat-sidenav-container>

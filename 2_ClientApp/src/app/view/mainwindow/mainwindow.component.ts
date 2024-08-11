@@ -11,11 +11,9 @@ import {DarkModeService} from "../../service/DarkModeService";
 })
 export class MainwindowComponent {
 
-  opened: boolean = true;
-  reportGroup: any = [
-    {name: "Count By Designation", routerlink: "reports/countbydesignation"},
-    {name: "Ingredient Count By Category", routerlink: "reports/ingredientcountbycategory"}
-  ]
+  opened: boolean = false;
+  profileOpened: boolean = false;
+  
 
   constructor(private router: Router,public authService: AuthorizationManager,public darkModeSevice:DarkModeService) {
   }
@@ -31,9 +29,8 @@ export class MainwindowComponent {
   }
     admMenuItems = this.authService.admMenuItems;
     invMenuItems = this.authService.invMenuItems;
-    acdMenuItems = this.authService.acdMenuItems;
-    regMenuItems = this.authService.regMenuItems;
-    clsMenuItems = this.authService.clsMenuItems;
+    purchMenuItems = this.authService.purchMenuItems;
+    reportMenuItems = this.authService.reportMenuItems;
 
   isMenuVisible(category: string): boolean {
     switch (category) {
@@ -41,10 +38,10 @@ export class MainwindowComponent {
         return this.admMenuItems.some(menuItem => menuItem.accessFlag);
       case 'Inventory':
         return this.invMenuItems.some(menuItem => menuItem.accessFlag);
-      // case 'Academic':
-      //   return this.acdMenuItems.some(menuItem => menuItem.accessFlag);
-      // case 'Registration':
-      //   return this.regMenuItems.some(menuItem => menuItem.accessFlag);
+      case 'Purchase':
+        return this.purchMenuItems.some(menuItem => menuItem.accessFlag);
+      case 'Report':
+        return this.reportMenuItems.some(menuItem => menuItem.accessFlag);
       // case 'Class':
       //   return this.clsMenuItems.some(menuItem => menuItem.accessFlag);
       default:

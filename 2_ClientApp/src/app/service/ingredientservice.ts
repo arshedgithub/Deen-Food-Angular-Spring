@@ -31,6 +31,13 @@ export class IngredientService {
     return this.http.delete('http://localhost:8080/ingredients/' + id).toPromise();
   }
 
+  async getIngredientsBySupplier(): Promise<Array<Ingredient>> {
+    const ingredients = await this.http.get<Array<Ingredient>>('http://localhost:8080/ingredients').toPromise();
+    if(ingredients == undefined){
+      return [];
+    }
+    return ingredients;
+  }
 }
 
 
