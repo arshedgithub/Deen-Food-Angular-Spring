@@ -105,7 +105,7 @@ public class GrnController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('GRN-update')")
+//    @PreAuthorize("hasAuthority('GRN-update')")
     public HashMap<String,String> update(@RequestBody Grn grn){
 
         HashMap<String,String> response = new HashMap<>();
@@ -128,23 +128,25 @@ public class GrnController {
 
                 Ingredient ingredient = grnItem.getIngredient();
                 BigDecimal unitCost = grnItem.getUnitcost();
-//                BigDecimal qtyToIncrease = BigDecimal.valueOf(grnItem.getQty());
+                BigDecimal qtyToIncrease = grnItem.getQuantity();
 
                 List<Grnitem> oldGrnItems = grndao.findByGrnItemId(grn.getId());
                 for (Grnitem oldgrnitm : oldGrnItems){
                     if (oldgrnitm.getIngredient().getId()==grnItem.getIngredient().getId()){
-                        newqty = oldgrnitm.getQuantity().subtract(grnItem.getQuantity());
+//                        newqty =  oldgrnitm.getQuantity().add(grnItem.getQuantity());
+                        oldgrnitm.getIngredient().setQoh(oldgrnitm.getIngredient().getQoh().add(grnItem.getQuantity()));
+                        System.out.println("newqty"+newqty);
                     }
                 }
 
                 // Find the existing item or create a new one if not found
                 Ingredient existingIngredient = ingredientDao.findById(ingredient.getId()).orElse(ingredient);
-
+                System.out.println("extqty"+existingIngredient.getQoh());
                 // Calculate the updated qty for the item
-                BigDecimal increasedQty = existingIngredient.getQoh().subtract(newqty);
-
+//                BigDecimal increasedQty = existingIngredient.getQoh().add(newqty);
+//                System.out.println("incresqty"+increasedQty);
                 // Update the item's qty and unitprice
-                existingIngredient.setQoh(increasedQty);
+//                existingIngredient.setQoh(increasedQty);
                 existingIngredient.setCost(unitCost); // Set unitprice as unitcost for simplicity, you can customize the logic here.
 
                 // Save the item with the updated qty and unitprice
@@ -165,7 +167,7 @@ public class GrnController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('GRN-delete')")
+//    @PreAuthorize("hasAuthority('GRN-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();
@@ -177,21 +179,11 @@ public class GrnController {
             errors = errors+"<br> Grn Does Not Existed";
 
         if (errors.isEmpty()) {
-            // Step 2: Get associated Grnitem records
-            Collection<Grnitem> grnitems = grnToDelete.getGrnitems();
 
-            // Step 3: Update Item entities' qty
-            for (Grnitem grnitem : grnitems) {
-                Ingredient itemToUpdate = grnitem.getIngredient();
-                BigDecimal currentQty = itemToUpdate.getQoh();
-                BigDecimal grnitemQty = grnitem.getQuantity();
-                BigDecimal accQty =currentQty.subtract(grnitemQty);
-                itemToUpdate.setQoh(accQty);
-
-                // Step 4: Save the updated Item entities to the database
-                ingredientDao.save(itemToUpdate);
+            List<Grnitem> oldGrnItems = grndao.findByGrnItemId(grnToDelete.getId());
+            for (Grnitem oldgrnitm : oldGrnItems){
+                    oldgrnitm.getIngredient().setQoh(oldgrnitm.getIngredient().getQoh().subtract(oldgrnitm.getQuantity()));
             }
-
             // Step 5: Finally, delete the Grn entity
             grndao.delete(grnToDelete);
         } else {

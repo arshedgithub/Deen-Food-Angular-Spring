@@ -44,6 +44,7 @@ export class GrnComponent {
     indata!: MatTableDataSource<Grnitem>
     innerform!: FormGroup;
     ingredients: Array<Ingredient> = [];
+    changedingredients: Array<Grnitem> = [];
     grnitems: Array<Grnitem> = [];
 
     public csearch!: FormGroup;
@@ -311,8 +312,6 @@ export class GrnComponent {
         this.grn = JSON.parse(JSON.stringify(grn));
         this.oldgrn = JSON.parse(JSON.stringify(grn));
 
-        console.log(grn);
-
         // @ts-ignore
         this.grn.grnstatus = this.grnstatuses.find(g => g.id === this.grn.grnstatus.id);
         // @ts-ignore
@@ -408,7 +407,7 @@ export class GrnComponent {
         if (errors != "") {
             const errmsg = this.dg.open(MessageComponent, {
                 width: '500px',
-                data: {heading: "Errors - grn Update ", message: "You have following Errors <br> " + errors}
+                data: {heading: "Errors - GRN Update ", message: "You have following Errors <br> " + errors}
             });
             errmsg.afterClosed().subscribe(async result => {
                 if (!result) {
@@ -464,7 +463,7 @@ export class GrnComponent {
                             }
                             const stsmsg = this.dg.open(MessageComponent, {
                                 width: '500px',
-                                data: {heading: "Status -grn Add", message: updmessage}
+                                data: {heading: "Status - GRN Add", message: updmessage}
                             });
                             stsmsg.afterClosed().subscribe(async result => {
                                 if (!result) {
@@ -495,6 +494,10 @@ export class GrnComponent {
             if (control.dirty) {
                 updates = updates + "<br>" + controlName.charAt(0).toUpperCase() + controlName.slice(1) + " Changed";
             }
+        }
+
+        if (this.changedingredients.length > 0){
+            updates = updates + "<br>" + "Ingredients Changed";
         }
         return updates;
     }
@@ -537,7 +540,7 @@ export class GrnComponent {
 
                     const stsmsg = this.dg.open(MessageComponent, {
                         width: '500px',
-                        data: {heading: "Status - grn Delete ", message: delmessage}
+                        data: {heading: "Status - GRN Delete ", message: delmessage}
                     });
                     stsmsg.afterClosed().subscribe(async result => {
                         if (!result) {
@@ -603,6 +606,8 @@ export class GrnComponent {
             this.indata = new MatTableDataSource(this.grnitems);
             console.log(this.indata)
 
+            this.getUpdateInnerData(grnitem);
+
             this.id++;
             this.calculateGrandTotal();
             this.innerform.reset();
@@ -630,6 +635,8 @@ export class GrnComponent {
         this.indata.data = datasources;
         this.grnitems = this.indata.data;
 
+        this.getUpdateInnerData(x);
+
         this.calculateGrandTotal();
     }
 
@@ -644,6 +651,10 @@ export class GrnComponent {
 
         this.innerdata.ingredient = this.ingredients.find((s) => s.id === this.innerdata.ingredient.id);
         this.innerform.patchValue(this.innerdata);
+    }
+
+    getUpdateInnerData(element:Grnitem){
+        this.changedingredients.push(element);
     }
 
 }
