@@ -1,5 +1,6 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.globaltech.deenfood.util.RegexPattern;
 
 import javax.persistence.*;
@@ -22,9 +23,12 @@ public class Grnitem {
     @Basic
     @Column(name = "linecost")
     private BigDecimal linecost;
+
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "grn_id", referencedColumnName = "id", nullable = false)
     private Grn grn;
+
     @ManyToOne
     @JoinColumn(name = "ingredient_id", referencedColumnName = "id", nullable = false)
     private Ingredient ingredient;
