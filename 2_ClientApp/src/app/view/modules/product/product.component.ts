@@ -28,7 +28,7 @@ export class ProductComponent {
 
     columns: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee'];
     headers: string[] = ['Number', 'Name', 'Description', 'Quantity', 'Price', 'Employee'];
-    binders: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee.name'];
+    binders: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee.fullname'];
 
     cscolumns: string[] = ['csnumber', 'csname', 'csdescription', 'csquantity', 'csprice', 'csemployee'];
     csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Description', 'Search by Quantity', 'Search by Price', 'Search by Employee'];
@@ -218,11 +218,11 @@ export class ProductComponent {
         const csearchData = this.csearch.getRawValue();
         this.data.filterPredicate = (product: Product, filter: string) => {
             // @ts-ignore
-            return (csearchData.csnumber == null || product.number.toLowerCase().includes(csearchData.csnumber.toLowerCase())) &&
+            return (csearchData.csnumber == null || product.productnumber.toLowerCase().includes(csearchData.csnumber.toLowerCase())) &&
                 (csearchData.csname == null || product.name.toLowerCase().includes(csearchData.csname.toLowerCase())) &&
                 (csearchData.csdescription == null || product.description.toLowerCase().includes(csearchData.csdescription.toLowerCase())) &&
-                (csearchData.csquantity == null || product.quantity == csearchData.quantity) &&
-                (csearchData.csprice == null || product.price == csearchData.price) &&
+                (csearchData.csquantity == null || product.quantity.toString().includes(csearchData.csquantity)) &&
+                (csearchData.csprice == null || product.price.toString().includes(csearchData.csprice)) &&
                 (csearchData.csemployee == null || product.employee.fullname.toLowerCase().includes(csearchData.csemployee.toLowerCase()))
         };
         this.data.filter = 'xx';
@@ -234,10 +234,10 @@ export class ProductComponent {
         const sserchdata = this.ssearch.getRawValue();
 
         let employeeId = sserchdata.ssemployee;
-        let prodstatusid = sserchdata.ssproductStatus;
+        let prodstatusid = sserchdata.ssproductstatus;
 
         let query = "";
-        if (prodstatusid != null) query = query + "&prodsatusid=" + prodstatusid;
+        if (prodstatusid != null) query = query + "&productstatusid=" + prodstatusid;
         if (employeeId != null) query = query + "&employeeid=" + employeeId;
         if (query != "") query = query.replace(/^./, "?")
         this.loadTable(query);
@@ -314,7 +314,6 @@ export class ProductComponent {
 
             this.product = this.form.getRawValue();
             this.product.productIngredients = this.productIngredients;
-            this.product.productIngredients.forEach(p => console.log("qqqqppp"+p.quantityratio));
             // @ts-ignore
             this.productIngredients.forEach((i) => delete i.id);
 
@@ -547,18 +546,14 @@ export class ProductComponent {
     }
 
     //inner table
-
     id = 0;
 
     btnAddLine() {
 
         this.innerdata = this.innerform.getRawValue();
-        console.log(this.innerdata.quantityratio);
 
         if (this.innerdata != null) {
             let productIngredient = new Productingredient(this.id, this.innerdata.quantityratio, this.innerdata.ingredient);
-            console.log(productIngredient);
-
             let productIngredients: Productingredient[] = [];
 
             if (this.indata != null) this.indata.data.forEach((i) => productIngredients.push(i));
@@ -566,13 +561,10 @@ export class ProductComponent {
             this.productIngredients = [];
             productIngredients.forEach((i) => this.productIngredients.push(i));
             this.productIngredients.push(productIngredient);
-
-            this.productIngredients.forEach(p => console.log("qqq" + p.quantityratio));
             this.indata = new MatTableDataSource(this.productIngredients);
 
             this.id++;
             this.innerform.reset();
-
         }
     }
 
@@ -586,7 +578,6 @@ export class ProductComponent {
         }
         this.indata.data = datasources;
         this.productIngredients = this.indata.data;
-
     }
 
     // generateNumber(): void {

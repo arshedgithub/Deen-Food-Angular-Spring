@@ -29,7 +29,7 @@ public class ProductController {
 
         if(params.isEmpty()) return products;
 
-        String productStatusId = params.get("prodstatusid");
+        String productStatusId = params.get("productstatusid");
         String employeeId = params.get("employeeid");
 
         Stream<Product> prodStream = products.stream();
@@ -51,9 +51,7 @@ public class ProductController {
             errors = errors+"<br>Purchase Order Not Found";
 
         for (ProductIngredient prodIng : product.getProductIngredients()) {
-//            System.out.println(prodIng.setQuantityratio(););
             prodIng.setProduct(product);
-            System.out.println(prodIng.getIngredient().getName() + prodIng.getQuantityratio() + prodIng.getProduct().getName());
         }
 
         if(errors=="") productDao.save(product);
