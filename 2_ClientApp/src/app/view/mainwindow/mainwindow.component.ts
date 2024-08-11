@@ -13,7 +13,7 @@ export class MainwindowComponent {
 
   opened: boolean = false;
   profileOpened: boolean = false;
-  
+
 
   constructor(private router: Router,public authService: AuthorizationManager,public darkModeSevice:DarkModeService) {
   }
@@ -30,6 +30,7 @@ export class MainwindowComponent {
     admMenuItems = this.authService.admMenuItems;
     invMenuItems = this.authService.invMenuItems;
     purchMenuItems = this.authService.purchMenuItems;
+    orderMenuItems = this.authService.orderMenuItems;
     reportMenuItems = this.authService.reportMenuItems;
 
   isMenuVisible(category: string): boolean {
@@ -40,6 +41,8 @@ export class MainwindowComponent {
         return this.invMenuItems.some(menuItem => menuItem.accessFlag);
       case 'Purchase':
         return this.purchMenuItems.some(menuItem => menuItem.accessFlag);
+      case 'Order':
+        return this.orderMenuItems.some(menuItem => menuItem.accessFlag);
       case 'Report':
         return this.reportMenuItems.some(menuItem => menuItem.accessFlag);
       // case 'Class':

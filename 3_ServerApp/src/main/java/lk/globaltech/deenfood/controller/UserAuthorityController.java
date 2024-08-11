@@ -50,6 +50,8 @@ public class UserAuthorityController {
                     "purchase order-select","purchase order-delete","purchase order-update","purchase order-insert",
                     "GRN-select","GRN-delete","GRN-update","GRN-insert",
 
+                    "Production Order-select","Production Order-delete","Production Order-update","Production Order-insert",
+
                     "Count By Designation-select",
                     "Ingredient Count By Category-select"
 

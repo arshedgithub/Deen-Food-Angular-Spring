@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/products")
+@RequestMapping(value = "/productionorders")
 public class ProductionorderController {
     @Autowired
     private ProductionOrderDao ProductionOrderDao;
@@ -22,7 +22,6 @@ public class ProductionorderController {
 //  @PreAuthorize("hasAuthority('employee-select')")
     public List<ProductionOrder> get(@RequestParam HashMap<String, String> params) //Searching by entering strings --> Words = params
     {
-
         List<ProductionOrder> prodorders = this.ProductionOrderDao.findAll();
 
         if (params.isEmpty()) return prodorders; // if search word is empty --> return the full Suppliers List
@@ -44,7 +43,7 @@ public class ProductionorderController {
             prodorderStream = prodorderStream.filter(o -> o.getProductionOrderstatus().getId() == Integer.parseInt(orderstatusid));
         if (prodstyleid != null)
             prodorderStream = prodorderStream.filter(o -> o.getProductionOrderstatus().getId() == Integer.parseInt(prodstyleid));
-        
+
         return prodorderStream.collect(Collectors.toList());
     }
 

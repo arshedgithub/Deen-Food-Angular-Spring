@@ -50,6 +50,7 @@ import { IngredientFormComponent } from './view/modules/ingredientModule/ingredi
 import { PurchaseOrderComponent } from './view/modules/purchase-order/purchase-order.component';
 import { GrnComponent } from './view/modules/grn/grn.component';
 import { ProductComponent } from './view/modules/product/product.component';
+import { ProductionOrderComponent } from './view/modules/production-order/production-order.component';
 
 
 @NgModule({
@@ -76,6 +77,7 @@ import { ProductComponent } from './view/modules/product/product.component';
     PurchaseOrderComponent,
     GrnComponent,
     ProductComponent,
+    ProductionOrderComponent,
   ],
     imports: [
         MatDatepickerModule,
