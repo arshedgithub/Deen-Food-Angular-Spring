@@ -311,12 +311,14 @@ export class GrnComponent {
         this.grn = JSON.parse(JSON.stringify(grn));
         this.oldgrn = JSON.parse(JSON.stringify(grn));
 
+        console.log(grn);
+
         // @ts-ignore
         this.grn.grnstatus = this.grnstatuses.find(g => g.id === this.grn.grnstatus.id);
         // @ts-ignore
         this.grn.employee = this.employees.find(e => e.id === this.grn.employee.id);
         // @ts-ignore
-        this.grn.purorder = this.purorders.find(p => p.id === this.grn.purorder.id);
+        this.grn.purchaseorder = this.purorders.find(p => p.id === this.grn.purchaseorder.id);
 
         this.indata = new MatTableDataSource(this.grn.grnitems);
 
@@ -640,40 +642,8 @@ export class GrnComponent {
         this.innerdata = JSON.parse(JSON.stringify(grnitm));
         this.oldinnerdata = JSON.parse(JSON.stringify(grnitm));
 
-        //@ts-ignore
-        this.innerdata.item = this.items.find((s) => s.id === this.innerdata.item.id);
-        //@ts-ignore
-        this.innerdata.store = this.stores.find((s) => s.id === this.innerdata.store.id);
-
+        this.innerdata.ingredient = this.ingredients.find((s) => s.id === this.innerdata.ingredient.id);
         this.innerform.patchValue(this.innerdata);
     }
 
-    quantityValidator(): boolean {
-        if (!this.enaupd) {
-            let po = this.form.controls['purorder'].value.poitems;
-            let it = this.innerform.controls['ingredient'].value;
-            let qy = 0;
-
-            if (Array.isArray(po) && it && it.id) {
-                for (const item of po) {
-
-                    if (item.item && item.item.id === it.id) {
-                        qy = item.qty;
-                        break;
-                    }
-                }
-            }
-            let q = this.innerform.controls['quantity'].value;
-            if (qy < q) {
-                const addmessage = `Required quantity (${q}) exceeds available quantity (${qy}).`;
-                const stsmsg = this.dg.open(MessageComponent, {
-                    width: '500px',
-                    data: {heading: "Error - GRN Add", message: addmessage}
-                });
-                return false;
-            }
-            return true;
-        }
-        return false;
-    }
 }
