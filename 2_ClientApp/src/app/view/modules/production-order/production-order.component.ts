@@ -400,16 +400,12 @@ export class ProductionOrderComponent {
         this.selectedrow = productionorder;
 
         this.productionOrder = JSON.parse(JSON.stringify(productionorder));
-
         this.oldProductionOrder = JSON.parse(JSON.stringify(productionorder));
-
 
         // @ts-ignore
         this.productionOrder.employee = this.employees.find(e => e.id === this.productionOrder.employee.id);
-
         // @ts-ignore
-        this.productionOrder.productionorderstatus = this.postatuses.find(s => s.id === this.productionOrder.productionorderstatus.id);
-
+        this.productionOrder.productionOrderstatus = this.postatuses.find(s => s.id === this.productionOrder.productionOrderstatus.id);
 
         // Update the form values
         this.form.patchValue(this.productionOrder);
