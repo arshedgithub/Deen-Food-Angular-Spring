@@ -7,7 +7,7 @@ import {Productionorder} from "../entity/productionorder";
   providedIn: 'root'
 })
 
-export class ProductService {
+export class ProductionOrderService {
 
   constructor(private http: HttpClient) {  }
 

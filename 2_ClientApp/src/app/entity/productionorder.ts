@@ -6,17 +6,17 @@ export class Productionorder {
 
   public id !: number;
   public orderNumber !: string;
-  public dorequested !: string;
+  public dorequired !: string;
   public doplaced !: string;
   public description !: string;
   public productionOrderstatus ! : Prodorderstatus;
   public productionOrderProducts !: Array<ProductionOrderProduct>;
   public employee !: Employee;
 
-  constructor(id: number, orderNumber: string, dorequested: string, doplaced: string, description: string, productionOrderstatus: Prodorderstatus, productionOrderProducts: Array<ProductionOrderProduct>, employee: Employee) {
+  constructor(id: number, orderNumber: string, dorequired: string, doplaced: string, description: string, productionOrderstatus: Prodorderstatus, productionOrderProducts: Array<ProductionOrderProduct>, employee: Employee) {
     this.id = id;
     this.orderNumber = orderNumber;
-    this.dorequested = dorequested;
+    this.dorequired = dorequired;
     this.doplaced = doplaced;
     this.description = description;
     this.productionOrderstatus = productionOrderstatus;

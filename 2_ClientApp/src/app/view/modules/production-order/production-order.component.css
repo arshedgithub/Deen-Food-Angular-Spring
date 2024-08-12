@@ -1,0 +1,156 @@
+/*mat-grid-list{*/
+/*  height: 100%;*/
+/*}*/
+
+mat-card {
+  width: 170%;
+  height: 100%;
+  margin: 10px 10px -5px 10px !important;
+  overflow: hidden;
+}
+
+mat-card-content {
+  overflow: auto;
+  height: 100%;
+}
+
+mat-grid-tile {
+  overflow: visible;
+  margin-bottom: 20px; /* Adjust the margin size as needed */
+}
+
+mat-card-header {
+  background: #bbdefb;
+  padding: 16px;
+  padding-left: 20px;
+}
+
+.mat-table {
+  display: block;
+  width: 100%;
+  overflow: auto;
+}
+
+#loading img {
+  width: 30px;
+  height: 30px;
+}
+
+.mat-paginator-sticky {
+  position: sticky;
+  bottom: 1px;
+}
+
+/* Highlight rows on hover */
+.mat-row:hover {
+  cursor: pointer;
+}
+
+.csearch {
+  height: 40px;
+  width: 100%;
+  margin-top: 5px;
+}
+
+#ssearch mat-card-content {
+  padding-top: 30px
+}
+
+#ssearch mat-form-field {
+  padding-left: 15px;
+  width: 250px
+}
+
+#ssearch button {
+  width: 155px;
+  margin-left: 10px;
+  margin-top: 5px;
+  background-color: #1565c0;
+  color: white
+}
+
+/* Order Form */
+#orderform {
+  padding-top: 20px;
+}
+
+#btnAdd {
+  color: #1565c0;
+  border: 1px solid #1565c0;
+}
+
+/* Production order Form > Button Panel */
+#butpanel {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+#butpanel button {
+  width: 79px;
+  margin: 3px;
+  color: white;
+  background-color: #1565c0;
+}
+
+.selected-row {
+  background-color: #e3f2fd !important;
+}
+
+
+/*#btnAdd, #removeBtn{*/
+/*  width: 100px;*/
+/*  display: block;*/
+/*  !*margin-left: 10px;*!*/
+/*  margin-bottom: 6px;*/
+/*  margin-left: 5px;*/
+/*  background-color: white;*/
+/*  color: #ec160e;*/
+/*  border: 2px solid #ec160e;*/
+/*  padding: 8px;*/
+/*  border-radius: 5px;*/
+/*  text-align: center;*/
+
+/*  &:hover {*/
+/*    background-color: #ec160e;*/
+/*    color: white;*/
+/*    border: 2px solid #ec160e;*/
+/*  }*/
+/*}*/
+
+.mat-form-field .ng-dirty {
+  background-color: #abfecc !important;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+#orderform mat-form-field .ng-dirty {
+  background-color: #C9E6FFFF !important;
+}
+
+#tableInner{
+  margin-bottom: 20px;
+}
+
+#lineDelete {
+  color: #c70303;
+}
+
+/*#innertable {*/
+/*  margin-right: 10px;*/
+/*  margin-bottom: 20px;*/
+/*  margin-top: 5px;*/
+/*  padding: 10px;*/
+/*  padding-top: 20px;*/
+/*  border: 1px solid #777777 ;*/
+/*  border-radius: 0px;*/
+/*  background-color: #ffffff;*/
+/*}*/
+
+/*#innertable mat-form-field {*/
+/*  padding-left: 10px;*/
+/*  padding-right: 10px;*/
+/*  width: 540px;*/
+
+/*}*/

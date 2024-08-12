@@ -7,13 +7,11 @@ export class ProductionOrderProduct {
 
   public id !: number;
   public amount !: number;
-  public productionOrder !: Productionorder;
   public product !: Product;
 
-  constructor(id: number, amount: number, productionOrder: Productionorder, product: Product) {
+  constructor(id: number, amount: number, product: Product) {
     this.id = id;
     this.amount = amount;
-    this.productionOrder = productionOrder;
     this.product = product;
   }
 
