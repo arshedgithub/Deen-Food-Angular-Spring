@@ -34,7 +34,7 @@ export class ProductionOrderComponent {
     public innerform!: FormGroup;
 
     columns: string[] = ['orderNumber', 'doplaced', 'dorequired', 'description', 'productionOrderstatus', 'employee'];
-    headers: string[] = ['Order No', 'Do Placed', 'Do Required', 'Description', 'Production Order Status', 'Employee'];
+    headers: string[] = ['Order No', 'Date Placed', 'Date Required', 'Description', 'Pr. Order Status', 'Employee'];
     binders: string[] = ['orderNumber', 'doplaced', 'dorequired', 'description', 'productionOrderstatus.name', 'employee.callingname'];
 
     cscolumns: string[] = ['csordernumber', 'csdoplaced', 'csdorequired', 'csdescription', 'csproductionorderstatus', 'csemployee'];
@@ -43,7 +43,7 @@ export class ProductionOrderComponent {
 
     incolumns: string[] = ['code', 'amount', 'remove'];
     inheaders: string[] = ['Product Code', 'Amount', ''];
-    inbinders: string[] = ['product.prodenumber', 'amount', 'getBtn()'];
+    inbinders: string[] = ['product.productnumber', 'amount', 'getBtn()'];
 
     data!: MatTableDataSource<Productionorder>;
     @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -277,13 +277,11 @@ export class ProductionOrderComponent {
                 (cserchdata.csdescription == null || pOrder.description.toString().includes(cserchdata.csdescription)) &&
                 (cserchdata.csproductionorderstatus == null || pOrder.productionOrderstatus.name.toLowerCase().includes(cserchdata.csproductionorderstatus))
         };
-
         this.data.filter = 'xx';
-
     }
 
     btnSearchMc() {
-
+    
         const ssearchdata = this.ssearch.getRawValue();
         let prodorderstatus = ssearchdata.ssproductionorderstatus;
         let doplaced = this.dp.transform(ssearchdata.ssdoplaced, 'yyyy-MM-dd');
@@ -313,7 +311,6 @@ export class ProductionOrderComponent {
                 this.loadTable("");
             }
         });
-
     }
 
     getBtn(element: Productionorder) {
@@ -361,13 +358,13 @@ export class ProductionOrderComponent {
 
         if (this.innerdata != null) {
 
-            let productionorderproduct = new ProductionOrderProduct(this.id,this.innerdata.product,this.innerdata.amount);
+            let productionorderproduct = new ProductionOrderProduct(this.id, this.innerdata.amount, this.innerdata.product);
 
             let tem: ProductionOrderProduct[] = [];
-            if(this.indata != null) this.indata.data.forEach((i) => tem.push(i));
+            if (this.indata != null) this.indata.data.forEach((i) => tem.push(i));
 
             this.productionorderproducts = [];
-            tem.forEach((t)=> this.productionorderproducts.push(t));
+            tem.forEach((t) => this.productionorderproducts.push(t));
 
             this.productionorderproducts.push(productionorderproduct);
             this.indata = new MatTableDataSource(this.productionorderproducts);
@@ -380,7 +377,7 @@ export class ProductionOrderComponent {
         }
     }
 
-    fillInnerForm(productionorderproduct: ProductionOrderProduct){
+    fillInnerForm(productionorderproduct: ProductionOrderProduct) {
 
         this.selectedinnerrow = productionorderproduct;
 
@@ -389,7 +386,7 @@ export class ProductionOrderComponent {
 
 
         // @ts-ignore
-        this.productionorderproduct.product = this.products.find((r)=>r.id=== this.productionorderproduct.product.id);
+        this.productionorderproduct.product = this.products.find((r) => r.id === this.productionorderproduct.product.id);
 
         this.innerform.patchValue(this.productionorderproduct);
         this.innerform.markAsPristine();
@@ -428,10 +425,9 @@ export class ProductionOrderComponent {
         }
     }
 
-    updateDataSource(productionorderproducts?:ProductionOrderProduct[]) {
+    updateDataSource(productionorderproducts?: ProductionOrderProduct[]) {
         this.indata = new MatTableDataSource(productionorderproducts);
     }
-
 
     getUpdates(): string {
 

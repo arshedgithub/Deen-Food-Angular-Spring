@@ -88,7 +88,6 @@
             </mat-select>
           </mat-form-field>
 
-
           <div id="butpanel">
             <button mat-raised-button id="searchcolor" (click)="add()"  [disabled]="!enaadd" >Add</button>
             <button mat-raised-button id="clearcolor" (click)="clear()">Clear</button>
@@ -111,15 +110,6 @@
 
         <form [formGroup]="ssearch">
 
-          <mat-form-field appearance="outline" class="ssfield">
-            <mat-label>Search By Prod. Order Status</mat-label>
-            <mat-select formControlName="ssproductionorderstatus">
-              <mat-option [value]="null" selected>All</mat-option>
-              <mat-option *ngFor="let status of postatuses" [value]="status.id">{{ status.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
           <mat-form-field appearance="outline">
             <mat-label>Search By Date Placed</mat-label>
             <input matInput [matDatepicker]="doplaced" formControlName="ssdoplaced">
@@ -132,6 +122,15 @@
             <input matInput [matDatepicker]="dorequired" formControlName="ssdorequired">
             <mat-datepicker-toggle matIconSuffix [for]="dorequired"></mat-datepicker-toggle>
             <mat-datepicker #dorequired></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="ssfield">
+            <mat-label>Search By Prod. Order Status</mat-label>
+            <mat-select formControlName="ssproductionorderstatus">
+              <mat-option [value]="null" selected>All</mat-option>
+              <mat-option *ngFor="let status of postatuses" [value]="status.id">{{ status.name }}
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <div>

@@ -32,7 +32,7 @@ public class ProductionorderController {
     @GetMapping(produces = "application/json")
     public List<ProductionOrder> get(@RequestParam HashMap<String, String> params) {
 
-        String productionorderstatusid = params.get("productionorderstatusid");
+        String productionorderstatusid = params.get("prodorderstatusid");
         String employeeid = params.get("employeeid");
         String dorequired = params.get("dorequired");
         String doplaced = params.get("doplaced");
