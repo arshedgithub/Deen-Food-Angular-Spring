@@ -34,7 +34,7 @@ public class Grn {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
-    @OneToMany(mappedBy = "grn",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "grn", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Grnitem> grnitems;
     @Basic
     @Column(name = "grnnumber")

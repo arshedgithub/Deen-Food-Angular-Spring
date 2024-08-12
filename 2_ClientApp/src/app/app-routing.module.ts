@@ -17,6 +17,7 @@ import {SupplierComponent} from "./view/modules/supplierModule/supplier/supplier
 import {PurchaseOrderComponent} from "./view/modules/purchase-order/purchase-order.component";
 import {GrnComponent} from "./view/modules/grn/grn.component";
 import {ProductComponent} from "./view/modules/product/product.component";
+import {ProductionOrderComponent} from "./view/modules/production-order/production-order.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -35,6 +36,7 @@ const routes: Routes = [
       {path: "supplier", component: SupplierComponent},
       {path: "purchase", component: PurchaseOrderComponent},
       {path: "grn", component: GrnComponent},
+      {path: "productionorder", component: ProductionOrderComponent},
       {path: "payments",component:PaymentComponent},
       {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
       {path: "reports/countbydesignation", component: CountByDesignationComponent},

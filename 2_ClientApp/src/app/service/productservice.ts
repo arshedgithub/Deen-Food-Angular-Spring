@@ -17,7 +17,6 @@ export class ProductService {
   }
 
   async add(product: Product): Promise<[]|undefined>{
-    console.log(product)
     return this.http.post<[]>('http://localhost:8080/products', product).toPromise();
   }
 
