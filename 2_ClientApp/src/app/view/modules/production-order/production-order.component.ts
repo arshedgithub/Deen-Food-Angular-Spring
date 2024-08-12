@@ -28,12 +28,6 @@ export class ProductionOrderComponent {
     @ViewChild('myForm', {static: false}) myForm!: ElementRef;
     @ViewChild('myInnerForm', {static: false}) myInnerForm!: ElementRef;
 
-    private productCategorySubscription: any;
-    private materialTypeSubscription: any;
-    private supplierSubscription: any;
-    private rawMaterialSubscription: any;
-
-
     public csearch!: FormGroup;
     public ssearch!: FormGroup;
     public form!: FormGroup;
@@ -44,11 +38,11 @@ export class ProductionOrderComponent {
     binders: string[] = ['orderNumber', 'doplaced', 'dorequired', 'description', 'productionOrderstatus.name', 'employee.callingname'];
 
     cscolumns: string[] = ['csordernumber', 'csdoplaced', 'csdorequired', 'csdescription', 'csproductionorderstatus', 'csemployee'];
-    csprompts: string[] = ['Search by Order No', 'Search by Do Placed', 'Search by Do Required',
+    csprompts: string[] = ['Search by Order No', 'Search by Date Placed', 'Search by Date Required',
         'Search by Description', 'Search by Production Order Status', 'Search by Employee'];
 
     incolumns: string[] = ['code', 'amount', 'remove'];
-    inheaders: string[] = ['Product Code', 'Amount', 'Remove'];
+    inheaders: string[] = ['Product Code', 'Amount', ''];
     inbinders: string[] = ['product.prodenumber', 'amount', 'getBtn()'];
 
     data!: MatTableDataSource<Productionorder>;
@@ -72,6 +66,7 @@ export class ProductionOrderComponent {
     imageurl: string = '';
 
     regexes: any;
+    innerregexes: any;
     uiassist: UiAssist;
 
     productionOrder!: Productionorder;
@@ -90,7 +85,6 @@ export class ProductionOrderComponent {
     constructor(
         private pos: ProductionOrderService,
         private posts: ProdOrderStatusService,
-        // private pcs: Productcategoryservice,
         private es: EmployeeService,
         private fb: FormBuilder,
         private ps: ProductService,
@@ -111,7 +105,8 @@ export class ProductionOrderComponent {
         });
 
         this.ssearch = this.fb.group({
-            "ssemployee": new FormControl(),
+            "ssdorequired": new FormControl(),
+            "ssdoplaced": new FormControl(),
             "ssproductionorderstatus": new FormControl(),
         });
 
@@ -138,15 +133,15 @@ export class ProductionOrderComponent {
         this.createView();
 
         this.posts.getAllList().then((poss: Prodorderstatus[]) => this.postatuses = poss);
-        // @ts-ignore
-        this.ps.getAll().then((pss: Product[]) => this.products = pss);
+        this.ps.getAll("").then((products: Product[]) => this.products = products);
         this.es.getAllListNameId().then((emps: Employee[]) => this.employees = emps);
-
 
         this.rx.get("productionorders").then((regs: []) => {
             this.regexes = regs;
-            // console.log(this.regexes)
-            this.createForm();
+            this.rx.get('productionorderproducts').then((regs: []) => {
+                this.innerregexes = regs;
+                this.createForm();
+            })
         });
 
     }
@@ -175,7 +170,6 @@ export class ProductionOrderComponent {
             control.markAsUntouched();
             control.markAsPristine();
         });
-
 
         for (const controlName in this.form.controls) {
             const control = this.form.controls[controlName];
@@ -234,7 +228,6 @@ export class ProductionOrderComponent {
                 this.data = new MatTableDataSource(this.orders);
                 this.data.paginator = this.paginator;
             });
-
     }
 
     // fillOrderNumber(): void {
@@ -277,7 +270,7 @@ export class ProductionOrderComponent {
 
         this.data.filterPredicate = (pOrder: Productionorder, filter: string) => {
             // @ts-ignore
-            return (cserchdata.csordernumber == null || pOrder.ordernumber.includes(cserchdata.csordernumber)) &&
+            return (cserchdata.csordernumber == null || pOrder.orderNumber.includes(cserchdata.csordernumber)) &&
                 (cserchdata.csemployee == null || pOrder.employee.fullname.toLowerCase().includes(cserchdata.csemployee)) &&
                 (cserchdata.csdoplaced == null || pOrder.doplaced.includes(cserchdata.csdoplaced)) &&
                 (cserchdata.csdorequired == null || pOrder.dorequired.includes(cserchdata.csdorequired)) &&
@@ -292,18 +285,15 @@ export class ProductionOrderComponent {
     btnSearchMc() {
 
         const ssearchdata = this.ssearch.getRawValue();
-        let ordernumber = ssearchdata.ssordernumber;
-        let employeeid = ssearchdata.ssemployee;
+        let prodorderstatus = ssearchdata.ssproductionorderstatus;
         let doplaced = this.dp.transform(ssearchdata.ssdoplaced, 'yyyy-MM-dd');
         let dorequired = this.dp.transform(ssearchdata.ssdorequired, 'yyyy-MM-dd');
 
         let query = "";
 
-        if (ordernumber != null) query = query + "&ordernumber=" + ordernumber;
-        if (employeeid != null) query = query + "&employeeid=" + employeeid;
         if (doplaced != null && doplaced.trim() != "") query = query + "&doplaced=" + doplaced;
         if (dorequired != null && dorequired.trim() != "") query = query + "&dorequired=" + dorequired;
-
+        if (prodorderstatus != null) query = query + "&prodorderstatusid=" + prodorderstatus;
 
         if (query != "") query = query.replace(/^./, "?")
         this.loadTable(query);

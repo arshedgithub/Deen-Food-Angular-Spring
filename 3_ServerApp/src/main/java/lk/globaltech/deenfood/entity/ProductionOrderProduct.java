@@ -1,6 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lk.globaltech.deenfood.util.RegexPattern;
 
 import javax.persistence.*;
 
@@ -13,6 +14,7 @@ public class ProductionOrderProduct {
     private Integer id;
     @Basic
     @Column(name = "amount")
+    @RegexPattern(reg = "^[0-9]+(\\.[0-9]{1,3})?$", msg = "Invalid amount format.")
     private String amount;
     @JsonIgnore
     @ManyToOne

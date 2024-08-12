@@ -2,6 +2,8 @@ package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.ProductionOrderDao;
 import lk.globaltech.deenfood.entity.ProductionOrder;
+import lk.globaltech.deenfood.entity.ProductionOrderProduct;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,113 +18,113 @@ import java.util.stream.Stream;
 @RequestMapping(value = "/productionorders")
 public class ProductionorderController {
     @Autowired
-    private ProductionOrderDao ProductionOrderDao;
+    private ProductionOrderDao productionorderDao;
+
+//    @GetMapping(path ="/ordernumber", produces = "application/json")
+//    public ResponseEntity<Map<String, String>> get() {
+//        String number = this.productionorderDao.findMaxNumber();
+//        if(number==null)number="0000" ;
+//        Map<String, String> response = new HashMap<>();
+//        response.put("number", number);
+//        return ResponseEntity.ok().body(response);
+//    }
 
     @GetMapping(produces = "application/json")
-//  @PreAuthorize("hasAuthority('employee-select')")
-    public List<ProductionOrder> get(@RequestParam HashMap<String, String> params) //Searching by entering strings --> Words = params
-    {
-        List<ProductionOrder> prodorders = this.ProductionOrderDao.findAll();
+    public List<ProductionOrder> get(@RequestParam HashMap<String, String> params) {
 
-        if (params.isEmpty()) return prodorders; // if search word is empty --> return the full Suppliers List
+        String productionorderstatusid = params.get("productionorderstatusid");
+        String employeeid = params.get("employeeid");
+        String dorequired = params.get("dorequired");
+        String doplaced = params.get("doplaced");
 
-        //Define all searching categories in the UI for the Supplier Module, and map them to the entities in the DB
+        List<ProductionOrder> productionorders = this.productionorderDao.findAll();
 
-        String orderno = params.get("orderno");
-        String prodstyleid = params.get("styleid");
-        String orderstatusid = params.get("orderstatusid");
+        if (params.isEmpty()) return productionorders;
 
-        // Stream the Suppliers list
-        Stream<ProductionOrder> prodorderStream = prodorders.stream();
+        Stream<ProductionOrder> postream = productionorders.stream();
+        if (productionorderstatusid != null)
+            postream = postream.filter(o -> o.getProductionOrderstatus().getId() == Integer.parseInt(productionorderstatusid));
+        if (dorequired != null) postream = postream.filter(o -> o.getDorequired().toString().contains(dorequired));
+        if (doplaced != null) postream = postream.filter(o -> o.getDoplaced().toString().contains(doplaced));
 
-        //if there's a search from Suppliername, filter each object in the stream(s->s) to find the ones which "contains" that name
-        if (orderno != null) prodorderStream = prodorderStream.filter(o -> o.getOrderNumber().contains(orderno));
+        return postream.collect(Collectors.toList());
 
-        //if there's a search from Supplierstatusid, convert that string input to an integer and filter each object in the stream(s->s) to find the ones which are equal to that id
-        if (orderstatusid != null)
-            prodorderStream = prodorderStream.filter(o -> o.getProductionOrderstatus().getId() == Integer.parseInt(orderstatusid));
-        if (prodstyleid != null)
-            prodorderStream = prodorderStream.filter(o -> o.getProductionOrderstatus().getId() == Integer.parseInt(prodstyleid));
-
-        return prodorderStream.collect(Collectors.toList());
     }
 
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    // @PreAuthorize("hasAuthority('Employee-Insert')")
-    //embed the msg in the body to PUT command
-    public HashMap<String, String> add(@RequestBody ProductionOrder prodorder) {
+    public HashMap<String, String> add(@RequestBody ProductionOrder order) {
+        HashMap<String, String> response = new HashMap<>();
 
-        HashMap<String, String> responce = new HashMap<>();
-        String errors = "";//For any Errors, reserving an empty variable
+        String errors = "";
+        for (ProductionOrderProduct po : order.getProductionOrderProducts()) po.setProductionOrder(order);
 
-        if (ProductionOrderDao.findByProdNumber(prodorder.getOrderNumber()) != null)//findBySid is a custom method defined by me. write the relevant query in Supplierdao class.
-            errors = errors + "<br> Existing Order Number";// Assigning an error for pre-defined empty Error variable
+        //Add this after PRODUCT addition
+        if (this.productionorderDao.findByProdOrderNumber(order.getOrderNumber()) != null)
+            errors = errors + "<br> Existing Order";
 
+        if (errors.isEmpty()) {
+            productionorderDao.save(order);
+        } else {
+            errors = "Server Validation Errors : <br> " + errors;
+        }
 
-        if (errors == "") //if there are no errors up to now, it's a new Supplier
+        response.put("id", String.valueOf(order.getId()));
+        response.put("url", "/productionorders/" + order.getId());
+        response.put("errors", errors);
 
-            ProductionOrderDao.save(prodorder);// save the New Supplier details in DB
-
-        else errors = "Server Validation Errors : " + errors;
-
-        responce.put("id", String.valueOf(prodorder.getId()));
-        responce.put("url", "/orders/" + prodorder.getId());
-        responce.put("errors", errors);
-
-        return responce;
+        return response;
 
     }
 
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
-    public HashMap<String, String> update(@RequestBody ProductionOrder prodorder) {
+    public HashMap<String, String> update(@RequestBody ProductionOrder order) {
 
-        HashMap<String, String> responce = new HashMap<>();
+        HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
-        ProductionOrder order1 = ProductionOrderDao.findByProdNumber(prodorder.getOrderNumber());
+        ProductionOrder extPOrder = productionorderDao.findByMyId(order.getId());
 
-        if (order1 != null && prodorder.getOrderNumber() != order1.getOrderNumber())
-            errors = errors + "<br> Existing Order Number";
+        if (extPOrder != null) {
+            for (ProductionOrderProduct po : order.getProductionOrderProducts()) po.setProductionOrder(order);
+            BeanUtils.copyProperties(order, extPOrder, "id", "productionorderproducts", "qty");
+        } else {
+            errors = errors + "<br> Production Order Does Not Exist";
+        }
 
-        if (errors == "") ProductionOrderDao.save(prodorder);
-        else errors = "Server Validation Errors : <br> " + errors;
+        response.put("id", String.valueOf(order.getId()));
+        response.put("url", "/productionorders/" + order.getId());
+        response.put("errors", errors);
 
-        responce.put("id", String.valueOf(prodorder.getId()));
-        responce.put("url", "/suppliers/" + prodorder.getId());
-        responce.put("errors", errors);
-
-        return responce;
+        return response;
     }
 
-    //
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String, String> delete(@PathVariable Integer id) {
 
-        System.out.println(id);
-
         HashMap<String, String> responce = new HashMap<>();
         String errors = "";
 
-        ProductionOrder order1 = ProductionOrderDao.findByMyId(id);
+        ProductionOrder ord = productionorderDao.findByMyId(id);
 
-        if (order1 == null)
-            errors = errors + "<br> Order Does Not Exists";
+        if (ord == null)
+            errors = errors + "<br> Production Order Does Not Exists";
 
-        if (errors == "") ProductionOrderDao.delete(order1);
+        if (errors == "") productionorderDao.delete(ord);
         else errors = "Server Validation Errors : <br> " + errors;
 
-        responce.put("id", String.valueOf(id));
-        responce.put("url", "/orders/" + id);
+        responce.put("code", String.valueOf(id));
+        responce.put("url", "/id/" + id);
         responce.put("errors", errors);
 
         return responce;
     }
+
 }
 
 

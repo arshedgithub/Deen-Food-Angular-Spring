@@ -1,6 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.util.Collection;
 
@@ -21,6 +22,7 @@ public class ProductionOrder {
     @Column(name = "dorequired")
     private Date dorequired;
     @Basic
+    @Pattern(regexp = "^.*$", message = "Invalid Description")
     @Column(name = "description")
     private String description;
     @ManyToOne

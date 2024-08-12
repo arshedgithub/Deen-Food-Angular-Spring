@@ -15,6 +15,6 @@ public interface ProductionOrderDao extends JpaRepository<ProductionOrder,Intege
     ProductionOrder findByMyId(@Param("id") Integer id);
 
     @Query("select p from ProductionOrder p where p.orderNumber = :number")
-    ProductionOrder findByProdNumber(@Param("number")String number);
+    ProductionOrder findByProdOrderNumber(@Param("number")String number);
 }
 
