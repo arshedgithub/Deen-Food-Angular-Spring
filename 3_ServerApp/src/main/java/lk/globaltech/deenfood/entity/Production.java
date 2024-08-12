@@ -34,7 +34,7 @@ public class Production {
     private Productionstatus productionstatus;
     @ManyToOne
     @JoinColumn(name = "production_order_id", referencedColumnName = "id", nullable = false)
-        private ProductionOrder productionOrder;
+    private ProductionOrder productionOrder;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;

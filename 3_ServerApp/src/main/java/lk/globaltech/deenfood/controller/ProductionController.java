@@ -34,20 +34,18 @@ public class ProductionController {
     @GetMapping(produces = "application/json")
     public List<Production> get(@RequestParam HashMap<String, String> params){
 
-        String number = params.get("number");
-        String placed = params.get("placed");
+        String placed = params.get("date");
         String productionstatusid = params.get("productionstatusid");
 
-        List<Production> porders = this.productiondao.findAll();
+        List<Production> productions = this.productiondao.findAll();
+        System.out.println(productions.size());
+        System.out.println(productions.get(0).getNumber());
 
-        if (params.isEmpty()) return porders;
+        if (params.isEmpty()) return productions;
 
-        Stream<Production> postream = porders.stream();
-
-        if (number!=null) postream = postream.filter (o -> o.getNumber().toString().contains(number));
+        Stream<Production> postream = productions.stream();
         if (productionstatusid!=null) postream = postream.filter (o -> o.getProductionstatus().getId()==Integer.parseInt(productionstatusid));
         if (placed!=null) postream = postream.filter (o -> o.getPlaced().toString().contains(placed));
-
         return postream.collect(Collectors.toList());
 
     }
@@ -60,8 +58,6 @@ public class ProductionController {
         String errors = "";
 
         // for (Poitem po : order.getPoitems()) po.setPurchaseorder(order);
-
-
         //Add this after PRODUCT addition
 //        if (podao.findbyNumber(order.getNumber()) != null)
 //            errors = errors + "<br> Existing Order";

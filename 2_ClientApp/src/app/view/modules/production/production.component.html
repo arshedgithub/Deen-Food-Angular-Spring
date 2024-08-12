@@ -93,15 +93,10 @@
 
                 <mat-form [formGroup]="ssearch">
 
-                    <mat-form-field appearance="outline">
-                        <mat-label>Search By Production No</mat-label>
-                        <input matInput formControlName="ssnumber">
-                    </mat-form-field>
-
                     <mat-form-field appearance="outline" class="ssfield">
                         <mat-label>Search By Status</mat-label>
                         <mat-select formControlName="ssproductionstatus">
-                            <mat-option [value]="null" selected>Not Selected</mat-option>
+                            <mat-option [value]="null" selected>All</mat-option>
                             <mat-option *ngFor="let productionstatus of productionstatuses" [value]="productionstatus.id">{{ productionstatus.name }}
                             </mat-option>
                         </mat-select>

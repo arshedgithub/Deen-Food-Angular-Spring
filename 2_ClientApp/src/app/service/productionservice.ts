@@ -19,7 +19,6 @@ export class ProductionService {
   }
 
   async add(production: Production): Promise<[]|undefined>{
-    console.log(production)
     return this.http.post<[]>('http://localhost:8080/productions', production).toPromise();
   }
 

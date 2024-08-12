@@ -34,9 +34,9 @@ export class ProductionComponent {
     public ssearch!: FormGroup;
     public form!: FormGroup;
 
-    columns: string[] = ['number', 'product', 'amount', 'productionstatus', 'placed', 'employee'];
+    columns: string[] = ['number', 'product', 'amount', 'productionstatus', 'doplaced', 'employee'];
     headers: string[] = ['Number', 'Product', 'Amount', 'Production Status', 'Date Placed', 'Employee'];
-    binders: string[] = ['number', 'product.productnumber', 'amount', 'productionstatus.name', 'placed', 'employee.fullname'];
+    binders: string[] = ['number', 'product.productnumber', 'amount', 'productionstatus.name', 'doplaced', 'employee.fullname'];
 
     cscolumns: string[] = ['csnumber', 'csproduct', 'csamount', 'csproductionstatus', 'csplaced', 'csemployee'];
     csprompts: string[] = ['Search by Pr. Number', 'Search by Date Placed', 'Search by Amount',
@@ -101,7 +101,6 @@ export class ProductionComponent {
 
         this.ssearch = this.fb.group({
             "ssdate": new FormControl(),
-            "ssplaced": new FormControl(),
             "ssproductionstatus": new FormControl(),
         });
 
@@ -237,12 +236,10 @@ export class ProductionComponent {
 
         const ssearchdata = this.ssearch.getRawValue();
 
-        let number = ssearchdata.ssnumber;
         let productionstatusid = ssearchdata.ssproductionstatus;
         let date = this.dp.transform(ssearchdata.ssdate, 'yyyy-MM-dd');
 
         let query = "";
-        if (number != null) query = query + "&number=" + number;
         if (productionstatusid != null) query = query + "&productionstatusid=" + productionstatusid;
         if (date != null && date.trim() != "") query = query + "&date=" + date;
 
@@ -273,7 +270,6 @@ export class ProductionComponent {
     }
 
     getErrors(): string {
-
         let errors: string = "";
         for (const controlName in this.form.controls) {
             const control = this.form.controls[controlName];
@@ -288,8 +284,6 @@ export class ProductionComponent {
         this.selectedrow = production;
         this.production = JSON.parse(JSON.stringify(production));
         this.oldProduction = JSON.parse(JSON.stringify(production));
-
-
         // @ts-ignore
         this.production.employee = this.employees.find(e => e.id === this.production.employee.id);
         // @ts-ignore
