@@ -155,9 +155,9 @@ export class ProductionOrderComponent {
 
         this.form.controls['orderNumber'].setValidators([Validators.required]);
         this.innerform.controls['product'].setValidators([Validators.required]);
-        this.innerform.controls['amount'].setValidators([Validators.required, Validators.pattern("^\\d{1,4}$")]);
+        this.innerform.controls['amount'].setValidators([Validators.required, Validators.pattern(this.innerregexes['amount']['regex'])]);
         this.form.controls['dorequired'].setValidators([Validators.required]);
-        this.form.controls['description'].setValidators([Validators.required]);
+        this.form.controls['description'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
         this.form.controls['productionOrderstatus'].setValidators([Validators.required]);
         this.form.controls['doplaced'].setValidators([Validators.required]);
         this.form.controls['employee'].setValidators([Validators.required]);
@@ -281,7 +281,7 @@ export class ProductionOrderComponent {
     }
 
     btnSearchMc() {
-    
+
         const ssearchdata = this.ssearch.getRawValue();
         let prodorderstatus = ssearchdata.ssproductionorderstatus;
         let doplaced = this.dp.transform(ssearchdata.ssdoplaced, 'yyyy-MM-dd');

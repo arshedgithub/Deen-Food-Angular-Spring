@@ -1,5 +1,6 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.globaltech.deenfood.util.RegexPattern;
 
 import javax.persistence.*;
@@ -48,7 +49,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
     private Collection<ProductionOrderProduct> productionOrderProducts;
 
     public Integer getId() {

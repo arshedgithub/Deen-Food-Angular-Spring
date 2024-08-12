@@ -31,7 +31,7 @@ public class ProductionOrder {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
-    @OneToMany(mappedBy = "productionOrder")
+    @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ProductionOrderProduct> productionOrderProducts;
 
     public Integer getId() {

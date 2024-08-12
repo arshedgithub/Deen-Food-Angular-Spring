@@ -33,7 +33,6 @@ public class ProductionorderController {
     public List<ProductionOrder> get(@RequestParam HashMap<String, String> params) {
 
         String productionorderstatusid = params.get("prodorderstatusid");
-        String employeeid = params.get("employeeid");
         String dorequired = params.get("dorequired");
         String doplaced = params.get("doplaced");
 
@@ -62,7 +61,7 @@ public class ProductionorderController {
 
         //Add this after PRODUCT addition
         if (this.productionorderDao.findByProdOrderNumber(order.getOrderNumber()) != null)
-            errors = errors + "<br> Existing Order";
+            errors = errors + "<br> Existing Order Number";
 
         if (errors.isEmpty()) {
             productionorderDao.save(order);
@@ -75,7 +74,6 @@ public class ProductionorderController {
         response.put("errors", errors);
 
         return response;
-
     }
 
 

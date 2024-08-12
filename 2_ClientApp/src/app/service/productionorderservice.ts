@@ -13,10 +13,12 @@ export class ProductionOrderService {
   async getAll(query:string): Promise<Array<Productionorder>> {
     const prodOrders = await this.http.get<Array<Productionorder>>('http://localhost:8080/productionorders'+query).toPromise();
     if(prodOrders == undefined) return [];
+    console.log(prodOrders)
     return prodOrders;
   }
 
   async add(prodOrder: Productionorder): Promise<[]|undefined>{
+    console.log(prodOrder)
     return this.http.post<[]>('http://localhost:8080/productionorders', prodOrder).toPromise();
   }
 
