@@ -22,7 +22,6 @@ public class ProductionController {
     @Autowired
     private ProductionDao productiondao;
 
-
 //    @GetMapping(path ="/number", produces = "application/json")
 //    public ResponseEntity<Map<String, String>> get() {
 //        String number = this.productiondao.findMaxNumber();
@@ -38,7 +37,6 @@ public class ProductionController {
         String number = params.get("number");
         String placed = params.get("placed");
         String productionstatusid = params.get("productionstatusid");
-
 
         List<Production> porders = this.productiondao.findAll();
 

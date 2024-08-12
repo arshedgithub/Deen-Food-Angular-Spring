@@ -34,13 +34,13 @@ public class Production {
     private Productionstatus productionstatus;
     @ManyToOne
     @JoinColumn(name = "production_order_id", referencedColumnName = "id", nullable = false)
-    private ProductionOrder productionOrder;
+        private ProductionOrder productionOrder;
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
     private Product product;
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
-    private Employee employee;
+        private Employee employee;
 
     public Integer getId() {
         return id;

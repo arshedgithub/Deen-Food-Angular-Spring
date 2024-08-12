@@ -8,7 +8,7 @@ import {Productionstatus} from "../entity/productionstatus";
   providedIn: 'root'
 })
 
-export class Productstatusservice {
+export class ProductionstatusService {
 
   constructor(private http: HttpClient) {  }
 
