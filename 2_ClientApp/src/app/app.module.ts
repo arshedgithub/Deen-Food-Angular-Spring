@@ -51,6 +51,7 @@ import { PurchaseOrderComponent } from './view/modules/purchase-order/purchase-o
 import { GrnComponent } from './view/modules/grn/grn.component';
 import { ProductComponent } from './view/modules/product/product.component';
 import { ProductionOrderComponent } from './view/modules/production-order/production-order.component';
+import { ProductionComponent } from './view/modules/production/production.component';
 
 
 @NgModule({
@@ -78,6 +79,7 @@ import { ProductionOrderComponent } from './view/modules/production-order/produc
     GrnComponent,
     ProductComponent,
     ProductionOrderComponent,
+    ProductionComponent,
   ],
     imports: [
         MatDatepickerModule,

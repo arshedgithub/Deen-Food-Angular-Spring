@@ -96,6 +96,9 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<ProductionOrder> productionOrders;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private Collection<Production> productions;
 
     public Employee(){}
 
@@ -339,5 +342,13 @@ public class Employee {
 
     public void setProductionOrders(Collection<ProductionOrder> productionOrders) {
         this.productionOrders = productionOrders;
+    }
+
+    public Collection<Production> getProductions() {
+        return productions;
+    }
+
+    public void setProductions(Collection<Production> productions) {
+        this.productions = productions;
     }
 }

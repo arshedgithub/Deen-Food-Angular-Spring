@@ -467,7 +467,6 @@ export class ProductionOrderComponent {
     resetForms() {
         const form = this.myForm.nativeElement as HTMLFormElement;
         form.reset();
-
         const innerForm = this.myInnerForm.nativeElement as HTMLFormElement;
         innerForm.reset();
 
@@ -479,14 +478,13 @@ export class ProductionOrderComponent {
 
         // @ts-ignore
         this.indata = new MatTableDataSource([]);
-        this.form.controls['ordernumber'].reset();
+        this.form.controls['orderNumber'].reset();
         this.enableButtons(true, false, false);
     }
 
     add() {
 
         let errors = this.getErrors();
-
         if (errors != "") {
             const errmsg = this.dg.open(MessageComponent, {
                 width: '500px',
@@ -504,15 +502,12 @@ export class ProductionOrderComponent {
 
             // @ts-ignore
             this.productionorderproducts.forEach((i) => delete i.id);
-
             // @ts-ignore
             this.productionOrder.doplaced = this.dp.transform(this.productionOrder.doplaced, "yyyy-MM-dd");
-
             // @ts-ignore
             this.productionOrder.dorequired = this.dp.transform(this.productionOrder.dorequired, "yyyy-MM-dd");
 
             let invdata: string = "";
-
             invdata = invdata + "<br>Placed Day is : " + this.productionOrder.doplaced
             invdata = invdata + "<br>Production Order Number : " + this.productionOrder.orderNumber;
 
@@ -529,16 +524,16 @@ export class ProductionOrderComponent {
 
             confirm.afterClosed().subscribe(async result => {
                 if (result) {
-                    this.pos.add(this.productionOrder).then((responce: [] | undefined) => {
-                        //console.log("Res-" + responce);
-                        //console.log("Un-" + responce == undefined);
-                        if (responce != undefined) { // @ts-ignore
-                            console.log("Add-" + responce['id'] + "-" + responce['url'] + "-" + (responce['errors'] == ""));
+                    this.pos.add(this.productionOrder).then((response: [] | undefined) => {
+                        //console.log("Res-" + response);
+                        //console.log("Un-" + response == undefined);
+                        if (response != undefined) { // @ts-ignore
+                            console.log("Add-" + response['id'] + "-" + response['url'] + "-" + (response['errors'] == ""));
                             // @ts-ignore
-                            addstatus = responce['errors'] == "";
+                            addstatus = response['errors'] == "";
                             console.log("Add Status" + addstatus);
                             if (!addstatus) { // @ts-ignore
-                                addmessage = responce['errors'];
+                                addmessage = response['errors'];
                             }
                         } else {
                             console.log("undefined");
@@ -561,7 +556,7 @@ export class ProductionOrderComponent {
 
                         const stsmsg = this.dg.open(MessageComponent, {
                             width: '500px',
-                            data: {heading: "Status -Production Order Add", message: addmessage}
+                            data: {heading: "Status - Production Order Add", message: addmessage}
                         });
 
                         stsmsg.afterClosed().subscribe(async result => {
@@ -613,26 +608,21 @@ export class ProductionOrderComponent {
                     if (result) {
 
                         this.productionOrder = this.form.getRawValue();
-
                         this.productionOrder.productionOrderProducts = this.productionorderproducts;
-
                         // @ts-ignore
                         this.productionorderproducts.forEach((i) => delete i.id);
-
                         // @ts-ignore
                         this.productionOrder.doplaced = this.dp.transform(this.productionOrder.doplaced, 'yyyy-MM-dd');
-
                         // @ts-ignore
                         this.productionOrder.dorequired = this.dp.transform(this.productionOrder.dorequired, 'yyyy-MM-dd');
-
                         this.productionOrder.id = this.oldProductionOrder.id;
 
-                        this.pos.update(this.productionOrder).then((responce: [] | undefined) => {
-                            if (responce != undefined) {
+                        this.pos.update(this.productionOrder).then((response: [] | undefined) => {
+                            if (response != undefined) {
                                 // @ts-ignore
-                                updstatus = responce['errors'] == "";
+                                updstatus = response['errors'] == "";
                                 if (!updstatus) { // @ts-ignore
-                                    updmessage = responce['errors'];
+                                    updmessage = response['errors'];
                                 }
                             } else {
                                 updstatus = false;
@@ -695,12 +685,12 @@ export class ProductionOrderComponent {
                 let delstatus: boolean = false;
                 let delmessage: string = "Server Not Found";
 
-                this.pos.delete(this.productionOrder.id).then((responce: [] | undefined) => {
+                this.pos.delete(this.productionOrder.id).then((response: [] | undefined) => {
 
-                    if (responce != undefined) { // @ts-ignore
-                        delstatus = responce['errors'] == "";
+                    if (response != undefined) { // @ts-ignore
+                        delstatus = response['errors'] == "";
                         if (!delstatus) { // @ts-ignore
-                            delmessage = responce['errors'];
+                            delmessage = response['errors'];
                         }
                     } else {
                         delstatus = false;

@@ -1,6 +1,5 @@
 package lk.globaltech.deenfood.dao;
 
-import lk.globaltech.deenfood.entity.Product;
 import lk.globaltech.deenfood.entity.ProductionOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

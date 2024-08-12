@@ -38,6 +38,7 @@ export class AuthorizationManager {
 
     orderMenuItems = [
       {name: 'Production Order', accessFlag: true, routerLink: 'productionorder'},
+      {name: 'Production', accessFlag: true, routerLink: 'production'},
     ];
 
     reportMenuItems = [

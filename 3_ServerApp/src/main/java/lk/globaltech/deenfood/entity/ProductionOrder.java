@@ -33,6 +33,8 @@ public class ProductionOrder {
     private Employee employee;
     @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ProductionOrderProduct> productionOrderProducts;
+    @OneToMany(mappedBy = "productionOrder")
+    private Collection<Production> productions;
 
     public Integer getId() {
         return id;
@@ -122,5 +124,13 @@ public class ProductionOrder {
 
     public void setProductionOrderProducts(Collection<ProductionOrderProduct> productionOrderProducts) {
         this.productionOrderProducts = productionOrderProducts;
+    }
+
+    public Collection<Production> getProductions() {
+        return productions;
+    }
+
+    public void setProductions(Collection<Production> productions) {
+        this.productions = productions;
     }
 }
