@@ -1,8 +1,11 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.sql.Date;
+import java.util.Collection;
 
 @Entity
 public class Customer {
@@ -47,6 +50,9 @@ public class Customer {
     @Basic
     @Column(name = "doassignment")
     private Date doassignment;
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer")
+    private Collection<Customerorder> customerorders;
 
     public Integer getId() {
         return id;
@@ -177,5 +183,13 @@ public class Customer {
 
     public void setDoassignment(Date doassignment) {
         this.doassignment = doassignment;
+    }
+
+    public Collection<Customerorder> getCustomerorders() {
+        return customerorders;
+    }
+
+    public void setCustomerorders(Collection<Customerorder> customerorders) {
+        this.customerorders = customerorders;
     }
 }

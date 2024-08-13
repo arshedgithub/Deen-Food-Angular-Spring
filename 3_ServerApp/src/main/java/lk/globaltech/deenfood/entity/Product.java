@@ -55,6 +55,9 @@ public class Product {
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     private Collection<Production> productionsById;
+    @JsonIgnore
+    @OneToMany(mappedBy = "product")
+    private Collection<Orderproduct> orderproducts;
 
     public Integer getId() {
         return id;
@@ -192,5 +195,13 @@ public class Product {
 
     public void setProductionsById(Collection<Production> productionsById) {
         this.productionsById = productionsById;
+    }
+
+    public Collection<Orderproduct> getOrderproducts() {
+        return orderproducts;
+    }
+
+    public void setOrderproducts(Collection<Orderproduct> orderproducts) {
+        this.orderproducts = orderproducts;
     }
 }
