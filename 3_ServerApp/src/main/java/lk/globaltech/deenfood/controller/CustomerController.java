@@ -24,7 +24,6 @@ public class CustomerController {
     public List<Customer> get(@RequestParam HashMap<String, String> params) {
 
         List<Customer> customers = this.customerDao.findAll();
-        System.out.println(customers.size());
         if(params.isEmpty()) return customers;
 
         String genderid = params.get("genderid");

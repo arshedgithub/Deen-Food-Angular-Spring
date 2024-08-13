@@ -10,15 +10,13 @@
 
                 <mat-form-field appearance="outline">
                     <mat-label>Number</mat-label>
-                    <input matInput formControlName="number">
+                    <input matInput formControlName="customernumber">
                 </mat-form-field>
-
 
                 <mat-form-field appearance="outline">
                     <mat-label>Full Name</mat-label>
                     <input matInput formControlName="fullname">
                 </mat-form-field>
-
 
                 <mat-form-field appearance="outline">
                     <mat-label>Calling Name</mat-label>
@@ -34,37 +32,13 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>NIC</mat-label>
-                    <input matInput formControlName="nic">
+                    <mat-label>Description</mat-label>
+                    <input matInput formControlName="description">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Birth Date</mat-label>
-                    <input matInput [matDatepicker]="dob" formControlName="dobirth">
-                    <mat-datepicker-toggle matIconSuffix [for]="dob"></mat-datepicker-toggle>
-                    <mat-datepicker #dob></mat-datepicker>
-                </mat-form-field>
-
-                <div id="imgpanel">
-                    <img [src]="imageempurl">
-                    <input id="userImage" hidden="hidden" (change)="selectImage($event)" Select type="file" formControlName="photo">
-                    <label for="userImage" id="selectbutton">Select</label>
-                    <label id="clearbutton" (click)="clearImage()">Clear</label>
-                </div>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Address</mat-label>
-                    <input matInput formControlName="address">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Mobile</mat-label>
-                    <input matInput formControlName="mobile">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Land</mat-label>
-                    <input matInput formControlName="land">
+                    <mat-label>Contact</mat-label>
+                    <input matInput formControlName="contact">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
@@ -73,11 +47,8 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Designation</mat-label>
-                    <mat-select formControlName="designation">
-                        <mat-option [value]="null" selected>Not Selected</mat-option>
-                        <mat-option *ngFor="let designation of designations" [value]="designation">{{designation.name}}</mat-option>
-                    </mat-select>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="address">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
@@ -88,23 +59,10 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Description</mat-label>
-                    <input matInput formControlName="description">
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Employee Type</mat-label>
-                    <mat-select formControlName="emptype">
+                    <mat-label>Employee</mat-label>
+                    <mat-select formControlName="employee">
                         <mat-option [value]="null" selected>Not Selected</mat-option>
-                        <mat-option *ngFor="let employeetype of employeetypes" [value]="employeetype">{{employeetype.name}}</mat-option>
-                    </mat-select>
-                </mat-form-field>
-
-                <mat-form-field appearance="outline">
-                    <mat-label>Employee Status</mat-label>
-                    <mat-select formControlName="empstatus">
-                        <mat-option [value]="null" selected>Not Selected</mat-option>
-                        <mat-option *ngFor="let employeestatus of employeestatuses" [value]="employeestatus">{{employeestatus.name}}</mat-option>
+                        <mat-option *ngFor="let employee of employees" [value]="employee">{{employee.fullname}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 

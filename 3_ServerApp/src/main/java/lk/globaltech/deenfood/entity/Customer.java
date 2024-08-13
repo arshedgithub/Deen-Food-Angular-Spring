@@ -1,6 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
 import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 public class Customer {
@@ -38,6 +39,9 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
+    @Basic
+    @Column(name = "doassignment")
+    private Date doassignment;
 
     public Integer getId() {
         return id;
@@ -160,5 +164,13 @@ public class Customer {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
+    }
+
+    public Date getDoassignment() {
+        return doassignment;
+    }
+
+    public void setDoassignment(Date doassignment) {
+        this.doassignment = doassignment;
     }
 }

@@ -2,20 +2,18 @@ import {Component, Inject} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Employee} from "../../../../entity/employee";
 import {Gender} from "../../../../entity/gender";
-import {Designation} from "../../../../entity/designation";
-import {Empstatus} from "../../../../entity/empstatus";
-import {Emptype} from "../../../../entity/emptype";
 import {UiAssist} from "../../../../util/ui/ui.assist";
 import {EmployeeService} from "../../../../service/employeeservice";
 import {GenderService} from "../../../../service/genderservice";
-import {DesignationService} from "../../../../service/designationservice";
-import {Empstatusservice} from "../../../../service/empstatusservice";
-import {Emptypeservice} from "../../../../service/emptypeservice";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {RegexService} from "../../../../service/regexservice";
 import {DatePipe} from "@angular/common";
 import {MessageComponent} from "../../../../util/dialog/message/message.component";
 import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.component";
+import {Customer} from "../../../../entity/customer";
+import {Customerstatus} from "../../../../entity/customerstatus";
+import {CustomerstatusService} from "../../../../service/customerstatusservice";
+import {CustomerService} from "../../../../service/customerservice";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-customer-form',
@@ -24,18 +22,15 @@ import {ConfirmComponent} from "../../../../util/dialog/confirm/confirm.componen
 })
 export class CustomerFormComponent {
   public form!: FormGroup;
-  employee!: Employee;
-  oldemployee!: Employee;
-  imageempurl: string = 'assets/default.png'
+  customer!: Customer;
+  oldCustomer!: Customer;
 
   popupTitle: any;
-  selectedrow!: Employee;
-
+  selectedrow!: Customer;
 
   genders: Array<Gender> = [];
-  designations: Array<Designation> = [];
-  employeestatuses: Array<Empstatus> = [];
-  employeetypes: Array<Emptype> = [];
+  employees: Array<Employee> = [];
+  customerstatuses: Array<Customerstatus> = [];
 
   regexes: any;
 
@@ -57,31 +52,25 @@ export class CustomerFormComponent {
       this.genders = gens;
     });
 
-    const designationLoad = this.ds.getAllList().then((dess: Designation[]) => {
-      this.designations = dess;
+    const statusLoad = this.ss.getAllList().then((stes: Customerstatus[]) => {
+      this.customerstatuses = stes;
     });
 
-    const statusLoad = this.ss.getAllList().then((stes: Empstatus[]) => {
-      this.employeestatuses = stes;
-    });
-
-    const typeLoad = this.ts.getAllList().then((types: Emptype[]) => {
-      this.employeetypes = types;
+    const employeeLoad = this.es.getAll("").then((employees: Employee[]) => {
+      this.employees = employees;
     });
 
     if (this.popupTitle == "Edit Employee") {
-      Promise.all([genderLoad, designationLoad, statusLoad, typeLoad])
+      Promise.all([genderLoad, statusLoad, employeeLoad])
           .then(() => this.fillForm(this.data.employee));
     }
   }
 
-
   constructor(
+      private cs: CustomerService,
       private es: EmployeeService,
       private gs: GenderService,
-      private ds: DesignationService,
-      private ss: Empstatusservice,
-      private ts: Emptypeservice,
+      private ss: CustomerstatusService,
       private dg: MatDialog,
       private rs: RegexService,
       private fb: FormBuilder,
@@ -105,11 +94,9 @@ export class CustomerFormComponent {
       "customerstatus": new FormControl('', [Validators.required]),
       "employee": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
-
   }
 
   createForm() {
-
     this.form.controls['customernumber'].setValidators([Validators.required]);
     this.form.controls['fullname'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
     this.form.controls['callingname'].setValidators([Validators.required, Validators.pattern(this.regexes['callingname']['regex'])]);
@@ -133,9 +120,9 @@ export class CustomerFormComponent {
             if (controlName == "doassignment")
               value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
 
-            if (this.oldemployee != undefined && control.valid) {
+            if (this.oldCustomer != undefined && control.valid) {
               // @ts-ignore
-              if (value === this.employee[controlName]) {
+              if (value === this.customer[controlName]) {
                 control.markAsPristine();
               } else {
                 control.markAsDirty();
@@ -149,23 +136,6 @@ export class CustomerFormComponent {
     // this.enableButtons(true,false,false);
   }
 
-  selectImage(e: any): void {
-    if (e.target.files) {
-      let reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-      reader.onload = (event: any) => {
-        this.imageempurl = event.target.result;
-        this.form.controls['photo'].clearValidators();
-      }
-    }
-  }
-
-  clearImage(): void {
-    this.imageempurl = 'assets/default.png';
-    this.form.controls['photo'].setErrors({'required': true});
-  }
-
-
   add() {
 
     let errors = this.getErrors();
@@ -173,7 +143,7 @@ export class CustomerFormComponent {
     if (errors != "") {
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - Employee Add ", message: "You have following Errors <br> " + errors}
+        data: {heading: "Errors - Customer Add ", message: "You have following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => {
         if (!result) {
@@ -182,23 +152,18 @@ export class CustomerFormComponent {
       });
     } else {
 
-      this.employee = this.form.getRawValue();
+      this.customer = this.form.getRawValue();
+      let customerData: string = "";
 
-      //console.log("Photo-Before"+this.employee.photo);
-      this.employee.photo = btoa(this.imageempurl);
-      //console.log("Photo-After"+this.employee.photo);
-
-      let empdata: string = "";
-
-      empdata = empdata + "<br>Number is : " + this.employee.number;
-      empdata = empdata + "<br>Fullname is : " + this.employee.fullname;
-      empdata = empdata + "<br>Callingname is : " + this.employee.callingname;
+      customerData = customerData + "<br>Number is : " + this.customer.customernumber;
+      customerData = customerData + "<br>Fullname is : " + this.customer.fullname;
+      customerData = customerData + "<br>Callingname is : " + this.customer.callingname;
 
       const confirm = this.dg.open(ConfirmComponent, {
         width: '500px',
         data: {
-          heading: "Confirmation - Employee Add",
-          message: "Are you sure to Add the following Employee? <br> <br>" + empdata
+          heading: "Confirmation - Customer Add",
+          message: "Are you sure to Add the following Customer? <br> <br>" + customerData
         }
       });
 
@@ -207,9 +172,9 @@ export class CustomerFormComponent {
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          // console.log("EmployeeService.add(emp)");
+          // console.log("CustomerService.add(emp)");
 
-          this.es.add(this.employee).then((responce: [] | undefined) => {
+          this.cs.add(this.customer).then((responce: [] | undefined) => {
             //console.log("Res-" + responce);
             //console.log("Un-" + responce == undefined);
             if (responce != undefined) { // @ts-ignore
@@ -230,7 +195,6 @@ export class CustomerFormComponent {
             if (addstatus) {
               addmessage = "Successfully Saved";
               this.form.reset();
-              this.clearImage();
               Object.values(this.form.controls).forEach(control => {
                 control.markAsTouched();
               });
@@ -239,7 +203,7 @@ export class CustomerFormComponent {
 
             const stsmsg = this.dg.open(MessageComponent, {
               width: '500px',
-              data: {heading: "Status -Employee Add", message: addmessage}
+              data: {heading: "Status -Customer Add", message: addmessage}
             });
 
             stsmsg.afterClosed().subscribe(async result => {
@@ -273,33 +237,21 @@ export class CustomerFormComponent {
     return errors;
   }
 
-  fillForm(employee: Employee) {
+  fillForm(customer: Customer) {
 
     console.log(this.genders);
 
-    this.selectedrow = employee;
-    this.employee = JSON.parse(JSON.stringify(employee));
-    this.oldemployee = JSON.parse(JSON.stringify(employee));
-
-    if (this.employee.photo != null) {
-      this.imageempurl = atob(this.employee.photo);
-      this.form.controls['photo'].clearValidators();
-    } else {
-      this.clearImage();
-    }
-    this.employee.photo = "";
-
+    this.selectedrow = customer;
+    this.customer = JSON.parse(JSON.stringify(customer));
+    this.oldCustomer = JSON.parse(JSON.stringify(customer));
     // @ts-ignore
-    this.employee.gender = this.genders.find(g => g.id === this.employee.gender.id);
+    this.customer.gender = this.genders.find(g => g.id === this.customer.gender.id);
+    //@ts-ignore
+    this.customer.customerstatus = this.customerstatuses.find(s => s.id === this.customer.customerstatus.id);
+    //@ts-ignore
+    this.customer.employee = this.customertypes.find(s => s.id === this.customer.employee.id);
 
-    //@ts-ignore
-    this.employee.designation = this.designations.find(d => d.id === this.employee.designation.id);
-    //@ts-ignore
-    this.employee.empstatus = this.employeestatuses.find(s => s.id === this.employee.empstatus.id);
-    //@ts-ignore
-    this.employee.emptype = this.employeetypes.find(s => s.id === this.employee.emptype.id);
-
-    this.form.patchValue(this.employee);
+    this.form.patchValue(this.customer);
     this.form.markAsPristine();
 
   }
@@ -326,7 +278,7 @@ export class CustomerFormComponent {
 
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - Employee Update ", message: "You have following Errors <br> " + errors}
+        data: {heading: "Errors - Customer Update ", message: "You have following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => {
         if (!result) {
@@ -337,28 +289,24 @@ export class CustomerFormComponent {
     } else {
 
       let updates: string = this.getUpdates();
-
       if (updates != "") {
-
         let updstatus: boolean = false;
         let updmessage: string = "Server Not Found";
 
         const confirm = this.dg.open(ConfirmComponent, {
           width: '500px',
           data: {
-            heading: "Confirmation - Employee Update",
+            heading: "Confirmation - Customer Update",
             message: "Are you sure to Save folowing Updates? <br> <br>" + updates
           }
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            //console.log("EmployeeService.update()");
-            this.employee = this.form.getRawValue();
-            if (this.form.controls['photo'].dirty) this.employee.photo = btoa(this.imageempurl);
-            else this.employee.photo = this.oldemployee.photo;
-            this.employee.id = this.oldemployee.id;
+            //console.log("CustomerService.update()");
+            this.customer = this.form.getRawValue();
+            this.customer.id = this.oldCustomer.id;
 
-            this.es.update(this.employee).then((responce: [] | undefined) => {
+            this.cs.update(this.customer).then((responce: [] | undefined) => {
               //console.log("Res-" + responce);
               // console.log("Un-" + responce == undefined);
               if (responce != undefined) { // @ts-ignore
@@ -378,7 +326,6 @@ export class CustomerFormComponent {
               if (updstatus) {
                 updmessage = "Successfully Updated";
                 this.form.reset();
-                this.clearImage();
                 Object.values(this.form.controls).forEach(control => {
                   control.markAsTouched();
                 });
@@ -387,7 +334,7 @@ export class CustomerFormComponent {
 
               const stsmsg = this.dg.open(MessageComponent, {
                 width: '500px',
-                data: {heading: "Status -Employee Add", message: updmessage}
+                data: {heading: "Status -Customer Add", message: updmessage}
               });
               stsmsg.afterClosed().subscribe(async result => {
                 if (!result) {
@@ -402,7 +349,7 @@ export class CustomerFormComponent {
 
         const updmsg = this.dg.open(MessageComponent, {
           width: '500px',
-          data: {heading: "Confirmation - Employee Update", message: "Nothing Changed"}
+          data: {heading: "Confirmation - Customer Update", message: "Nothing Changed"}
         });
         updmsg.afterClosed().subscribe(async result => {
           if (!result) {
@@ -418,7 +365,7 @@ export class CustomerFormComponent {
     const confirm = this.dg.open(ConfirmComponent, {
       width: '500px',
       data: {
-        heading: "Confirmation - Employee Clear",
+        heading: "Confirmation - Customer Clear",
         message: "Are you sure to Clear following Details ? <br> <br>"
       }
     });
