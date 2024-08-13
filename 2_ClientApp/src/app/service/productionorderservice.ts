@@ -23,6 +23,7 @@ export class ProductionOrderService {
   }
 
   async update(prodOrder: Productionorder): Promise<[]|undefined>{
+    console.log(prodOrder)
     return this.http.put<[]>('http://localhost:8080/productionorders', prodOrder).toPromise();
   }
 

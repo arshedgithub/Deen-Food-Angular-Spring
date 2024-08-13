@@ -479,14 +479,13 @@ export class ProductionOrderComponent {
 
         // @ts-ignore
         this.indata = new MatTableDataSource([]);
-        this.form.controls['ordernumber'].reset();
+        this.form.controls['orderNumber'].reset();
         this.enableButtons(true, false, false);
     }
 
     add() {
 
         let errors = this.getErrors();
-
         if (errors != "") {
             const errmsg = this.dg.open(MessageComponent, {
                 width: '500px',

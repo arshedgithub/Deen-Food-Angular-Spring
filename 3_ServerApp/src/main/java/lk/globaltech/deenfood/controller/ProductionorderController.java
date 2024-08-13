@@ -81,17 +81,20 @@ public class ProductionorderController {
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String, String> update(@RequestBody ProductionOrder order) {
 
+        System.out.println("ordrer num" + order.getOrderNumber());
         HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
-        ProductionOrder extPOrder = productionorderDao.findByMyId(order.getId());
+        ProductionOrder existOrder = productionorderDao.findByMyId(order.getId());
 
-        if (extPOrder != null) {
-            for (ProductionOrderProduct po : order.getProductionOrderProducts()) po.setProductionOrder(order);
-            BeanUtils.copyProperties(order, extPOrder, "id", "productionorderproducts", "qty");
-        } else {
-            errors = errors + "<br> Production Order Does Not Exist";
+        if(existOrder!=null && order.getId()!=existOrder.getId())
+            errors = errors+"<br> Production Order Not Found";
+
+        for (ProductionOrderProduct orderProduct : order.getProductionOrderProducts()) {
+            orderProduct.setProductionOrder(order);
         }
+        BeanUtils.copyProperties(order, existOrder, "id","userroles");
+        productionorderDao.save(order);
 
         response.put("id", String.valueOf(order.getId()));
         response.put("url", "/productionorders/" + order.getId());
