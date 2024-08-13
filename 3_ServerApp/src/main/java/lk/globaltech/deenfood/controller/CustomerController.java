@@ -24,17 +24,16 @@ public class CustomerController {
     public List<Customer> get(@RequestParam HashMap<String, String> params) {
 
         List<Customer> customers = this.customerDao.findAll();
+        System.out.println(customers.size());
+        if(params.isEmpty()) return customers;
 
-        if(params.isEmpty())  return customers;
-
-        String genderid= params.get("genderid");
-        String statusid= params.get("custstatusid");
+        String genderid = params.get("genderid");
+        String statusid = params.get("custstatusid");
 
         Stream<Customer> estream = customers.stream();
 
         if(genderid!=null) estream = estream.filter(e -> e.getGender().getId()==Integer.parseInt(genderid));
         if(statusid!=null) estream = estream.filter(e -> e.getCustomerstatus().getId()==Integer.parseInt(statusid));
-
         return estream.collect(Collectors.toList());
 
     }
@@ -46,7 +45,7 @@ public class CustomerController {
 //
 //        customers = customers.stream().map(
 //                customer -> {
-//                    Customer e = new Customer(customer.getId(), customer.getCallingname());
+//                    Customer e = new Customer(customer.getId(), customer.getCustomername());
 //                    return e;
 //                }
 //        ).collect(Collectors.toList());
@@ -62,7 +61,7 @@ public class CustomerController {
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
-        if(customerDao.findByNumber(customer.getCustomernumber())!=null)
+        if(customerDao.findByCustomernumber(customer.getCustomernumber())!=null)
             errors = errors+"<br> Existing Number";
 
         if(errors=="")
@@ -83,9 +82,9 @@ public class CustomerController {
 
         HashMap<String,String> response = new HashMap<>();
         String errors="";
-        Customer emp1 = customerDao.findByNumber(customer.getCustomernumber());
+        Customer emp1 = customerDao.findByCustomernumber(customer.getCustomernumber());
         if(emp1!=null) errors = errors+"<br> Existing Number";
-       
+
         if(errors=="") customerDao.save(customer);
         else errors = "Server Validation Errors : <br> "+errors;
 

@@ -37,6 +37,7 @@ export class AuthorizationManager {
     ];
 
     orderMenuItems = [
+      {name: 'Customer', accessFlag: true, routerLink: 'customer'},
       {name: 'Production Order', accessFlag: true, routerLink: 'productionorder'},
       {name: 'Production', accessFlag: true, routerLink: 'production'},
     ];

@@ -52,6 +52,8 @@ import { GrnComponent } from './view/modules/grn/grn.component';
 import { ProductComponent } from './view/modules/product/product.component';
 import { ProductionOrderComponent } from './view/modules/production-order/production-order.component';
 import { ProductionComponent } from './view/modules/production/production.component';
+import { CustomerComponent } from './view/modules/customerModule/customer/customer.component';
+import { CustomerFormComponent } from './view/modules/customerModule/customer-form/customer-form.component';
 
 
 @NgModule({
@@ -80,6 +82,8 @@ import { ProductionComponent } from './view/modules/production/production.compon
     ProductComponent,
     ProductionOrderComponent,
     ProductionComponent,
+    CustomerComponent,
+    CustomerFormComponent,
   ],
     imports: [
         MatDatepickerModule,
