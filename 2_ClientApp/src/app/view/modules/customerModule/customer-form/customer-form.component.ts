@@ -41,10 +41,10 @@ export class CustomerFormComponent {
   }
 
   initialize() {
-    // this.rs.get('customers').then((regs: []) => {
-    //   this.regexes = regs;
-    //   this.createForm();
-    // });
+    this.rs.get('customers').then((regs: []) => {
+      this.regexes = regs;
+      this.createForm();
+    });
 
     this.popupTitle = this.data.title;
 
@@ -60,9 +60,9 @@ export class CustomerFormComponent {
       this.employees = employees;
     });
 
-    if (this.popupTitle == "Edit Employee") {
+    if (this.popupTitle == "Edit Customer") {
       Promise.all([genderLoad, statusLoad, employeeLoad])
-          .then(() => this.fillForm(this.data.employee));
+          .then(() => this.fillForm(this.data.customer));
     }
   }
 
@@ -90,7 +90,7 @@ export class CustomerFormComponent {
       "email": new FormControl('', [Validators.required]),
       "description": new FormControl('', [Validators.required]),
       "address": new FormControl('', [Validators.required]),
-      "doassignment": new FormControl('', [Validators.required]),
+      "doassignment": new FormControl({value: new Date(), disabled: false}, [Validators.required]),
       "customerstatus": new FormControl('', [Validators.required]),
       "employee": new FormControl('', [Validators.required]),
     }, {updateOn: 'change'});
@@ -99,12 +99,12 @@ export class CustomerFormComponent {
   createForm() {
     this.form.controls['customernumber'].setValidators([Validators.required]);
     this.form.controls['fullname'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
-    this.form.controls['callingname'].setValidators([Validators.required, Validators.pattern(this.regexes['callingname']['regex'])]);
+    this.form.controls['callingname'].setValidators([Validators.required]);
     this.form.controls['gender'].setValidators([Validators.required]);
     this.form.controls['contact'].setValidators([Validators.required, Validators.pattern(this.regexes['contact']['regex'])]);
     this.form.controls['email'].setValidators([Validators.required, Validators.pattern(this.regexes['email']['regex'])]);
     this.form.controls['description'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
-    this.form.controls['address'].setValidators([Validators.required, Validators.pattern(this.regexes['address']['regex'])]);
+    this.form.controls['address'].setValidators([Validators.required]);
     this.form.controls['doassignment'].setValidators([Validators.required]);
     this.form.controls['customerstatus'].setValidators([Validators.required]);
     this.form.controls['employee'].setValidators([Validators.required]);
@@ -139,7 +139,6 @@ export class CustomerFormComponent {
   add() {
 
     let errors = this.getErrors();
-
     if (errors != "") {
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
@@ -233,13 +232,10 @@ export class CustomerFormComponent {
         }
       }
     }
-
     return errors;
   }
 
   fillForm(customer: Customer) {
-
-    console.log(this.genders);
 
     this.selectedrow = customer;
     this.customer = JSON.parse(JSON.stringify(customer));
@@ -249,11 +245,10 @@ export class CustomerFormComponent {
     //@ts-ignore
     this.customer.customerstatus = this.customerstatuses.find(s => s.id === this.customer.customerstatus.id);
     //@ts-ignore
-    this.customer.employee = this.customertypes.find(s => s.id === this.customer.employee.id);
+    this.customer.employee = this.employees.find(s => s.id === this.customer.employee.id);
 
     this.form.patchValue(this.customer);
     this.form.markAsPristine();
-
   }
 
 
@@ -273,9 +268,7 @@ export class CustomerFormComponent {
   update() {
 
     let errors = this.getErrors();
-
     if (errors != "") {
-
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
         data: {heading: "Errors - Customer Update ", message: "You have following Errors <br> " + errors}

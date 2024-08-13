@@ -82,7 +82,8 @@ public class CustomerController {
         HashMap<String,String> response = new HashMap<>();
         String errors="";
         Customer emp1 = customerDao.findByCustomernumber(customer.getCustomernumber());
-        if(emp1!=null) errors = errors+"<br> Existing Number";
+        if(emp1!=null && customer.getId()!=emp1.getId())
+            errors = errors+"<br> Existing Customer Registration Number";
 
         if(errors=="") customerDao.save(customer);
         else errors = "Server Validation Errors : <br> "+errors;
@@ -103,6 +104,7 @@ public class CustomerController {
         String errors="";
 
         Customer emp1 = customerDao.findByMyId(id);
+        System.out.println(emp1.getCallingname());
 
         if(emp1==null) errors = errors+"<br> Customer Does Not Existed";
         if(errors=="") customerDao.delete(emp1);

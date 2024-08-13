@@ -1,6 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 
 @Entity
@@ -14,18 +15,22 @@ public class Customer {
     private String customernumber;
     @Basic
     @Column(name = "fullname")
+    @Pattern(regexp = "^([A-Z][a-z]*[.]?[\\s]?)*([A-Z][a-z]*)$", message = "Invalid Name")
     private String fullname;
     @Basic
     @Column(name = "callingname")
     private String callingname;
     @Basic
     @Column(name = "contact")
+    @Pattern(regexp = "^[0][0-9]{9}$", message = "Invalid Contact Number")
     private String contact;
     @Basic
     @Column(name = "description")
+    @Pattern(regexp = "^.*$", message = "Invalid Description")
     private String description;
     @Basic
     @Column(name = "email")
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Invalid Email")
     private String email;
     @Basic
     @Column(name = "address")

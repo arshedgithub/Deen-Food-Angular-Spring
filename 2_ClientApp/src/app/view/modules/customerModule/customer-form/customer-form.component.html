@@ -52,6 +52,14 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
+                    <mat-label>Customer Stastus</mat-label>
+                    <mat-select formControlName="customerstatus">
+                        <mat-option [value]="null" selected>Not Selected</mat-option>
+                        <mat-option *ngFor="let customerstatus of customerstatuses" [value]="customerstatus">{{customerstatus.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
                     <mat-label>Assignment Date</mat-label>
                     <input matInput [matDatepicker]="assdate" formControlName="doassignment">
                     <mat-datepicker-toggle matIconSuffix [for]="assdate"></mat-datepicker-toggle>
