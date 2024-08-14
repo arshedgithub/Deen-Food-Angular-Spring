@@ -1,0 +1,124 @@
+mat-card {
+    width: 170%;
+    height: 100%;
+    margin: 10px 10px -5px 10px !important;
+    overflow: hidden;
+}
+
+mat-card-content {
+    overflow: auto;
+    height: 100%;
+}
+
+mat-card-title {
+    /*font-family: ui-sans-serif;*/
+    font-size: 22px;
+}
+
+mat-grid-tile {
+    overflow: visible;
+    margin-bottom: 20px; /* Adjust the margin size as needed */
+}
+
+mat-card-header {
+    background: #bbdefb;
+    padding: 16px;
+    padding-left: 20px;
+    font-weight: bold;
+}
+
+.mat-table {
+    display: block;
+    width: 100%;
+    overflow: auto;
+}
+
+#loading img {
+    width: 30px;
+    height: 30px;
+}
+
+.mat-paginator-sticky {
+    position: sticky;
+    bottom: 1px;
+}
+
+/* Highlight rows on hover */
+.mat-row:hover {
+    cursor: pointer;
+}
+
+.csearch {
+    height: 40px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+#ssearch mat-card-content {
+    padding-top: 30px
+}
+
+#ssearch mat-form-field {
+    padding-left: 15px;
+    width: 250px
+}
+
+#ssearch button {
+    width: 155px;
+    margin-left: 10px;
+    margin-top: 5px;
+    background-color: #1565c0;
+    color: white
+}
+
+/* Order Form */
+#orderform {
+    padding-top: 20px;
+}
+
+#btnAdd, #removeBtn{
+    width: 100px;
+    display: block;
+    /*margin-left: 10px;*/
+    margin-bottom: 6px;
+    margin-left: 5px;
+    background-color: white;
+    color: #1565c0;
+    border: 2px solid #1565c0;
+    padding: 8px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* Employee Form > Button Panel */
+#butpanel {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+#butpanel button {
+    width: 82px;
+    margin: 3px;
+    background-color: #1565c0;
+    color: white;
+}
+
+.selected-row  {
+    background-color: #c9e6ff !important;
+}
+
+.mat-form-field .ng-dirty {
+    background-color: #abfecc !important;
+}
+
+button:disabled {
+    opacity: 0.5;
+}
+
+#orderform mat-form-field .ng-dirty {
+    background-color: #C9E6FFFF !important;
+}
+
+#tableInner{
+    margin-bottom: 20px;
+}

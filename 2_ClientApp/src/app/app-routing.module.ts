@@ -18,6 +18,9 @@ import {PurchaseOrderComponent} from "./view/modules/purchase-order/purchase-ord
 import {GrnComponent} from "./view/modules/grn/grn.component";
 import {ProductComponent} from "./view/modules/product/product.component";
 import {ProductionOrderComponent} from "./view/modules/production-order/production-order.component";
+import {ProductionComponent} from "./view/modules/production/production.component";
+import {CustomerComponent} from "./view/modules/customerModule/customer/customer.component";
+import {CustomerOrderComponent} from "./view/modules/customer-order/customer-order.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -36,7 +39,10 @@ const routes: Routes = [
       {path: "supplier", component: SupplierComponent},
       {path: "purchase", component: PurchaseOrderComponent},
       {path: "grn", component: GrnComponent},
+      {path: "customer", component: CustomerComponent},
+      {path: "customerorder", component: CustomerOrderComponent},
       {path: "productionorder", component: ProductionOrderComponent},
+      {path: "production", component: ProductionComponent},
       {path: "payments",component:PaymentComponent},
       {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
       {path: "reports/countbydesignation", component: CountByDesignationComponent},
@@ -48,5 +54,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule { }

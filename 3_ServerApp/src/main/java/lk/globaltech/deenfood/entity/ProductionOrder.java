@@ -1,5 +1,7 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.sql.Date;
@@ -33,6 +35,10 @@ public class ProductionOrder {
     private Employee employee;
     @OneToMany(mappedBy = "productionOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<ProductionOrderProduct> productionOrderProducts;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "productionOrder")
+    private Collection<Production> productions;
 
     public Integer getId() {
         return id;
@@ -122,5 +128,13 @@ public class ProductionOrder {
 
     public void setProductionOrderProducts(Collection<ProductionOrderProduct> productionOrderProducts) {
         this.productionOrderProducts = productionOrderProducts;
+    }
+
+    public Collection<Production> getProductions() {
+        return productions;
+    }
+
+    public void setProductions(Collection<Production> productions) {
+        this.productions = productions;
     }
 }
