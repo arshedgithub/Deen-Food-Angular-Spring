@@ -28,11 +28,15 @@ public class CustomerorderController {
 
         String statusid = params.get("custstatusid");
         String customerid = params.get("customerid");
+        String doplaced = params.get("doplaced");
+        String doexpect = params.get("doexpected");
 
-        Stream<Customerorder> estream = customerorders.stream();
-        if(customerid!=null) estream = estream.filter(e -> e.getCustomer().getId()==Integer.parseInt(customerid));
-        if(statusid!=null) estream = estream.filter(e -> e.getCustomerorderstatus().getId()==Integer.parseInt(statusid));
-        return estream.collect(Collectors.toList());
+        Stream<Customerorder> cstream = customerorders.stream();
+        if(customerid!=null) cstream = cstream.filter(e -> e.getCustomer().getId()==Integer.parseInt(customerid));
+        if(statusid!=null) cstream = cstream.filter(e -> e.getCustomerorderstatus().getId()==Integer.parseInt(statusid));
+        if (doexpect != null) cstream = cstream.filter(o -> o.getDoexpected().toString().contains(doexpect));
+        if (doplaced != null) cstream = cstream.filter(o -> o.getDoplaced().toString().contains(doplaced));
+        return cstream.collect(Collectors.toList());
     }
 
     @PostMapping

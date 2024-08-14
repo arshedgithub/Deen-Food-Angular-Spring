@@ -129,24 +129,31 @@
                 <mat-form [formGroup]="ssearch">
 
                     <mat-form-field appearance="outline" class="ssfield">
-                        <mat-label>Search By Supplier</mat-label>
+                        <mat-label>Search By Cus. Order Status</mat-label>
+                        <mat-select formControlName="ssorderstatus">
+                            <mat-option [value]="null" selected>Not Selected</mat-option>
+                            <mat-option *ngFor="let status of customerorderstatuses" [value]="status.id">{{ status.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="ssfield">
+                        <mat-label>Search By Customer</mat-label>
                         <mat-select formControlName="sscustomer">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let customer of customers" [value]="customer.id">{{ customer.fullname }}</mat-option>
                         </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="ssfield">
-                        <mat-label>Search By Employee</mat-label>
-                        <mat-select formControlName="ssemployee">
-                            <mat-option [value]="null" selected>Not Selected</mat-option>
-                            <mat-option *ngFor="let employee of employees" [value]="employee.id">{{ employee.callingname }}
-                            </mat-option>
-                        </mat-select>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Search By Date Placed</mat-label>
+                        <input matInput [matDatepicker]="doplced" formControlName="ssdoplaced">
+                        <mat-datepicker-toggle matIconSuffix [for]="doplced"></mat-datepicker-toggle>
+                        <mat-datepicker #doplced></mat-datepicker>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Search By Date Placed</mat-label>
+                        <mat-label>Search By Date Expected</mat-label>
                         <input matInput [matDatepicker]="doexpcted" formControlName="ssdoexpected">
                         <mat-datepicker-toggle matIconSuffix [for]="doexpcted"></mat-datepicker-toggle>
                         <mat-datepicker #doexpcted></mat-datepicker>
@@ -172,7 +179,7 @@
     <mat-grid-tile [colspan]="7" [rowspan]="4">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>Client Order Table</mat-card-title>
+                <mat-card-title>Customer Order Table</mat-card-title>
                 <div id="loading">
                     <img [src]="imageurl">
                 </div>

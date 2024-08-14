@@ -48,7 +48,7 @@ export class CustomerOrderComponent {
 
   incolumns: string[] = ['name', 'amount', 'unitprice', 'expectedlinecost', 'remove'];
   inheaders: string[] = ['Name', 'Amount', 'Product Cost', 'Exp. Line Total', ''];
-  inbinders: string[] = ['product.productnumber', 'amount', 'product.price', 'expectedcost', 'getBtn()'];
+  inbinders: string[] = ['product.productnumber', 'amount', 'product.price', 'expectedcost', ''];
 
 
   data!: MatTableDataSource<CustomerOrder>;
@@ -97,7 +97,6 @@ export class CustomerOrderComponent {
       private cs: CustomerService,
       private es: EmployeeService,
       private ps: ProductService,
-      // private pcs: Productcategoryservice,
       private rx: RegexService,
       private dp: DatePipe,
       private dg: MatDialog,
@@ -116,8 +115,9 @@ export class CustomerOrderComponent {
 
     this.ssearch = this.fb.group({
       "sscustomer": new FormControl(),
-      "ssemployee": new FormControl(),
-      "ssdoexpected": new FormControl()
+      "ssorderstatus": new FormControl(),
+      "ssdoexpected": new FormControl(),
+      "ssdoplaced": new FormControl()
     });
 
     this.form = this.fb.group({
@@ -144,9 +144,6 @@ export class CustomerOrderComponent {
 
   initialize() {
     this.createView();
-    // this.pcs.getAllList().then((pcss: Productcategory[]) => {
-    //   this.productcategories = pcss;
-    // });
     this.cs.getAll("").then((customers: Customer[]) => this.customers = customers);
     this.es.getAll("").then((emps: Employee[]) => this.employees = emps);
     this.ps.getAll("").then((pcts: Product[]) => this.products = pcts);
@@ -159,14 +156,12 @@ export class CustomerOrderComponent {
 
   }
 
-
   createView() {
     this.imageurl = 'assets/pending.gif';
     this.loadTable("");
   }
 
   createForm() {
-
     this.form.controls['number'].setValidators([Validators.required]);
     this.form.controls['customer'].setValidators([Validators.required]);
     this.innerform.controls['product'].setValidators([Validators.required]);
@@ -210,15 +205,12 @@ export class CustomerOrderComponent {
             }
           }
       );
-
       this.enableButtons(false,true,true);
-
     }
 
     for (const controlName in this.innerform.controls) {
       const control = this.innerform.controls[controlName];
       control.valueChanges.subscribe(value => {
-
             if (this.oldinnerdata != undefined && control.valid) {
               // @ts-ignore
               if (value === this.innerdata[controlName]) {
@@ -277,27 +269,31 @@ export class CustomerOrderComponent {
     const cserchdata = this.csearch.getRawValue();
     // @ts-ignore
     this.data.filterPredicate = (co: Customerorder, filter: string) => {
+      console.log(cserchdata, co)
       return (cserchdata.csnumber == null || co.number.includes(cserchdata.csnumber)) &&
-          (cserchdata.cscustomer == null || co.customer.name.toLowerCase().includes(cserchdata.cscustomer)) &&
+          (cserchdata.cscustomer == null || co.customer.fullname.toLowerCase().includes(cserchdata.cscustomer)) &&
           (cserchdata.csemployee == null || co.employee.callingname.toLowerCase().includes(cserchdata.csemployee)) &&
-          (cserchdata.csdoexpected == null || co.doexpected.toString(cserchdata.csdoexpected)) &&
+          (cserchdata.csdoexpected == null || co.doexpected.includes(cserchdata.csdoexpected)) &&
           (cserchdata.csdescription == null || co.description.toLowerCase().includes(cserchdata.csdescription)) &&
           (cserchdata.cscustomerorderstatus == null || co.customerorderstatus.name.toLowerCase().includes(cserchdata.cscustomer));
     };
+
     this.data.filter = 'xx';
   }
 
   btnSearchMc() {
 
     const ssearchdata = this.ssearch.getRawValue();
-    let customerid = ssearchdata.sssupplier;
-    let employeeid = ssearchdata.ssemployee;
+    let statusid = ssearchdata.ssorderstatus;
+    let customerid = ssearchdata.sscustomer;
+    let doplaced = this.dp.transform(ssearchdata.ssdoplaced, 'yyyy-MM-dd');
     let doexpected = this.dp.transform(ssearchdata.ssdoexpected, 'yyyy-MM-dd');
 
     let query = "";
+    if (statusid != null) query = query + "&custstatusid=" + statusid;
     if (customerid != null) query = query + "&customerid=" + customerid;
-    if (employeeid != null) query = query + "&employeeid=" + employeeid;
-    if (doexpected != null && doexpected.trim() != "") query = query + "&doexpected=" + doexpected;
+    if (doplaced != null) query = query + "&doplaced=" + doplaced;
+    if (doexpected != null) query = query + "&doexpected=" + doexpected;
 
     if (query != "") query = query.replace(/^./, "?")
     this.loadTable(query);
@@ -413,35 +409,22 @@ export class CustomerOrderComponent {
 
     this.enableButtons(false, true, true);
 
-    this.products = Array.from(this.oldproducts);
-    if(customerorder){
-      this.selectedrow = customerorder;
-      this.customerorder = JSON.parse(JSON.stringify(customerorder));
-      this.customerorder = JSON.parse(JSON.stringify(customerorder));
-      // Clear previous subscriptions to prevent multiple triggers
-      // this.clearProductCategorySubscription();
-      // Set initial form values
-      this.updateFormValues();
-    }
-  }
+    this.selectedrow = customerorder;
+    this.customerorder = JSON.parse(JSON.stringify(customerorder));
+    this.oldcustomerorder = JSON.parse(JSON.stringify(customerorder));
 
-  updateFormValues() {
+    // @ts-ignore
+    this.customerorder.customerorderstatus = this.customerorderstatuses.find(s => s.id === this.customerorder.customerorderstatus.id);
     // @ts-ignore
     this.customerorder.employee = this.employees.find(e => e.id === this.customerorder.employee.id);
     // @ts-ignore
-    this.customerorder.customerorderstatus = this.costatuses.find(c => c.id === this.customerorder.customerorderstatus.id);
-    // Update the form values
+    this.customerorder.customer = this.customers.find(e => e.id === this.customerorder.customer.id);
+
+    this.indata = new MatTableDataSource(this.customerorder.orderproducts);
+
     this.form.patchValue(this.customerorder);
     this.form.markAsPristine();
-    this.enableButtons(false, true, true);
-    // @ts-ignore
-    this.customerorder.customer = this.customers.find(c => c.id === this.customerorder.customer.id);
-    this.form.controls['customer'].setValue(this.customerorder.customer);
-    this.form.controls["number"].setValue(this.customerorder.number);
-    // @ts-ignore
-    this.orderproducts = this.customerorder.orderproducts || [];
     this.updateDataSource();
-    // Calculate the grand total after updating the items
     this.calculateGrandTotal();
   }
 
