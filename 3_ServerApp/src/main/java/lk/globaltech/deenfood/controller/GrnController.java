@@ -84,10 +84,6 @@ public class GrnController {
                 ingredientDao.save(existingIngredient);
 
 //                Purchaseorder purorder = purorderDao.findByPONumber(grn.getPurchaseorder().getNumber());
-//                System.out.println("id" + purorder.getId());
-//                System.out.println("Number" + purorder.getNumber());
-//                System.out.println("Status " + purorder.getPostatus().getId() + purorder.getPostatus().getName());
-//                System.out.println("Status " + purorder.getPostatus().getName());
 //                purorder.setPostatus(postatusDao.findByName("Received"));
 //                System.out.println(purorder.getPostatus());
 //                purorderDao.save(purorder);

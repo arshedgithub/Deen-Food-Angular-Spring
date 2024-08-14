@@ -1,9 +1,7 @@
 package lk.globaltech.deenfood.controller;
 
-import lk.globaltech.deenfood.dao.CustomerDao;
 import lk.globaltech.deenfood.dao.CustomerorderDao;
-import lk.globaltech.deenfood.entity.Customer;
-import lk.globaltech.deenfood.entity.Customerorder;
+import lk.globaltech.deenfood.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,14 +41,18 @@ public class CustomerorderController {
     public HashMap<String,String> add(@RequestBody Customerorder customerorder){
 
         HashMap<String,String> response = new HashMap<>();
-        String errors="";
+        String errors = "";
+        for (Orderproduct orderProduct : customerorder.getOrderproducts()) orderProduct.setCustomerorder(customerorder);
 
-        if(customerorderDao.findByNumber(customerorder.getNumber())!=null)
-            errors = errors+"<br> Existing Number";
+        //Add this after PRODUCT addition
+        if (this.customerorderDao.findByNumber(customerorder.getNumber()) != null)
+            errors = errors + "<br> Existing Order Number";
 
-        if(errors=="")
+        if (errors.isEmpty()) {
             customerorderDao.save(customerorder);
-        else errors = "Server Validation Errors : <br> "+errors;
+        } else {
+            errors = "Server Validation Errors : <br> " + errors;
+        }
 
         response.put("id",String.valueOf(customerorder.getId()));
         response.put("url","/customerorders/"+customerorder.getId());
