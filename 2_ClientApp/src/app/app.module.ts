@@ -54,6 +54,7 @@ import { ProductionOrderComponent } from './view/modules/production-order/produc
 import { ProductionComponent } from './view/modules/production/production.component';
 import { CustomerComponent } from './view/modules/customerModule/customer/customer.component';
 import { CustomerFormComponent } from './view/modules/customerModule/customer-form/customer-form.component';
+import { CustomerOrderComponent } from './view/modules/customer-order/customer-order.component';
 
 
 @NgModule({
@@ -84,6 +85,7 @@ import { CustomerFormComponent } from './view/modules/customerModule/customer-fo
     ProductionComponent,
     CustomerComponent,
     CustomerFormComponent,
+    CustomerOrderComponent,
   ],
     imports: [
         MatDatepickerModule,

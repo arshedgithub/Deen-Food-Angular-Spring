@@ -1,7 +1,9 @@
 package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.CustomerDao;
+import lk.globaltech.deenfood.dao.CustomerorderDao;
 import lk.globaltech.deenfood.entity.Customer;
+import lk.globaltech.deenfood.entity.Customerorder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -13,46 +15,45 @@ import java.util.stream.Stream;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/customers")
+@RequestMapping(value = "/customerorders")
 public class CustomerorderController {
 
     @Autowired
-    private CustomerDao customerDao;
+    private CustomerorderDao customerorderDao;
 
     @GetMapping(produces = "application/json")
 //    @PreAuthorize("hasAuthority('employee-select')")
-    public List<Customer> get(@RequestParam HashMap<String, String> params) {
+    public List<Customerorder> get(@RequestParam HashMap<String, String> params) {
 
-        List<Customer> customers = this.customerDao.findAll();
-        if(params.isEmpty()) return customers;
+        List<Customerorder> customerorders = this.customerorderDao.findAll();
+        if(params.isEmpty()) return customerorders;
 
-        String genderid = params.get("genderid");
         String statusid = params.get("custstatusid");
+        String customerid = params.get("customerid");
 
-        Stream<Customer> estream = customers.stream();
-
-        if(genderid!=null) estream = estream.filter(e -> e.getGender().getId()==Integer.parseInt(genderid));
-        if(statusid!=null) estream = estream.filter(e -> e.getCustomerstatus().getId()==Integer.parseInt(statusid));
+        Stream<Customerorder> estream = customerorders.stream();
+        if(customerid!=null) estream = estream.filter(e -> e.getCustomer().getId()==Integer.parseInt(customerid));
+        if(statusid!=null) estream = estream.filter(e -> e.getCustomerorderstatus().getId()==Integer.parseInt(statusid));
         return estream.collect(Collectors.toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAuthority('Customer-Insert')")
-    public HashMap<String,String> add(@RequestBody Customer customer){
+    public HashMap<String,String> add(@RequestBody Customerorder customerorder){
 
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
-        if(customerDao.findByCustomernumber(customer.getCustomernumber())!=null)
+        if(customerorderDao.findByNumber(customerorder.getNumber())!=null)
             errors = errors+"<br> Existing Number";
 
         if(errors=="")
-        customerDao.save(customer);
+            customerorderDao.save(customerorder);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        response.put("id",String.valueOf(customer.getId()));
-        response.put("url","/customers/"+customer.getId());
+        response.put("id",String.valueOf(customerorder.getId()));
+        response.put("url","/customerorders/"+customerorder.getId());
         response.put("errors",errors);
 
         return response;
@@ -61,19 +62,19 @@ public class CustomerorderController {
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
 //    @PreAuthorize("hasAuthority('Customer-Update')")
-    public HashMap<String,String> update(@RequestBody Customer customer){
+    public HashMap<String,String> update(@RequestBody Customerorder customerorder){
 
         HashMap<String,String> response = new HashMap<>();
         String errors="";
-        Customer emp1 = customerDao.findByCustomernumber(customer.getCustomernumber());
-        if(emp1!=null && customer.getId()!=emp1.getId())
-            errors = errors+"<br> Existing Customer Registration Number";
+        Customerorder emp1 = customerorderDao.findByNumber(customerorder.getNumber());
+        if(emp1!=null && customerorder.getId()!=emp1.getId())
+            errors = errors+"<br> Existing Customer Order Registration Number";
 
-        if(errors=="") customerDao.save(customer);
+        if(errors=="") customerorderDao.save(customerorder);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        response.put("id",String.valueOf(customer.getId()));
-        response.put("url","/customers/"+customer.getId());
+        response.put("id",String.valueOf(customerorder.getId()));
+        response.put("url","/customerorders/"+customerorder.getId());
         response.put("errors",errors);
 
         return response;
@@ -87,15 +88,14 @@ public class CustomerorderController {
         HashMap<String,String> response = new HashMap<>();
         String errors="";
 
-        Customer emp1 = customerDao.findByMyId(id);
-        System.out.println(emp1.getCallingname());
+        Customerorder customerorder = customerorderDao.findByMyId(id);
 
-        if(emp1==null) errors = errors+"<br> Customer Does Not Existed";
-        if(errors=="") customerDao.delete(emp1);
+        if(customerorder==null) errors = errors+"<br> Customer Order Does Not Existed";
+        if(errors=="") customerorderDao.delete(customerorder);
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(id));
-        response.put("url","/customers/"+id);
+        response.put("url","/customerorders/"+id);
         response.put("errors",errors);
 
         return response;

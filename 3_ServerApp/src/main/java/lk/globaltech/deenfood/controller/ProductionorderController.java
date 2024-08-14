@@ -76,7 +76,6 @@ public class ProductionorderController {
         return response;
     }
 
-
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String, String> update(@RequestBody ProductionOrder order) {
@@ -100,27 +99,24 @@ public class ProductionorderController {
         return response;
     }
 
-
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String, String> delete(@PathVariable Integer id) {
 
-        HashMap<String, String> responce = new HashMap<>();
+        HashMap<String, String> response = new HashMap<>();
         String errors = "";
 
         ProductionOrder ord = productionorderDao.findByMyId(id);
 
-        if (ord == null)
-            errors = errors + "<br> Production Order Does Not Exists";
-
+        if (ord == null) errors = errors + "<br> Production Order Does Not Exists";
         if (errors == "") productionorderDao.delete(ord);
         else errors = "Server Validation Errors : <br> " + errors;
 
-        responce.put("code", String.valueOf(id));
-        responce.put("url", "/id/" + id);
-        responce.put("errors", errors);
+        response.put("code", String.valueOf(id));
+        response.put("url", "/id/" + id);
+        response.put("errors", errors);
 
-        return responce;
+        return response;
     }
 
 }
