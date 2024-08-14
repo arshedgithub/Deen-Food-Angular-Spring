@@ -109,9 +109,9 @@
             </mat-form-field>
 
             <div id="butpanel">
-                <button mat-raised-button (click)="add()" [disabled]="false">Add</button>
+                <button mat-raised-button (click)="add()">Add</button>
                 <button mat-raised-button (click)="clear()">Clear</button>
-                <button mat-raised-button (click)="update()" [disabled]="false">Update</button>
+                <button mat-raised-button (click)="update()" [disabled]="this.authService.getEnaUpd()">Update</button>
             </div>
 
         </mat-form>

@@ -1,6 +1,8 @@
 package lk.globaltech.deenfood.security;
 
+import lk.globaltech.deenfood.dao.ModuleDao;
 import lk.globaltech.deenfood.dao.UserDao;
+import lk.globaltech.deenfood.entity.Module;
 import lk.globaltech.deenfood.entity.Privilege;
 import lk.globaltech.deenfood.entity.User;
 import lk.globaltech.deenfood.entity.Userrole;
@@ -26,11 +28,14 @@ public class UserService implements UserDetailsService {
         this.userdao = userdao;
     }
 
+    @Autowired
+    private ModuleDao moduleDao;
+
     public User getByUsername(String username){
 
         User user = new User();
 
-        if ("AdminEUC".equals(username)){
+        if ("Admin".equals(username)){
 
             user.setUsername(username);
 
@@ -48,15 +53,25 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        if (username.equals("AdminEUC")) {
+        if (username.equals("Admin")) {
             Set<SimpleGrantedAuthority> authorities = new HashSet<>();
-            authorities.add(new SimpleGrantedAuthority("gender-list-get"));
-            authorities.add(new SimpleGrantedAuthority("designation-list-get"));
-            authorities.add(new SimpleGrantedAuthority("employeestatus-list-get"));
-            authorities.add(new SimpleGrantedAuthority("employee-select"));
+
+            List<Module> modules = moduleDao.findAll();
+            String[] operations = {"select","insert","update","delete"};
+
+            for (Module module : modules){
+                for (String op : operations){
+                    authorities.add(new SimpleGrantedAuthority(module.getName().toLowerCase() + "-" + op));
+                }
+            }
+
+//            authorities.add(new SimpleGrantedAuthority("gender-list-get"));
+//            authorities.add(new SimpleGrantedAuthority("designation-list-get"));
+//            authorities.add(new SimpleGrantedAuthority("employeestatus-list-get"));
+//            authorities.add(new SimpleGrantedAuthority("employee-select"));
 
             return org.springframework.security.core.userdetails.User
-                    .withUsername("AdminEUC")
+                    .withUsername("Admin")
                     .password(new BCryptPasswordEncoder().encode("Admin1234"))
                     .authorities(authorities)
                     .accountExpired(false)

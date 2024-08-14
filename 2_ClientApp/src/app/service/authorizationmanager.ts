@@ -22,7 +22,7 @@ export class AuthorizationManager {
         {name: 'Employee', accessFlag: true, routerLink: 'employee'},
         {name: 'User', accessFlag: true, routerLink: 'user'},
         {name: 'Privilege', accessFlag: true, routerLink: 'privilege'},
-        {name: 'Operations', accessFlag: true, routerLink: 'operation'}
+        {name: 'Operation', accessFlag: true, routerLink: 'operation'}
     ];
 
     invMenuItems = [

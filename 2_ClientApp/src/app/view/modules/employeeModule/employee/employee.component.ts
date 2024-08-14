@@ -67,7 +67,6 @@ export class EmployeeComponent {
     private et: Emptypeservice,
     private fb: FormBuilder,
     private dg: MatDialog,
-    private dp: DatePipe,
     public authService:AuthorizationManager) {
 
 
@@ -88,7 +87,6 @@ export class EmployeeComponent {
       "ssdesignation": new FormControl(),
       "ssnic": new FormControl()
     });
-
   }
 
   ngOnInit() {
@@ -114,7 +112,6 @@ export class EmployeeComponent {
     this.et.getAllList().then((typs: Emptype[]) => {
       this.employeetypes = typs;
     });
-
 
   }
 

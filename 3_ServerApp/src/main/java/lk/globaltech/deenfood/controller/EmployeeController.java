@@ -3,6 +3,7 @@ import lk.globaltech.deenfood.dao.EmployeeDao;
 import lk.globaltech.deenfood.entity.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -64,10 +65,10 @@ public class EmployeeController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+    @PreAuthorize("hasAuthority('employee-insert')")
     public HashMap<String,String> add(@RequestBody Employee employee){
 
-        HashMap<String,String> responce = new HashMap<>();
+        HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         if(employeedao.findByNumber(employee.getNumber())!=null)
@@ -81,19 +82,19 @@ public class EmployeeController {
         employeedao.save(employee);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        responce.put("id",String.valueOf(employee.getId()));
-        responce.put("url","/employees/"+employee.getId());
-        responce.put("errors",errors);
+        response.put("id",String.valueOf(employee.getId()));
+        response.put("url","/employees/"+employee.getId());
+        response.put("errors",errors);
 
-        return responce;
+        return response;
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
+    @PreAuthorize("hasAuthority('employee-update')")
     public HashMap<String,String> update(@RequestBody Employee employee){
 
-        HashMap<String,String> responce = new HashMap<>();
+        HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         Employee emp1 = employeedao.findByNumber(employee.getNumber());
@@ -107,11 +108,11 @@ public class EmployeeController {
         if(errors=="") employeedao.save(employee);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        responce.put("id",String.valueOf(employee.getId()));
-        responce.put("url","/employees/"+employee.getId());
-        responce.put("errors",errors);
+        response.put("id",String.valueOf(employee.getId()));
+        response.put("url","/employees/"+employee.getId());
+        response.put("errors",errors);
 
-        return responce;
+        return response;
     }
 
 
@@ -119,9 +120,7 @@ public class EmployeeController {
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String,String> delete(@PathVariable Integer id){
 
-        System.out.println(id);
-
-        HashMap<String,String> responce = new HashMap<>();
+            HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         Employee emp1 = employeedao.findByMyId(id);
@@ -132,11 +131,11 @@ public class EmployeeController {
         if(errors=="") employeedao.delete(emp1);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        responce.put("id",String.valueOf(id));
-        responce.put("url","/employees/"+id);
-        responce.put("errors",errors);
+        response.put("id",String.valueOf(id));
+        response.put("url","/employees/"+id);
+        response.put("errors",errors);
 
-        return responce;
+        return response;
     }
 
 }

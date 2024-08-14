@@ -17,6 +17,7 @@ import {RegexService} from "../../../../service/regexservice";
 import {DatePipe} from "@angular/common";
 import {EmployeeService} from "../../../../service/employeeservice";
 import {finalize} from "rxjs";
+import {AuthorizationManager} from "../../../../service/authorizationmanager";
 
 @Component({
     selector: 'app-employee-form',
@@ -89,6 +90,7 @@ export class EmployeeFormComponent implements OnInit {
         private rs: RegexService,
         private fb: FormBuilder,
         private dp: DatePipe,
+        public authService: AuthorizationManager,
         public dialogRef: MatDialogRef<EmployeeFormComponent>,
         @Inject(MAT_DIALOG_DATA) public data: any
     ) {
@@ -117,7 +119,6 @@ export class EmployeeFormComponent implements OnInit {
     }
 
     createForm() {
-
 
         this.form.controls['number'].setValidators([Validators.required, Validators.pattern(this.regexes['number']['regex'])]);
         this.form.controls['fullname'].setValidators([Validators.required, Validators.pattern(this.regexes['fullname']['regex'])]);
@@ -159,11 +160,8 @@ export class EmployeeFormComponent implements OnInit {
                     }
                 }
             );
-
         }
-
         // this.enableButtons(true,false,false);
-
     }
 
     selectImage(e: any): void {
@@ -181,7 +179,6 @@ export class EmployeeFormComponent implements OnInit {
         this.imageempurl = 'assets/default.png';
         this.form.controls['photo'].setErrors({'required': true});
     }
-
 
     add() {
 

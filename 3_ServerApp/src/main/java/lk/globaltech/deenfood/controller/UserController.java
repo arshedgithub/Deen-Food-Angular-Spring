@@ -50,12 +50,11 @@ public class UserController {
         return ustream.collect(Collectors.toList());
     }
 
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String,String> add(@RequestBody User user){
 
-        HashMap<String,String> responce = new HashMap<>();
+        HashMap<String,String> response = new HashMap<>();
         String errors="";
 
        if(userdao.findByUsername(user.getUsername())!=null)
@@ -73,20 +72,20 @@ public class UserController {
             user.setPassword(hashedPassword);
             userdao.save(user);
 
-            responce.put("id",String.valueOf(user.getId()));
-            responce.put("url","/users/"+user.getId());
-            responce.put("errors",errors);
+            response.put("id",String.valueOf(user.getId()));
+            response.put("url","/users/"+user.getId());
+            response.put("errors",errors);
 
-            return responce;
+            return response;
         }
 
         else errors = "Server Validation Errors : <br> "+errors;
 
-        responce.put("id",String.valueOf(user.getId()));
-        responce.put("url","/users/"+user.getId());
-        responce.put("errors",errors);
+        response.put("id",String.valueOf(user.getId()));
+        response.put("url","/users/"+user.getId());
+        response.put("errors",errors);
 
-        return responce;
+        return response;
     }
 
     @PutMapping
@@ -111,6 +110,13 @@ public class UserController {
 
                 // Update basic user properties
                 BeanUtils.copyProperties(user, extUser, "id","userroles");
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+                // Encrypt UserName and Password with Salt
+                String salt = passwordEncoder.encode(user.getUsername());
+                String hashedPassword = passwordEncoder.encode(salt + user.getPassword());
+                extUser.setSalt(salt);
+                extUser.setPassword(hashedPassword);
 
                 userdao.save(extUser); // Save the updated extUser object
 
@@ -129,7 +135,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public HashMap<String,String> delete(@PathVariable String username){
 
-        HashMap<String,String> responce = new HashMap<>();
+        HashMap<String,String> response = new HashMap<>();
         String errors="";
 
         User use1 = userdao.findByUsername(username);
@@ -140,11 +146,11 @@ public class UserController {
         if(errors=="") userdao.delete(use1);
         else errors = "Server Validation Errors : <br> "+errors;
 
-        responce.put("username",String.valueOf(username));
-        responce.put("url","/users/"+username);
-        responce.put("errors",errors);
+        response.put("username",String.valueOf(username));
+        response.put("url","/users/"+username);
+        response.put("errors",errors);
 
-        return responce;
+        return response;
     }
 
 }

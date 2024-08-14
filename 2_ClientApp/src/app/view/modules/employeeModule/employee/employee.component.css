@@ -23,10 +23,9 @@ button#new_sup {
   border: 1px solid #4444f8;
 }
 
-button#new_sup:hover {
-  color: #4444f8;
-  background: white;
-  border: 1px solid #4444f8;
+#new_sup[disabled] {
+  display: none;
+  background: black;
 
 }
 

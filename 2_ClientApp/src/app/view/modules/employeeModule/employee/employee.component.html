@@ -60,7 +60,7 @@
 
       <mat-card-content>
 
-        <button id="new_sup" mat-raised-button (click)="addEmployee()"><mat-icon fontIcon="person_add"></mat-icon>Add employee</button>
+        <button id="new_sup" mat-raised-button (click)="addEmployee()" [disabled]="!this.authService.getEnaAdd()"><mat-icon fontIcon="person_add"></mat-icon>Add employee</button>
 
 <!--        <mat-table [dataSource]="data">-->
 
