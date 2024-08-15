@@ -1,5 +1,6 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lk.globaltech.deenfood.util.RegexPattern;
 
 import javax.persistence.*;
@@ -45,6 +46,9 @@ public class Customerorder {
     private Employee employee;
     @OneToMany(mappedBy = "customerorder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Orderproduct> orderproducts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "customerorder")
+    private Collection<Invoice> invoices;
 
     public Integer getId() {
         return id;
@@ -163,5 +167,13 @@ public class Customerorder {
 
     public void setOrderproducts(Collection<Orderproduct> orderproducts) {
         this.orderproducts = orderproducts;
+    }
+
+    public Collection<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Collection<Invoice> invoices) {
+        this.invoices = invoices;
     }
 }

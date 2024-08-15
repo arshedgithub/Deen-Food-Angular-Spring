@@ -20,7 +20,6 @@ import {ProductService} from "../../../service/productservice";
 import {DatePipe} from "@angular/common";
 import {MatDialog} from "@angular/material/dialog";
 import {AuthorizationManager} from "../../../service/authorizationmanager";
-import {Grnitem} from "../../../entity/grnitem";
 
 @Component({
   selector: 'app-customer-order',
