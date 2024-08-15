@@ -128,7 +128,7 @@ export class IngredientFormComponent {
     this.form.controls['rop'].setValidators([Validators.required, Validators.pattern(this.regexes['rop']['regex'])]);
     this.form.controls['cost'].setValidators([Validators.required, Validators.pattern(this.regexes['cost']['regex'])]);
     this.form.controls['ingstatus'].setValidators([Validators.required]);
-    this.form.controls['dointroduced'].setValidators([Validators.required, Validators.pattern(this.regexes['dointroduced']['regex'])]);
+    this.form.controls['dointroduced'].setValidators([Validators.required]);
     this.form.controls['employee'].setValidators([Validators.required]);
 
     Object.values(this.form.controls).forEach(control => {

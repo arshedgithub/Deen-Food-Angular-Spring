@@ -102,7 +102,7 @@ export class SupplierFormComponent {
     this.form.controls['contactmobile'].setValidators([Validators.required, Validators.pattern(this.regexes['contactmobile']['regex'])]);
     this.form.controls['creditlimit'].setValidators([Validators.pattern(this.regexes['creditlimit']['regex'])]);
     this.form.controls['description'].setValidators([Validators.required,Validators.pattern(this.regexes['description']['regex'])]);
-    this.form.controls['doregister'].setValidators([Validators.required, Validators.pattern(this.regexes['doregister']['regex'])]);
+    this.form.controls['doregister'].setValidators([Validators.required]);
     this.form.controls['supplierstatus'].setValidators([Validators.required]);
     this.form.controls['employee'].setValidators([Validators.required]);
 
@@ -130,14 +130,12 @@ export class SupplierFormComponent {
 
     }
     // this.enableButtons(true,false,false);
-
   }
 
   fillForm(supplier: Supplier) {
 
     // this.enableButtons(false,true,true);
 
-    // console.log(this.selectedrow)
     this.supplier = JSON.parse(JSON.stringify(supplier));
     this.oldSupplier = JSON.parse(JSON.stringify(supplier));
 
@@ -215,7 +213,6 @@ export class SupplierFormComponent {
               Object.values(this.form.controls).forEach(control => {
                 control.markAsTouched();
               });
-              // this.loadTable("");
             }
 
             const stsmsg = this.dialog.open(MessageComponent, {
