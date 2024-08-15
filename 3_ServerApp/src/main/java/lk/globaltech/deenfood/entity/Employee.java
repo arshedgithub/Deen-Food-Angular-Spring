@@ -108,6 +108,7 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Invoice> invoices;
+    @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Invoice> invoicesById;
 
