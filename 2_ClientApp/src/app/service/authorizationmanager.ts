@@ -11,6 +11,7 @@ export class AuthorizationManager {
     private readonly localStoragePurchMenus = 'purchMenuState';
     private readonly localStorageProdMenus = 'prodMenuState';
     private readonly localStorageCustomerMenus = 'customerMenuState';
+    private readonly localStoragePayMenus = 'payMenuState';
     private readonly localStorageReportMenus = 'reportMenuState';
     private readonly localStorageRegMenus = 'regMenuState';
 
@@ -46,22 +47,13 @@ export class AuthorizationManager {
         {name: 'Customer Order', accessFlag: true, routerLink: 'customerorder'},
     ];
 
+    payMenuItems = [
+        {name: 'Invoice', accessFlag: true, routerLink: 'invoice'},
+    ];
+
     reportMenuItems = [
         {name: "Count By Designation", accessFlag: true, routerLink: "reports/countbydesignation"},
         {name: "Ingredient Count By Category", accessFlag: true, routerLink: "reports/ingredientcountbycategory"}
-    ];
-
-    regMenuItems = [
-        {name: 'Student', accessFlag: true, routerLink: 'students'},
-        {name: 'Batch Registration', accessFlag: true, routerLink: 'batchregistration'},
-        {name: 'Payments', accessFlag: true, routerLink: 'payments'},
-        {name: 'Mat. Distribution', accessFlag: true, routerLink: 'matdistribution'}
-    ];
-
-    clsMenuItems = [
-        {name: 'Attendance', accessFlag: true, routerLink: 'attendance'},
-        {name: 'Class Schedule', accessFlag: true, routerLink: 'clsschedule'},
-        {name: 'Progress Review', accessFlag: true, routerLink: 'prgreview'}
     ];
 
     constructor(private am: AuthoritySevice) {
@@ -97,14 +89,13 @@ export class AuthorizationManager {
             menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
         });
 
-        this.reportMenuItems.forEach(menuItem => {
+        this.payMenuItems.forEach(menuItem => {
             menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
         });
 
-        // this.regMenuItems.forEach(menuItem => {
-        //   menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
-        // });
-
+        this.reportMenuItems.forEach(menuItem => {
+            menuItem.accessFlag = modules.some(module => module.module.toLowerCase() === menuItem.name.toLowerCase());
+        });
 
         // Save menu state in localStorage
         localStorage.setItem(this.localStorageAdmMenus, JSON.stringify(this.admMenuItems));
@@ -112,8 +103,8 @@ export class AuthorizationManager {
         localStorage.setItem(this.localStoragePurchMenus, JSON.stringify(this.purchMenuItems));
         localStorage.setItem(this.localStorageProdMenus, JSON.stringify(this.prodMenuItems));
         localStorage.setItem(this.localStorageCustomerMenus, JSON.stringify(this.customerMenuItems));
+        localStorage.setItem(this.localStoragePayMenus, JSON.stringify(this.payMenuItems));
         localStorage.setItem(this.localStorageReportMenus, JSON.stringify(this.reportMenuItems));
-        // localStorage.setItem(this.localStorageRegMenus, JSON.stringify(this.regMenuItems));
     }
 
     async getAuth(username: string): Promise<void> {
@@ -196,14 +187,14 @@ export class AuthorizationManager {
             this.customerMenuItems = JSON.parse(customerMenuState);
         }
 
+        const payMenuState = localStorage.getItem(this.localStoragePayMenus);
+        if (payMenuState) {
+            this.payMenuItems = JSON.parse(payMenuState);
+        }
+
         const reportMenuState = localStorage.getItem(this.localStorageReportMenus);
         if (reportMenuState) {
             this.reportMenuItems = JSON.parse(reportMenuState);
-        }
-
-        const regMenuState = localStorage.getItem(this.localStorageRegMenus);
-        if (regMenuState) {
-            this.regMenuItems = JSON.parse(regMenuState);
         }
 
     }
@@ -220,10 +211,10 @@ export class AuthorizationManager {
         localStorage.removeItem(this.localStorageAdmMenus);
         localStorage.removeItem(this.localStorageInvMenus);
         localStorage.removeItem(this.localStoragePurchMenus);
-        localStorage.removeItem(this.localStorageReportMenus);
         localStorage.removeItem(this.localStorageProdMenus);
         localStorage.removeItem(this.localStorageCustomerMenus);
-        localStorage.removeItem(this.localStorageRegMenus);
+        localStorage.removeItem(this.localStoragePayMenus);
+        localStorage.removeItem(this.localStorageReportMenus);
     }
 
     isMenuItemDisabled(menuItem: { accessFlag: boolean }): boolean {

@@ -29,6 +29,7 @@ export class MainwindowComponent {
     purchMenuItems = this.authService.purchMenuItems;
     prodMenuItems = this.authService.prodMenuItems;
     customerMenuItems = this.authService.customerMenuItems;
+    payMenuItems = this.authService.payMenuItems;
     reportMenuItems = this.authService.reportMenuItems;
 
     isMenuVisible(category: string): boolean {
@@ -43,6 +44,8 @@ export class MainwindowComponent {
                 return this.prodMenuItems.some(menuItem => menuItem.accessFlag);
             case 'Customer':
                 return this.customerMenuItems.some(menuItem => menuItem.accessFlag);
+            case 'Payment':
+                return this.payMenuItems.some(menuItem => menuItem.accessFlag);
             case 'Report':
                 return this.reportMenuItems.some(menuItem => menuItem.accessFlag);
             default:
