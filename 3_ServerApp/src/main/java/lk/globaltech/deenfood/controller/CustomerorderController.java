@@ -1,11 +1,14 @@
 package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.CustomerorderDao;
+import lk.globaltech.deenfood.dao.ProductDao;
 import lk.globaltech.deenfood.entity.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,6 +21,9 @@ public class CustomerorderController {
 
     @Autowired
     private CustomerorderDao customerorderDao;
+
+    @Autowired
+    private ProductDao productDao;
 
     @GetMapping(produces = "application/json")
 //    @PreAuthorize("hasAuthority('employee-select')")
@@ -41,16 +47,34 @@ public class CustomerorderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Customer-Insert')")
-    public HashMap<String,String> add(@RequestBody Customerorder customerorder){
+    public HashMap<String, String> add(@RequestBody Customerorder customerorder) {
 
-        HashMap<String,String> response = new HashMap<>();
+        HashMap<String, String> response = new HashMap<>();
         String errors = "";
-        for (Orderproduct orderProduct : customerorder.getOrderproducts()) orderProduct.setCustomerorder(customerorder);
 
-        //Add this after PRODUCT addition
-        if (this.customerorderDao.findByNumber(customerorder.getNumber()) != null)
-            errors = errors + "<br> Existing Order Number";
+        for (Orderproduct orderProduct : customerorder.getOrderproducts()) {
+            orderProduct.setCustomerorder(customerorder);
+
+            Product product = productDao.findById(orderProduct.getProduct().getId()).orElse(null);
+
+            if (product == null) {
+                errors += "<br> Product with ID " + orderProduct.getProduct().getId() + " not found.";
+            } else {
+                BigDecimal newQuantity = product.getQuantity().subtract(BigDecimal.valueOf(orderProduct.getAmount()));
+
+                if (newQuantity.compareTo(BigDecimal.ZERO) < 0) {
+                    errors += "<br> Not enough stock for product ID " + product.getId() + ".";
+                } else {
+                    product.setQuantity(newQuantity);
+                    productDao.save(product);
+                }
+            }
+        }
+
+        // Check if the order number already exists
+        if (this.customerorderDao.findByNumber(customerorder.getNumber()) != null) {
+            errors += "<br> Existing Order Number";
+        }
 
         if (errors.isEmpty()) {
             customerorderDao.save(customerorder);
@@ -58,12 +82,13 @@ public class CustomerorderController {
             errors = "Server Validation Errors : <br> " + errors;
         }
 
-        response.put("id",String.valueOf(customerorder.getId()));
-        response.put("url","/customerorders/"+customerorder.getId());
-        response.put("errors",errors);
+        response.put("id", String.valueOf(customerorder.getId()));
+        response.put("url", "/customerorders/" + customerorder.getId());
+        response.put("errors", errors);
 
         return response;
     }
+
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -72,11 +97,31 @@ public class CustomerorderController {
 
         HashMap<String,String> response = new HashMap<>();
         String errors="";
-        Customerorder emp1 = customerorderDao.findByNumber(customerorder.getNumber());
-        if(emp1!=null && customerorder.getId()!=emp1.getId())
+        Customerorder extCusOrd = customerorderDao.findByNumber(customerorder.getNumber());
+        if(extCusOrd!=null && customerorder.getId()!=extCusOrd.getId())
             errors = errors+"<br> Existing Customer Order Registration Number";
 
-        if(errors=="") customerorderDao.save(customerorder);
+        if(errors=="") {
+
+            for (Orderproduct orderproduct : customerorder.getOrderproducts()) {
+                orderproduct.setCustomerorder(customerorder);
+            }
+            BeanUtils.copyProperties(customerorder, extCusOrd, "id", "orderproducts");
+
+            extCusOrd.getOrderproducts().forEach(orderproduct -> {
+                Product product = orderproduct.getProduct();
+                BigDecimal extAmnt = BigDecimal.valueOf(orderproduct.getAmount());
+                customerorder.getOrderproducts().forEach(orderproduct1 -> {
+                    BigDecimal amnt = BigDecimal.valueOf(orderproduct1.getAmount());
+                    BigDecimal valueneedtoupdate = amnt.subtract(extAmnt);
+                    product.setQuantity(product.getQuantity().subtract(valueneedtoupdate));
+                });
+
+                productDao.save(product);
+            });
+
+            customerorderDao.save(customerorder);
+        }
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(customerorder.getId()));

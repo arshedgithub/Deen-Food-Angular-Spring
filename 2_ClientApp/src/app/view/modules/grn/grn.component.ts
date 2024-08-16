@@ -140,7 +140,7 @@ export class GrnComponent {
         });
 
         this.pos.getAll('').then((pos: PurchaseOrder[]) => {
-            this.purorders = pos.filter(po => po.postatus.name != 'Pending');
+            this.purorders = pos;
         });
 
         this.ings.getAll('').then((ings: Ingredient[]) => {
@@ -316,7 +316,9 @@ export class GrnComponent {
         this.grn.grnstatus = this.grnstatuses.find(g => g.id === this.grn.grnstatus.id);
         // @ts-ignore
         this.grn.employee = this.employees.find(e => e.id === this.grn.employee.id);
-        // @ts-ignore
+      console.log(this.grn.purchaseorder)
+      console.log(this.purorders)
+      // @ts-ignore
         this.grn.purchaseorder = this.purorders.find(p => p.id === this.grn.purchaseorder.id);
 
         this.indata = new MatTableDataSource(this.grn.grnitems);

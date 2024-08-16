@@ -1,6 +1,9 @@
 package lk.globaltech.deenfood.controller;
 
+import lk.globaltech.deenfood.dao.IngredientDao;
 import lk.globaltech.deenfood.dao.ProductionOrderDao;
+import lk.globaltech.deenfood.entity.Grnitem;
+import lk.globaltech.deenfood.entity.Ingredient;
 import lk.globaltech.deenfood.entity.ProductionOrder;
 import lk.globaltech.deenfood.entity.ProductionOrderProduct;
 import org.springframework.beans.BeanUtils;
@@ -8,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +23,9 @@ import java.util.stream.Stream;
 public class ProductionorderController {
     @Autowired
     private ProductionOrderDao productionorderDao;
+
+    @Autowired
+    private IngredientDao ingredientDao;
 
 //    @GetMapping(path ="/ordernumber", produces = "application/json")
 //    public ResponseEntity<Map<String, String>> get() {
@@ -64,6 +71,20 @@ public class ProductionorderController {
             errors = errors + "<br> Existing Order Number";
 
         if (errors.isEmpty()) {
+
+            order.getProductionOrderProducts().forEach(productionOrderProduct ->{
+
+                BigDecimal neededAmnt = new BigDecimal(productionOrderProduct.getAmount());
+
+                productionOrderProduct.getProduct().getProductIngredients().forEach(productIngredient -> {
+                    BigDecimal neededQty = productIngredient.getQuantityratio();
+
+                     Ingredient ingredient = productIngredient.getIngredient();
+                     ingredient.setQoh(productIngredient.getIngredient().getQoh().subtract(neededQty.multiply(neededAmnt)));
+                     ingredientDao.save(ingredient);
+                });
+            });
+
             productionorderDao.save(order);
         } else {
             errors = "Server Validation Errors : <br> " + errors;
@@ -86,8 +107,26 @@ public class ProductionorderController {
         ProductionOrder extPOrder = productionorderDao.findByMyId(order.getId());
 
         if (extPOrder != null) {
-            for (ProductionOrderProduct po : order.getProductionOrderProducts()) po.setProductionOrder(order);
-            BeanUtils.copyProperties(order, extPOrder, "id", "productionorderproducts", "qty");
+
+            for (ProductionOrderProduct productionOrderProduct : order.getProductionOrderProducts()) {
+                productionOrderProduct.setProductionOrder(order);
+            }
+            BeanUtils.copyProperties(order, extPOrder, "id", "productionOrderProducts");
+
+            extPOrder.getProductionOrderProducts().forEach(productionOrderProduct ->{
+
+                BigDecimal neededAmnt = new BigDecimal(productionOrderProduct.getAmount());
+
+                productionOrderProduct.getProduct().getProductIngredients().forEach(productIngredient -> {
+                    BigDecimal neededQty = productIngredient.getQuantityratio();
+
+                    Ingredient ingredient = productIngredient.getIngredient();
+                    ingredient.setQoh(productIngredient.getIngredient().getQoh().subtract(neededQty.multiply(neededAmnt)));
+                    ingredientDao.save(ingredient);
+                });
+            });
+
+            productionorderDao.save(extPOrder);
         } else {
             errors = errors + "<br> Production Order Does Not Exist";
         }

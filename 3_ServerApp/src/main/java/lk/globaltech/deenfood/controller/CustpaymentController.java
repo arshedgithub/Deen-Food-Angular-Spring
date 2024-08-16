@@ -1,7 +1,10 @@
 package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.CustpaymentDao;
+import lk.globaltech.deenfood.dao.InvoiceDao;
+import lk.globaltech.deenfood.dao.InvoicestatusDao;
 import lk.globaltech.deenfood.entity.Cuspayment;
+import lk.globaltech.deenfood.entity.Invoicestatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,12 @@ public class CustpaymentController {
 
     @Autowired
     private CustpaymentDao custpaymentDao;
+
+    @Autowired
+    private InvoicestatusDao invoicestatusDao;
+
+    @Autowired
+    private InvoiceDao invoiceDao;
     @GetMapping(produces = "application/json")
 //    @PreAuthorize("hasAuthority('employee-select')")
     public List<Cuspayment> get(@RequestParam HashMap<String,String> params) {
@@ -48,7 +57,19 @@ public class CustpaymentController {
         if(existingProduct!=null && custpayment.getId()!=existingProduct.getId())
             errors = errors+"<br>Purchase Order Not Found";
 
-        if(errors=="") custpaymentDao.save(custpayment);
+        if(errors=="") {
+
+//            List<Invoicestatus> invoicestatuses = invoicestatusDao.findAll();
+//
+//            if (custpayment.getPaystatus().getName().equalsIgnoreCase("paid")){
+//                Invoicestatus paidStatus = invoicestatuses.stream()
+//                        .filter(invoicestatus -> "Paid".equals(invoicestatus.getName()))
+//                        .findFirst()
+//                        .orElse(null);
+//                custpayment.getInvoice().setInvoicestatus(paidStatus);
+//            }
+            custpaymentDao.save(custpayment);
+        }
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(custpayment.getId()));
@@ -70,7 +91,25 @@ public class CustpaymentController {
         if (itm != null && cuspayment.getId() != itm.getId())
             errors = errors + "<br> Existing Number";
         
-        if (errors == "") custpaymentDao.save(cuspayment);
+        if (errors == "") {
+            List<Invoicestatus> invoicestatuses = invoicestatusDao.findAll();
+
+            if (cuspayment.getPaystatus().getName().equalsIgnoreCase("paid")) {
+                Invoicestatus paidStatus = invoicestatuses.stream()
+                        .filter(invoicestatus -> "Paid".equals(invoicestatus.getName()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (paidStatus != null) {
+                    cuspayment.getInvoice().setInvoicestatus(paidStatus);
+
+                    invoiceDao.save(cuspayment.getInvoice());
+                }
+            }
+
+            custpaymentDao.save(cuspayment);
+
+        }
         else errors = "Server Validation Errors : <br> " + errors;
 
         response.put("id", String.valueOf(cuspayment.getId()));

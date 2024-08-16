@@ -1,9 +1,13 @@
 package lk.globaltech.deenfood.controller;
 
+import lk.globaltech.deenfood.dao.CustomerorderDao;
+import lk.globaltech.deenfood.dao.CustomerorderstatusDao;
 import lk.globaltech.deenfood.dao.InvoiceDao;
 import lk.globaltech.deenfood.dao.InvoiceDao;
+import lk.globaltech.deenfood.entity.Customerorderstatus;
 import lk.globaltech.deenfood.entity.Invoice;
 import lk.globaltech.deenfood.entity.Invoice;
+import lk.globaltech.deenfood.entity.Invoicestatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,12 @@ public class InvoiceController {
 
     @Autowired
     private InvoiceDao invoiceDao;
+
+    @Autowired
+    private CustomerorderstatusDao customerorderstatusDao;
+
+    @Autowired
+    private CustomerorderDao customerorderDao;
 
     @GetMapping(produces = "application/json")
 //    @PreAuthorize("hasAuthority('invoice-select')")
@@ -74,7 +84,23 @@ public class InvoiceController {
             errors = errors+"<br> Existing NUmber";
 
 
-        if(errors=="") invoiceDao.save(invoice);
+        if(errors=="") {
+
+            List<Customerorderstatus> customerorderstatuses = customerorderstatusDao.findAll();
+            if (invoice.getInvoicestatus().getName().equalsIgnoreCase("paid")) {
+                Customerorderstatus closedStatus = customerorderstatuses.stream()
+                        .filter(customerorderstatus -> "Closed".equals(customerorderstatus.getName()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (closedStatus != null) {
+                    invoice.getCustomerorder().setCustomerorderstatus(closedStatus);
+                    customerorderDao.save(invoice.getCustomerorder());
+                }
+            }
+
+            invoiceDao.save(invoice);
+        }
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(invoice.getId()));
