@@ -16,7 +16,7 @@ mat-grid-tile:nth-child(1) mat-card{
 .round-card img {
   height: 100px;
   border: solid gold;
-  padding: 15px;
+  padding: 25px;
   border-radius: 10%;
 }
 
