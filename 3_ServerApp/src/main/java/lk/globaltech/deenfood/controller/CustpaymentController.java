@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @CrossOrigin
 @RestController
-    @RequestMapping(value = "/custpayments")
+@RequestMapping(value = "/custpayments")
 public class CustpaymentController {
 
     @Autowired
@@ -29,11 +29,11 @@ public class CustpaymentController {
         String custpaymenttypeid = params.get("custpaymenttypeid");
         String customerid = params.get("customerid");
 
-        Stream<Cuspayment> prodStream = custpayments.stream();
-        if(custpaymentstatusid!=null) prodStream = prodStream.filter(i -> i.getPaystatus().getId()==Integer.parseInt(custpaymentstatusid));
-        if(custpaymenttypeid!=null) prodStream = prodStream.filter(i -> i.getPaytype().getId()==Integer.parseInt(custpaymenttypeid));
-        if(customerid!=null) prodStream = prodStream.filter(i -> i.getCustomer().getId()==Integer.parseInt(customerid));
-        return prodStream.collect(Collectors.toList());
+        Stream<Cuspayment> custStream = custpayments.stream();
+        if(custpaymentstatusid!=null) custStream = custStream.filter(i -> i.getPaystatus().getId()==Integer.parseInt(custpaymentstatusid));
+        if(custpaymenttypeid!=null) custStream = custStream.filter(i -> i.getPaytype().getId()==Integer.parseInt(custpaymenttypeid));
+        if(customerid!=null) custStream = custStream.filter(i -> i.getCustomer().getId()==Integer.parseInt(customerid));
+        return custStream.collect(Collectors.toList());
     }
 
     @PostMapping

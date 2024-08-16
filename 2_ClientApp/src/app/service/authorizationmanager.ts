@@ -49,6 +49,7 @@ export class AuthorizationManager {
 
     payMenuItems = [
         {name: 'Invoice', accessFlag: true, routerLink: 'invoice'},
+        {name: 'Customer Payment', accessFlag: true, routerLink: 'customerpayment'},
     ];
 
     reportMenuItems = [

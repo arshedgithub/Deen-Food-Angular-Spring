@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthorizationManager} from "../../service/authorizationmanager";
-import {DarkModeService} from "../../service/DarkModeService";
 
 
 @Component({
@@ -14,7 +13,7 @@ export class MainwindowComponent {
     opened: boolean = false;
     profileOpened: boolean = false;
 
-    constructor(private router: Router, public authService: AuthorizationManager, public darkModeSevice: DarkModeService) {}
+    constructor(private router: Router, public authService: AuthorizationManager) {}
 
     logout(): void {
         this.router.navigateByUrl("login")

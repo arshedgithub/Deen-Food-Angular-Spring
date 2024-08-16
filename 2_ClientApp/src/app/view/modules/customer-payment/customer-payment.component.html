@@ -3,10 +3,10 @@
     <mat-grid-tile [colspan]="4" [rowspan]="9">
         <mat-card>
             <mat-card-header>
-                <mat-card-title id="left">Customer Payment Detail</mat-card-title>
+                <mat-card-title>Customer Payment Detail</mat-card-title>
             </mat-card-header>
 
-            <mat-card-content id="supaymentform">
+            <mat-card-content id="custpayform">
 
                 <mat-form  [formGroup]="form" >
 
@@ -16,7 +16,7 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Payment Type</mat-label>
+                        <mat-label>Invoice</mat-label>
                         <mat-select formControlName="invoice">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let invoice of invoices" [value]="invoice">{{invoice.number}}</mat-option>
@@ -69,7 +69,7 @@
 
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Supplier</mat-label>
+                        <mat-label>Customer</mat-label>
                         <mat-select formControlName="supplier">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.fullname}}</mat-option>
@@ -108,7 +108,7 @@
     <mat-grid-tile [colspan]="8" [rowspan]="3">
         <mat-card id="ssearch">
             <mat-card-header>
-                <mat-card-title id="right">Customer Payment Search</mat-card-title>
+                <mat-card-title>Customer Payment Search</mat-card-title>
             </mat-card-header>
 
             <mat-card-content>

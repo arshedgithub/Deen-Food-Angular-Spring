@@ -22,6 +22,7 @@ import {ProductionComponent} from "./view/modules/production/production.componen
 import {CustomerComponent} from "./view/modules/customerModule/customer/customer.component";
 import {CustomerOrderComponent} from "./view/modules/customer-order/customer-order.component";
 import {InvoiceComponent} from "./view/modules/invoice/invoice.component";
+import {CustomerPaymentComponent} from "./view/modules/customer-payment/customer-payment.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -45,8 +46,8 @@ const routes: Routes = [
       {path: "productionorder", component: ProductionOrderComponent},
       {path: "production", component: ProductionComponent},
       {path: "invoice", component: InvoiceComponent},
-      {path: "payments",component:PaymentComponent},
-      {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
+      {path: "customerpayment",component:CustomerPaymentComponent},
+      {path: "home/payments", redirectTo: 'customerpayment', pathMatch: 'full'},
       {path: "reports/countbydesignation", component: CountByDesignationComponent},
       {path: "reports/ingredientcountbycategory", component: IngredientcountbycategoryComponent},
     ]
