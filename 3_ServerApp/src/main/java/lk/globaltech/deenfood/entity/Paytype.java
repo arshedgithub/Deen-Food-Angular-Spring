@@ -18,6 +18,9 @@ public class Paytype {
     @JsonIgnore
     @OneToMany(mappedBy = "paytype")
     private Collection<Cuspayment> cuspayments;
+    @JsonIgnore
+    @OneToMany(mappedBy = "paytype")
+    private Collection<Suppayment> suppayments;
 
     public Collection<Cuspayment> getCuspayments() {
         return cuspayments;
@@ -61,5 +64,13 @@ public class Paytype {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    public Collection<Suppayment> getSuppayments() {
+        return suppayments;
+    }
+
+    public void setSuppayments(Collection<Suppayment> suppayments) {
+        this.suppayments = suppayments;
     }
 }
