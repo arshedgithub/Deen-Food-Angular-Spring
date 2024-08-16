@@ -23,16 +23,17 @@ public class SuppaymentController {
     public List<Suppayment> get(@RequestParam HashMap<String,String> params) {
 
         List<Suppayment> suppayments = this.suppaymentDao.findAll();
-        return suppayments;
-//        if(params.isEmpty()) return suppayments;
+        if(params.isEmpty()) return suppayments;
 
-//        String suppaymentstatusid = params.get("suppaymentstatusid");
-//        String custpaymenttypeid = params.get("custpaymenttypeid");
-//
-//        Stream<Suppayment> custStream = suppayments.stream();
-//        if(suppaymentstatusid!=null) custStream = custStream.filter(i -> i.getPaystatus().getId()==Integer.parseInt(suppaymentstatusid));
-//        if(custpaymenttypeid!=null) custStream = custStream.filter(i -> i.getPaytype().getId()==Integer.parseInt(custpaymenttypeid));
-//        return custStream.collect(Collectors.toList());
+        String suppaymentstatusid = params.get("suppaymentstatusid");
+        String suppaymenttypeid = params.get("suppaymenttypeid");
+        String supplierid = params.get("supplierid");
+
+        Stream<Suppayment> custStream = suppayments.stream();
+        if(suppaymentstatusid!=null) custStream = custStream.filter(i -> i.getPaystatus().getId()==Integer.parseInt(suppaymentstatusid));
+        if(suppaymenttypeid!=null) custStream = custStream.filter(i -> i.getPaytype().getId()==Integer.parseInt(suppaymenttypeid));
+        if(supplierid!=null) custStream = custStream.filter(i -> i.getPaytype().getId()==Integer.parseInt(supplierid));
+        return custStream.collect(Collectors.toList());
     }
 
     @PostMapping
