@@ -53,6 +53,10 @@ public class Customer {
     @JsonIgnore
     @OneToMany(mappedBy = "customer")
     private Collection<Customerorder> customerorders;
+    @JsonIgnore
+    @OneToMany(mappedBy = "customerByCustomerId")
+    private Collection<Cuspayment> cuspayments;
+
 
     public Integer getId() {
         return id;
@@ -192,4 +196,13 @@ public class Customer {
     public void setCustomerorders(Collection<Customerorder> customerorders) {
         this.customerorders = customerorders;
     }
+
+    public Collection<Cuspayment> getCuspayments() {
+        return cuspayments;
+    }
+
+    public void setCuspayments(Collection<Cuspayment> cuspayments) {
+        this.cuspayments = cuspayments;
+    }
+
 }
