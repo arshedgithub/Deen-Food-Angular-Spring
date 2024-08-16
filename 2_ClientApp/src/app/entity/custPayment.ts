@@ -1,4 +1,3 @@
-import {Ingredient} from "./ingredient";
 import {Invoice} from "./invoice";
 import {Paytype} from "./paytype";
 import {Paystatus} from "./paystatus";

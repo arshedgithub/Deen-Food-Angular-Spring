@@ -54,7 +54,7 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private Collection<Customerorder> customerorders;
     @JsonIgnore
-    @OneToMany(mappedBy = "customerByCustomerId")
+    @OneToMany(mappedBy = "customer")
     private Collection<Cuspayment> cuspayments;
 
 
