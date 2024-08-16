@@ -57,6 +57,7 @@ import { CustomerFormComponent } from './view/modules/customerModule/customer-fo
 import { CustomerOrderComponent } from './view/modules/customer-order/customer-order.component';
 import { InvoiceComponent } from './view/modules/invoice/invoice.component';
 import { CustomerPaymentComponent } from './view/modules/customer-payment/customer-payment.component';
+import { SupplierPaymentComponent } from './view/modules/supplier-payment/supplier-payment.component';
 
 
 @NgModule({
@@ -90,6 +91,7 @@ import { CustomerPaymentComponent } from './view/modules/customer-payment/custom
     CustomerOrderComponent,
     InvoiceComponent,
     CustomerPaymentComponent,
+    SupplierPaymentComponent,
   ],
     imports: [
         MatDatepickerModule,
