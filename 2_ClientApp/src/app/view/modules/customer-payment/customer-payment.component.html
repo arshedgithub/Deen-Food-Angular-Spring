@@ -53,7 +53,7 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Payment Type</mat-label>
-                        <mat-select formControlName="ptype">
+                        <mat-select formControlName="paytype">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let ptype of paytypes" [value]="ptype">{{ptype.name}}</mat-option>
                         </mat-select>
@@ -61,7 +61,7 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Payment Status</mat-label>
-                        <mat-select formControlName="pstatus">
+                        <mat-select formControlName="paystatus">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let pstatus of paystatuses" [value]="pstatus">{{pstatus.name}}</mat-option>
                         </mat-select>
@@ -70,7 +70,7 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Customer</mat-label>
-                        <mat-select formControlName="supplier">
+                        <mat-select formControlName="customer">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let customer of customers" [value]="customer">{{customer.fullname}}</mat-option>
                         </mat-select>
@@ -126,14 +126,14 @@
 
                     <mat-form-field appearance="outline">
                         <mat-label>Payment Types</mat-label>
-                        <mat-select formControlName="ssptypes">
+                        <mat-select formControlName="ssptype">
                             <mat-option [value]="null" selected>All</mat-option>
                             <mat-option *ngFor="let paytype of paytypes" [value]="paytype.id">{{paytype.name}}</mat-option>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Status</mat-label>
+                        <mat-label>Customer</mat-label>
                         <mat-select formControlName="sscustomer">
                             <mat-option [value]="null" selected>All</mat-option>
                             <mat-option *ngFor="let customer of customers" [value]="customer.id">{{customer.fullname}}</mat-option>

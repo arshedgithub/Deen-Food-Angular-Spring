@@ -1,12 +1,13 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 public class Paytype {
-    @OneToMany(mappedBy = "paytype")
-    private Collection<Cuspayment> cuspayments;
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -14,6 +15,9 @@ public class Paytype {
     @Basic
     @Column(name = "name")
     private String name;
+    @JsonIgnore
+    @OneToMany(mappedBy = "paytype")
+    private Collection<Cuspayment> cuspayments;
 
     public Collection<Cuspayment> getCuspayments() {
         return cuspayments;

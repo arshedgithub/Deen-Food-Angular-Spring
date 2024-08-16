@@ -19,6 +19,7 @@ import {InvoiceService} from "../../../service/invoiceservice";
 import {CustPaymentpaymentService} from "../../../service/custpaymentservice";
 import {PaystatusService} from "../../../service/paystatusservice";
 import {PaytypeService} from "../../../service/paytypeservice";
+import {CustomerService} from "../../../service/customerservice";
 
 @Component({
   selector: 'app-customer-payment',
@@ -27,12 +28,12 @@ import {PaytypeService} from "../../../service/paytypeservice";
 })
 export class CustomerPaymentComponent {
 
-  columns: string[] = ['suppayno', 'supplier', 'grn', 'employee','modi'];
-  headers: string[] = ['Payment Number', 'Supplier', 'Grn', 'Employee', 'Date'];
-  binders: string[] = ['suppayno', 'supplier.registernumber', 'grn.grnnumber', 'employee.fullname','getModi()'];
+  columns: string[] = ['number', 'invoice', 'grandtotal','date', 'customer', 'employee'];
+  headers: string[] = ['Payment Number', 'Invoice', 'Grand Total', 'Date', 'Customer', 'Employee'];
+  binders: string[] = ['number', 'invoice.number', 'grandtotal', 'date','customer.fullname','employee.fullname'];
 
-  cscolumns: string[] = ['cssuppayno', 'cssupplier', 'csgrn', 'csemployee', 'csmodi'];
-  csprompts: string[] = ['Search by Payment Number', 'Search by Grn', 'Search by Date', 'Search by Employee', 'Search by Date'];
+  cscolumns: string[] = ['csnumber', 'csinvoice', 'csgrandtotal', 'csdate', 'cscustomer', 'csemployee'];
+  csprompts: string[] = ['Search by Payment Number', 'Search by Invoice', 'Search by Total', 'Search by Date', 'Search by Customer', 'Search by Employee'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -65,6 +66,7 @@ export class CustomerPaymentComponent {
       private pays: CustPaymentpaymentService,
       private invoics: InvoiceService,
       private emps: EmployeeService,
+      private cuss: CustomerService,
       private paysts: PaystatusService,
       private paytys: PaytypeService,
       private fb: FormBuilder,
@@ -113,6 +115,10 @@ export class CustomerPaymentComponent {
 
     this.emps.getAll('').then((vsts: Employee[]) => {
       this.employees = vsts;
+    });
+
+    this.cuss.getAll('').then((cust: Customer[]) => {
+      this.customers = cust;
     });
 
     this.paytys.getAllList().then((pts: Paytype[]) => {
@@ -200,11 +206,11 @@ export class CustomerPaymentComponent {
     const cserchdata = this.csearch.getRawValue();
 
     this.data.filterPredicate = (payment: CustPayment, filter: string) => {
-      return (cserchdata.csnumber == null || payment.number.toLowerCase().includes(cserchdata.cssuppayno.toLowerCase())) &&
+      return (cserchdata.csnumber == null || payment.number.toLowerCase().includes(cserchdata.csnumber.toLowerCase())) &&
           (cserchdata.csinvoice == null || payment.invoice.number.toLowerCase().includes(cserchdata.csinvoice.toLowerCase())) &&
           (cserchdata.csgrandtotal == null || payment.grandtotal.toString().includes(cserchdata.csgrandtotal)) &&
           (cserchdata.csdate == null || payment.date.toString().includes(cserchdata.csdate)) &&
-          (cserchdata.cscustomer == null || payment.customer.fullname.toLowerCase().includes(cserchdata.cssupplier.toLowerCase())) &&
+          (cserchdata.cscustomer == null || payment.customer.fullname.toLowerCase().includes(cserchdata.cscustomer.toLowerCase())) &&
         (cserchdata.csemployee== null || payment.employee.fullname.toLowerCase().includes(cserchdata.csemployee.toLowerCase()));
     };
     this.data.filter = 'xx';
@@ -265,15 +271,15 @@ export class CustomerPaymentComponent {
     this.cuspayment = JSON.parse(JSON.stringify(payment));
     this.oldcuspayment = JSON.parse(JSON.stringify(payment));
     //@ts-ignore
-    this.payment.employee = this.employees.find(s => s.id === this.payment.employee.id);
+    this.cuspayment.employee = this.employees.find(s => s.id === this.cuspayment.employee.id);
+     //@ts-ignore
+    this.cuspayment.invoice = this.invoices.find(s => s.id === this.cuspayment.invoice.id);
     //@ts-ignore
-    this.payment.employee = this.employees.find(s => s.id === this.payment.employee.id);
+    this.cuspayment.paytype = this.paytypes.find(s => s.id === this.cuspayment.paytype.id);
     //@ts-ignore
-    this.payment.paytype = this.paytypes.find(s => s.id === this.payment.paytype.id);
+    this.cuspayment.paystatus = this.paystatuses.find(s => s.id === this.cuspayment.paystatus.id);
     //@ts-ignore
-    this.payment.paystatus = this.paystatuses.find(s => s.id === this.payment.paystatus.id);
-    //@ts-ignore
-    this.payment.customer = this.customers.find(s => s.id === this.payment.customer.id);
+    this.cuspayment.customer = this.customers.find(s => s.id === this.cuspayment.customer.id);
 
     this.form.patchValue(this.cuspayment);
     this.form.markAsPristine();
@@ -286,7 +292,7 @@ export class CustomerPaymentComponent {
     if (errors != "") {
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - CustPayment Add ", message: "You have following Errors <br> " + errors}
+        data: {heading: "Errors - Customer Payment Add ", message: "You have following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => {
         if (!result) {
@@ -524,7 +530,7 @@ export class CustomerPaymentComponent {
   //   this.form.controls['suppayno'].setValue(newNumber);
   // }
 
-  total=0;
+  total= 0;
 
   // filteritem(){
   //
