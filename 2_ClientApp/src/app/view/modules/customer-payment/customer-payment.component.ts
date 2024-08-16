@@ -1,45 +1,49 @@
 import {Component, ViewChild} from '@angular/core';
+import {MessageComponent} from "../../../util/dialog/message/message.component";
+import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {CustPayment} from "../../../entity/custPayment";
 import {MatTableDataSource} from "@angular/material/table";
-import {Invoice} from "../../../entity/invoice";
 import {MatPaginator} from "@angular/material/paginator";
 import {UiAssist} from "../../../util/ui/ui.assist";
-import {Invoicestatus} from "../../../entity/invoicestatus";
+import {Customer} from "../../../entity/customer";
 import {Employee} from "../../../entity/employee";
-import {InvoiceService} from "../../../service/invoiceservice";
-import {InvoicestatusService} from "../../../service/invoicestatusservice";
-import {MatDialog} from "@angular/material/dialog";
-import {AuthorizationManager} from "../../../service/authorizationmanager";
+import {Paystatus} from "../../../entity/paystatus";
+import {Invoice} from "../../../entity/invoice";
+import {Paytype} from "../../../entity/paytype";
 import {DatePipe} from "@angular/common";
+import {AuthorizationManager} from "../../../service/authorizationmanager";
+import {MatDialog} from "@angular/material/dialog";
 import {EmployeeService} from "../../../service/employeeservice";
-import {ConfirmComponent} from "../../../util/dialog/confirm/confirm.component";
-import {MessageComponent} from "../../../util/dialog/message/message.component";
-import {CustomerOrder} from "../../../entity/customerorder";
-import {CustomerOrderService} from "../../../service/customerorderservice";
+import {InvoiceService} from "../../../service/invoiceservice";
+import {CustPaymentpaymentService} from "../../../service/custpaymentservice";
+import {PaystatusService} from "../../../service/paystatusservice";
+import {PaytypeService} from "../../../service/paytypeservice";
+import {CustomerService} from "../../../service/customerservice";
 
 @Component({
-  selector: 'app-invoice',
-  templateUrl: './invoice.component.html',
-  styleUrls: ['./invoice.component.css']
+  selector: 'app-customer-payment',
+  templateUrl: './customer-payment.component.html',
+  styleUrls: ['./customer-payment.component.css']
 })
-export class InvoiceComponent {
+export class CustomerPaymentComponent {
 
-  columns: string[] = ['number', 'customerorder', 'date', 'invoicestatus', 'grandtotal','employee'];
-  headers: string[] = ['Number', 'Order', 'Date', 'Invoice Status', 'Total','Employee'];
-  binders: string[] = ['number', 'customerorder.number', 'date', 'invoicestatus.name', 'grandtotal', 'employee.fullname'];
+  columns: string[] = ['number', 'invoice', 'grandtotal','date', 'customer', 'employee'];
+  headers: string[] = ['Payment Number', 'Invoice', 'Grand Total', 'Date', 'Customer', 'Employee'];
+  binders: string[] = ['number', 'invoice.number', 'grandtotal', 'date','customer.fullname','employee.fullname'];
 
-  cscolumns: string[] = ['csnumber', 'csorder', 'csdate', 'csinvoicestatus', 'csgrandtotal', 'csemployee'];
-  csprompts: string[] = ['Search by Number', 'Search by Order', 'Search by Date', 'Search by Status', 'Search by Total', 'Search by Employee'];
+  cscolumns: string[] = ['csnumber', 'csinvoice', 'csgrandtotal', 'csdate', 'cscustomer', 'csemployee'];
+  csprompts: string[] = ['Search by Payment Number', 'Search by Invoice', 'Search by Total', 'Search by Date', 'Search by Customer', 'Search by Employee'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
   public form!: FormGroup;
 
-  invoice!: Invoice;
-  oldInvoice!: Invoice;
+  cuspayment!: CustPayment;
+  oldcuspayment!: CustPayment;
 
-  invoices: Array<Invoice> = [];
-  data!: MatTableDataSource<Invoice>;
+  custPayments: Array<CustPayment> = [];
+  data!: MatTableDataSource<CustPayment>;
   imageurl: string = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   imageempurl: string = 'assets/default.png'
@@ -48,19 +52,23 @@ export class InvoiceComponent {
   regexes: any;
   selectedrow: any;
 
-  customerorders: Array<CustomerOrder> = [];
-  invoicestatuses: Array<Invoicestatus> = [];
   employees: Array<Employee> = [];
+  customers: Array<Customer> = [];
+  paystatuses: Array<Paystatus> = [];
+  invoices: Array<Invoice> = [];
+  paytypes: Array<Paytype> = [];
 
   enaadd:boolean = true;
   enaupd:boolean = false;
   enadel:boolean = false;
 
   constructor(
-      private invs: InvoiceService,
-      private invstats: InvoicestatusService,
+      private pays: CustPaymentpaymentService,
+      private invoics: InvoiceService,
       private emps: EmployeeService,
-      private cos: CustomerOrderService,
+      private cuss: CustomerService,
+      private paysts: PaystatusService,
+      private paytys: PaytypeService,
       private fb: FormBuilder,
       private dg: MatDialog,
       private dp: DatePipe,
@@ -71,26 +79,30 @@ export class InvoiceComponent {
 
     this.csearch = this.fb.group({
       csnumber: new FormControl(),
-      csorder: new FormControl(),
+      csinvoice: new FormControl(),
       csgrandtotal: new FormControl(),
       csdate: new FormControl(),
-      csinvoicestatus: new FormControl(),
+      cscustomer: new FormControl(),
       csemployee: new FormControl(),
     });
 
     this.ssearch = this.fb.group({
-      ssemployee: new FormControl(),
-      ssinvstatus: new FormControl()
+      ssptype: new FormControl(),
+      sspstatus: new FormControl(),
+      sscustomer: new FormControl(),
     });
 
     this.form =this.fb.group({
       "number": new FormControl('', [Validators.required]),
-      "customerorder": new FormControl('', [Validators.required]),
       "grandtotal": new FormControl('', [Validators.required]),
-      "date": new FormControl({value: new Date(), disabled: false}, [Validators.required]),
-      "invoicestatus": new FormControl('', [Validators.required]),
+      "customer": new FormControl('', [Validators.required]),
+      "invoice": new FormControl('', [Validators.required]),
+      "paytype": new FormControl('', [Validators.required]),
+      "paystatus": new FormControl('', [Validators.required]),
       "employee": new FormControl('', [Validators.required]),
+      "date": new FormControl({value: new Date(), disabled: false}, [Validators.required]),
     }, {updateOn: 'change'});
+
   }
 
   ngOnInit() {
@@ -101,18 +113,27 @@ export class InvoiceComponent {
 
     this.createView();
 
-    this.invstats.getAllList().then((invs: Invoicestatus[]) => {
-      this.invoicestatuses = invs;
+    this.emps.getAll('').then((vsts: Employee[]) => {
+      this.employees = vsts;
     });
 
-    this.emps.getAll('').then((emps: Employee[]) => {
-      this.employees = emps;
+    this.cuss.getAll('').then((cust: Customer[]) => {
+      this.customers = cust;
     });
 
-    this.cos.getAll("").then((orders: CustomerOrder[]) => {
-      this.customerorders = orders;
+    this.paytys.getAllList().then((pts: Paytype[]) => {
+      this.paytypes = pts;
     });
-    this.form.controls['customerorder'].valueChanges.subscribe(value => this.form.controls['grandtotal'].setValue(value.expectedtotal))
+
+    this.paysts.getAllList().then((psts: Paystatus[]) => {
+      this.paystatuses = psts;
+    });
+
+    this.invoics.getAll('').then((invs: Invoice[]) => {
+      this.invoices = invs;
+    });
+
+    this.createForm();
   }
 
   createView() {
@@ -121,11 +142,14 @@ export class InvoiceComponent {
   }
 
   createForm() {
+
     this.form.controls['number'].setValidators([Validators.required]);
-    this.form.controls['customerorder'].setValidators([Validators.required]);
+    this.form.controls['invoice'].setValidators([Validators.required]);
     this.form.controls['grandtotal'].setValidators([Validators.required]);
+    this.form.controls['paytype'].setValidators([Validators.required]);
+    this.form.controls['paystatus'].setValidators([Validators.required]);
+    this.form.controls['customer'].setValidators([Validators.required]);
     this.form.controls['date'].setValidators([Validators.required]);
-    this.form.controls['invoicestatus'].setValidators([Validators.required]);
     this.form.controls['employee'].setValidators([Validators.required]);
 
     Object.values(this.form.controls).forEach( control => { control.markAsTouched(); } );
@@ -137,9 +161,9 @@ export class InvoiceComponent {
             if (controlName == "date")
               value = this.dp.transform(new Date(value), 'yyyy-MM-dd');
 
-            if (this.oldInvoice != undefined && control.valid) {
+            if (this.oldcuspayment != undefined && control.valid) {
               // @ts-ignore
-              if (value === this.invoice[controlName]) {
+              if (value === this.payment[controlName]) {
                 control.markAsPristine();
               } else {
                 control.markAsDirty();
@@ -150,7 +174,6 @@ export class InvoiceComponent {
           }
       );
     }
-
     this.enableButtons(true,false,false);
   }
 
@@ -162,10 +185,10 @@ export class InvoiceComponent {
 
   loadTable(query: string) {
 
-    this.invs.getAll(query)
-        .then((invs: Invoice[]) => {
-          this.invoices = invs;
-          // this.ns.setLastSequenceNumber(this.invoices[this.invoices.length-1].invoicenumber);
+    this.pays.getAll(query)
+        .then((pays: CustPayment[]) => {
+          this.custPayments = pays;
+          // this.ns.setLastSequenceNumber(this.payments[this.payments.length-1].suppayno);
           // this.generateNumber();
           this.imageurl = 'assets/fullfilled.png';
         })
@@ -173,23 +196,22 @@ export class InvoiceComponent {
           this.imageurl = 'assets/rejected.png';
         })
         .finally(() => {
-          this.data = new MatTableDataSource(this.invoices);
+          this.data = new MatTableDataSource(this.custPayments);
           this.data.paginator = this.paginator;
         });
-
   }
 
   filterTable(): void {
 
     const cserchdata = this.csearch.getRawValue();
 
-    this.data.filterPredicate = (invoice: Invoice, filter: string) => {
-      return (cserchdata.csnumber == null || invoice.number.toLowerCase().includes(cserchdata.csnumber.toLowerCase())) &&
-          (cserchdata.csgrandtotal == null || invoice.grandtotal.toString().includes(cserchdata.grandtotal  )) &&
-          (cserchdata.csorder == null || invoice.customerorder.number.toLowerCase().includes(cserchdata.csnumber.toLowerCase())) &&
-          (cserchdata.csdate == null || invoice.date.includes(cserchdata.csdate.toLowerCase())) &&
-          (cserchdata.csinvoicestatus == null || invoice.invoicestatus.name.toLowerCase().includes(cserchdata.csinvoicestatus.toLowerCase())) &&
-          (cserchdata.csemployee == null || invoice.employee.fullname.toLowerCase().includes(cserchdata.csemployee.toLowerCase()));
+    this.data.filterPredicate = (payment: CustPayment, filter: string) => {
+      return (cserchdata.csnumber == null || payment.number.toLowerCase().includes(cserchdata.csnumber.toLowerCase())) &&
+          (cserchdata.csinvoice == null || payment.invoice.number.toLowerCase().includes(cserchdata.csinvoice.toLowerCase())) &&
+          (cserchdata.csgrandtotal == null || payment.grandtotal.toString().includes(cserchdata.csgrandtotal)) &&
+          (cserchdata.csdate == null || payment.date.toString().includes(cserchdata.csdate)) &&
+          (cserchdata.cscustomer == null || payment.customer.fullname.toLowerCase().includes(cserchdata.cscustomer.toLowerCase())) &&
+        (cserchdata.csemployee== null || payment.employee.fullname.toLowerCase().includes(cserchdata.csemployee.toLowerCase()));
     };
     this.data.filter = 'xx';
   }
@@ -199,13 +221,16 @@ export class InvoiceComponent {
     this.csearch.reset();
     const sserchdata = this.ssearch.getRawValue();
 
-    let invstatusid = sserchdata.ssinvstatus;
-    let employeeid = sserchdata.ssemployee;
+    let pstatusid = sserchdata.sspstatus;
+    let ssptypeid = sserchdata.ssptype;
+    let sscustomer = sserchdata.sscustomer;
 
     let query = "";
-    if (invstatusid != null) query = query + "&invoicestatusid=" + invstatusid;
-    if (employeeid != null) query = query + "&invoicebrandid=" + employeeid;
+    if (pstatusid != null) query = query + "&custpaymentstatusid=" + pstatusid;
+    if (ssptypeid != null) query = query + "&custpaymenttypeid=" + ssptypeid;
+    if (sscustomer != null) query = query + "&customerid=" + sscustomer;
     if (query != "") query = query.replace(/^./, "?")
+
     this.loadTable(query);
   }
 
@@ -232,43 +257,42 @@ export class InvoiceComponent {
 
     for (const controlName in this.form.controls) {
       const control = this.form.controls[controlName];
-      if (control.errors) {
-
-        if (this.regexes[controlName] != undefined) {
-          errors = errors + "<br>" + this.regexes[controlName]['message'];
-        } else {
-          errors = errors + "<br>Invalid " + controlName;
-        }
-      }
+      if (control.errors) errors = errors + "<br>Invalid " + controlName;
     }
 
     return errors;
   }
 
-  fillForm(invoice: Invoice) {
+  fillForm(payment: CustPayment) {
 
     this.enableButtons(false,true,true);
 
-    this.selectedrow=invoice;
-    this.invoice = JSON.parse(JSON.stringify(invoice));
-    this.oldInvoice = JSON.parse(JSON.stringify(invoice));
+    this.selectedrow=payment;
+    this.cuspayment = JSON.parse(JSON.stringify(payment));
+    this.oldcuspayment = JSON.parse(JSON.stringify(payment));
     //@ts-ignore
-    this.invoice.invoicestatus = this.invoicestatuses.find(s => s.id === this.invoice.invoicestatus.id);
+    this.cuspayment.employee = this.employees.find(s => s.id === this.cuspayment.employee.id);
+     //@ts-ignore
+    this.cuspayment.invoice = this.invoices.find(s => s.id === this.cuspayment.invoice.id);
     //@ts-ignore
-    this.invoice.employee = this.employees.find(em => em.id === this.invoice.employee.id);
+    this.cuspayment.paytype = this.paytypes.find(s => s.id === this.cuspayment.paytype.id);
     //@ts-ignore
-    this.invoice.customerorder = this.customerorders.find(cs => cs.id === this.invoice.customerorder.id);
-    this.form.patchValue(this.invoice);
+    this.cuspayment.paystatus = this.paystatuses.find(s => s.id === this.cuspayment.paystatus.id);
+    //@ts-ignore
+    this.cuspayment.customer = this.customers.find(s => s.id === this.cuspayment.customer.id);
+
+    this.form.patchValue(this.cuspayment);
     this.form.markAsPristine();
   }
 
   add() {
+
     let errors = this.getErrors();
 
     if (errors != "") {
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - invoice Add ", message: "You have following Errors <br> " + errors}
+        data: {heading: "Errors - Customer Payment Add ", message: "You have following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => {
         if (!result) {
@@ -277,17 +301,17 @@ export class InvoiceComponent {
       });
     } else {
 
-      this.invoice = this.form.getRawValue();
-      // delete this.form.controls['category'];
+      this.cuspayment = this.form.getRawValue();
 
-      let itmdata: string = "";
-      itmdata = itmdata + "<br>Number is : " + this.invoice.number;
+      let shdata: string = "";
+
+      shdata = shdata + "<br> Customer Payment Number is : " + this.cuspayment.number;
 
       const confirm = this.dg.open(ConfirmComponent, {
         width: '500px',
         data: {
-          heading: "Confirmation - Invoice Add",
-          message: "Are you sure to Add the following invoice? <br> <br>" + itmdata
+          heading: "Confirmation - Customer Payment Add",
+          message: "Are you sure to Add the following CustPayment? <br> <br>" + shdata
         }
       });
 
@@ -296,9 +320,8 @@ export class InvoiceComponent {
 
       confirm.afterClosed().subscribe(async result => {
         if (result) {
-          // @ts-ignore
-          this.invs.add(this.invoice).then((response: [] | undefined) => {
-            if (response != undefined) { // @ts-ignore
+          this.pays.add(this.cuspayment).then((response: [] | undefined) => {
+            if (response != undefined) {
               // @ts-ignore
               addstatus = response['errors'] == "";
               if (!addstatus) { // @ts-ignore
@@ -321,7 +344,7 @@ export class InvoiceComponent {
 
             const stsmsg = this.dg.open(MessageComponent, {
               width: '500px',
-              data: {heading: "Status - Invoice Add", message: addmessage}
+              data: {heading: "Status -Customer Payment Add", message: addmessage}
             });
 
             stsmsg.afterClosed().subscribe(async result => {
@@ -343,7 +366,7 @@ export class InvoiceComponent {
 
       const errmsg = this.dg.open(MessageComponent, {
         width: '500px',
-        data: {heading: "Errors - invoice Update ", message: "You have following Errors <br> " + errors}
+        data: {heading: "Errors - Store Update ", message: "You have following Errors <br> " + errors}
       });
       errmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
 
@@ -359,15 +382,17 @@ export class InvoiceComponent {
         const confirm = this.dg.open(ConfirmComponent, {
           width: '500px',
           data: {
-            heading: "Confirmation - invoice Update",
+            heading: "Confirmation - Store Update",
             message: "Are you sure to Save folowing Updates? <br> <br>" + updates
           }
         });
         confirm.afterClosed().subscribe(async result => {
           if (result) {
-            this.invoice = this.form.getRawValue();
-            this.invoice.id = this.oldInvoice.id;
-            this.invs.update(this.invoice).then((response: [] | undefined) => {
+            this.cuspayment = this.form.getRawValue();
+
+            this.cuspayment.id = this.oldcuspayment.id;
+
+            this.pays.update(this.cuspayment).then((response: [] | undefined) => {
               if (response != undefined) { // @ts-ignore
                 updstatus = response['errors'] == "";
                 if (!updstatus) { // @ts-ignore
@@ -383,10 +408,12 @@ export class InvoiceComponent {
                 this.form.reset();
                 Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
                 this.loadTable("");
+                this.enableButtons(true,false,false);
               }
+
               const stsmsg = this.dg.open(MessageComponent, {
                 width: '500px',
-                data: {heading: "Status -invoice Add", message: updmessage}
+                data: {heading: "Status -Store Add", message: updmessage}
               });
               stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
 
@@ -398,7 +425,7 @@ export class InvoiceComponent {
 
         const updmsg = this.dg.open(MessageComponent, {
           width: '500px',
-          data: {heading: "Confirmation - invoice Update", message: "Nothing Changed"}
+          data: {heading: "Confirmation - Store Update", message: "Nothing Changed"}
         });
         updmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
 
@@ -425,8 +452,8 @@ export class InvoiceComponent {
     const confirm = this.dg.open(ConfirmComponent, {
       width: '500px',
       data: {
-        heading: "Confirmation - invoice Delete",
-        message: "Are you sure to Delete following invoice? <br> <br>" + this.invoice.number
+        heading: "Confirmation - Customer Payment Delete",
+        message: "Are you sure to Delete following Customer Payment? <br> <br>" + this.cuspayment.number
       }
     });
 
@@ -435,7 +462,7 @@ export class InvoiceComponent {
         let delstatus: boolean = false;
         let delmessage: string = "Server Not Found";
 
-        this.invs.delete(this.invoice.id).then((response: [] | undefined) => {
+        this.pays.delete(this.cuspayment.id).then((response: [] | undefined) => {
 
           if (response != undefined) { // @ts-ignore
             delstatus = response['errors'] == "";
@@ -450,15 +477,17 @@ export class InvoiceComponent {
           if (delstatus) {
             delmessage = "Successfully Deleted";
             this.form.reset();
+            this.enableButtons(true,false,false);
             Object.values(this.form.controls).forEach(control => { control.markAsTouched(); });
             this.loadTable("");
           }
 
           const stsmsg = this.dg.open(MessageComponent, {
             width: '500px',
-            data: {heading: "Status - invoice Delete ", message: delmessage}
+            data: {heading: "Status - Customer Payment Delete ", message: delmessage}
           });
           stsmsg.afterClosed().subscribe(async result => { if (!result) { return; } });
+
         });
       }
     });
@@ -468,34 +497,61 @@ export class InvoiceComponent {
     const confirm = this.dg.open(ConfirmComponent, {
       width: '500px',
       data: {
-        heading: "Confirmation - invoice Clear",
+        heading: "Confirmation - Customer Payment Clear",
         message: "Are you sure to Clear following Details ? <br> <br>"
       }
     });
-
     confirm.afterClosed().subscribe(async result => {
       if (result) {
-        this.form.reset()
-        this.enableButtons(true,false,false);
+        this.form.reset();
         this.loadTable('');
+        this.enableButtons(true,false,false);
       }
     });
+
   }
 
-  filterDates = (date: Date | null): boolean => {
-    const currentDate = new Date();
-    return !date || date.getTime() <= currentDate.getTime();
-  };
-
-  // generateNumber(): void {
-  //   const newNumber = this.ns.generateNumber('ITM');
-  //   this.form.controls['invoicenumber'].setValue(newNumber);
+  // setGrandTotal() {
+  //   let invoice = this.form.controls['invoice'].value;
+  //
+  //   let invoicenumber = invoice.number;
+  //   let gpayment: number = this.invoices.find(s => s.number === invoicenumber)?.grandtotal ?? 0;
+  //   let greturn: number = this.supreturns.find(s => s.grn.grnnumber === gnumber)?.grandtotal ?? 0;
+  //   let gpaied: number = parseFloat(this.payments.find(s => s.grn.grnnumber === gnumber)?.grandtotal ?? '0');
+  //   let total: number = gpayment - greturn - gpaied;
+  //   this.form.controls['grandtotal'].setValue(total);
+  //
+  //   let customer = invoice.customerorder?.customer ?? null;
+  //   this.form.controls['customer'].setValue(customer);
   // }
 
+  // generateNumber(): void {
+  //   const newNumber = this.ns.generateNumber('SAY');
+  //   this.form.controls['suppayno'].setValue(newNumber);
+  // }
 
-  findGrandTotal(order: CustomerOrder){
-    console.log("selecting customer order")
-    console.log(order.number)
-    this.form.controls['grandtotal'].setValue(order.expectadtotal);
-  }
+  total= 0;
+
+  // filteritem(){
+  //
+  //   let e = this.form.controls['grn'].value.id;
+  //
+  //   this.grs.getGrntotal(e).then((msys: Grn[]) => {
+  //     msys.forEach(i => {
+  //       this.total = this.total + i.grandtotal
+  //     })
+  //   });
+  //
+  //   this.surs.getReptotal(e).then((msys: Supreturn[]) => {
+  //     msys.forEach(i => {
+  //       this.total = this.total - i.grandtotal
+  //     })
+  //   });
+  //
+  //   this.sups.getSupplierByGrn(e).then((msys: Supplier[]) => {
+  //     this.suppliers = msys;
+  //   });
+  //   if(this.total!=0)this.form.controls['grandtotal'].setValue(this.total);
+  //   this.total=0;
+  // }
 }

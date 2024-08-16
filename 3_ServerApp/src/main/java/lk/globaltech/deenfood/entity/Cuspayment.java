@@ -1,14 +1,11 @@
 package lk.globaltech.deenfood.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.Collection;
 
 @Entity
-public class Invoice {
+public class Cuspayment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "id")
@@ -23,17 +20,20 @@ public class Invoice {
     @Column(name = "date")
     private Date date;
     @ManyToOne
-    @JoinColumn(name = "customerorder_id", referencedColumnName = "id", nullable = false)
-    private Customerorder customerorder;
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    private Customer customer;
+    @ManyToOne
+    @JoinColumn(name = "invoice_id", referencedColumnName = "id", nullable = false)
+    private Invoice invoice;
+    @ManyToOne
+    @JoinColumn(name = "paytype_id", referencedColumnName = "id", nullable = false)
+    private Paytype paytype;
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)
     private Employee employee;
     @ManyToOne
-    @JoinColumn(name = "ivoicestatus_id", referencedColumnName = "id", nullable = false)
-    private Invoicestatus invoicestatus;
-    @JsonIgnore
-    @OneToMany(mappedBy = "invoice")
-    private Collection<Cuspayment> cuspayments;
+    @JoinColumn(name = "paystatus_id", referencedColumnName = "id", nullable = false)
+    private Paystatus paystatus;
 
     public Integer getId() {
         return id;
@@ -72,12 +72,12 @@ public class Invoice {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Invoice invoice = (Invoice) o;
+        Cuspayment that = (Cuspayment) o;
 
-        if (id != null ? !id.equals(invoice.id) : invoice.id != null) return false;
-        if (number != null ? !number.equals(invoice.number) : invoice.number != null) return false;
-        if (grandtotal != null ? !grandtotal.equals(invoice.grandtotal) : invoice.grandtotal != null) return false;
-        if (date != null ? !date.equals(invoice.date) : invoice.date != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (number != null ? !number.equals(that.number) : that.number != null) return false;
+        if (grandtotal != null ? !grandtotal.equals(that.grandtotal) : that.grandtotal != null) return false;
+        if (date != null ? !date.equals(that.date) : that.date != null) return false;
 
         return true;
     }
@@ -91,12 +91,28 @@ public class Invoice {
         return result;
     }
 
-    public Customerorder getCustomerorder() {
-        return customerorder;
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public void setCustomerorder(Customerorder customerorder) {
-        this.customerorder = customerorder;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
+
+    public Paytype getPaytype() {
+        return paytype;
+    }
+
+    public void setPaytype(Paytype paytype) {
+        this.paytype = paytype;
     }
 
     public Employee getEmployee() {
@@ -107,19 +123,11 @@ public class Invoice {
         this.employee = employee;
     }
 
-    public Invoicestatus getInvoicestatus() {
-        return invoicestatus;
+    public Paystatus getPaystatus() {
+        return paystatus;
     }
 
-    public void setInvoicestatus(Invoicestatus invoicestatus) {
-        this.invoicestatus = invoicestatus;
-    }
-
-    public Collection<Cuspayment> getCuspayments() {
-        return cuspayments;
-    }
-
-    public void setCuspayments(Collection<Cuspayment> cuspayments) {
-        this.cuspayments = cuspayments;
+    public void setPaystatus(Paystatus paystatus) {
+        this.paystatus = paystatus;
     }
 }

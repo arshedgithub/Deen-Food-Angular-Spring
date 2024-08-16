@@ -73,6 +73,9 @@ public class Supplier {
     @JsonIgnore
     @OneToMany(mappedBy = "supplier")
     private Collection<Purchaseorder> purchaseorders;
+    @JsonIgnore
+    @OneToMany(mappedBy = "supplier")
+    private Collection<Suppayment> suppayments;
 
     public Supplier(){}
 
@@ -261,5 +264,13 @@ public class Supplier {
 
     public void setPurchaseorders(Collection<Purchaseorder> purchaseorders) {
         this.purchaseorders = purchaseorders;
+    }
+
+    public Collection<Suppayment> getSuppaymentsById() {
+        return suppayments;
+    }
+
+    public void setSuppaymentsById(Collection<Suppayment> suppayments) {
+        this.suppayments = suppayments;
     }
 }

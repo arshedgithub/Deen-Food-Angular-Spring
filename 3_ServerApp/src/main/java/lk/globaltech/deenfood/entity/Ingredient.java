@@ -209,4 +209,5 @@ public class Ingredient {
     public void setProductIngredients(Collection<ProductIngredient> productIngredients) {
         this.productIngredients = productIngredients;
     }
+
 }
