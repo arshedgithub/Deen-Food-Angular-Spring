@@ -97,7 +97,7 @@
                     <mat-expansion-panel-header>
                         <mat-list-item><a>
                             <mat-icon>event_note</mat-icon>
-                            Orders</a></mat-list-item>
+                            Production</a></mat-list-item>
                     </mat-expansion-panel-header>
                     <ng-container *ngFor="let menuItem of prodMenuItems">
                         <mat-list-item *ngIf="menuItem.accessFlag">
@@ -114,6 +114,20 @@
                             Customers</a></mat-list-item>
                     </mat-expansion-panel-header>
                     <ng-container *ngFor="let menuItem of customerMenuItems">
+                        <mat-list-item *ngIf="menuItem.accessFlag">
+                            <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null">
+                                <a>{{ menuItem.name }}</a></mat-list-item>
+                        </mat-list-item>
+                    </ng-container>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel *ngIf="isMenuVisible('Payment')">
+                    <mat-expansion-panel-header>
+                        <mat-list-item><a>
+                            <mat-icon>paid</mat-icon>
+                            Payment</a></mat-list-item>
+                    </mat-expansion-panel-header>
+                    <ng-container *ngFor="let menuItem of payMenuItems">
                         <mat-list-item *ngIf="menuItem.accessFlag">
                             <mat-list-item class="item" [routerLink]="menuItem.accessFlag ? menuItem.routerLink : null">
                                 <a>{{ menuItem.name }}</a></mat-list-item>

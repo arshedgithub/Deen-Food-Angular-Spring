@@ -7,6 +7,7 @@ import lk.globaltech.deenfood.entity.Product;
 import lk.globaltech.deenfood.entity.ProductIngredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class ProductController {
     @Autowired
     private ProductDao productDao;
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('product-select')")
     public List<Product> get(@RequestParam HashMap<String,String> params) {
 
         List<Product> products = this.productDao.findAll();
@@ -40,7 +41,7 @@ public class ProductController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+    @PreAuthorize("hasAuthority('product-insert')")
     public HashMap<String,String> add(@RequestBody Product product){
 
         HashMap<String,String> response = new HashMap<>();
@@ -66,7 +67,7 @@ public class ProductController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
+    @PreAuthorize("hasAuthority('product-update')")
     public HashMap<String,String> update(@RequestBody Product product) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -91,6 +92,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('product-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

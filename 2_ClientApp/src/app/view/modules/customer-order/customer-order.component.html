@@ -11,6 +11,11 @@
                 <form #myForm [formGroup]="form">
 
                     <mat-form-field appearance="outline">
+                        <mat-label>Customer Order Number</mat-label>
+                        <input matInput formControlName="number">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline">
                         <mat-label>Customer</mat-label>
                         <mat-select formControlName="customer">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
@@ -19,8 +24,8 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Customer Order Number</mat-label>
-                        <input matInput formControlName="number">
+                        <mat-label>Description</mat-label>
+                        <input matInput formControlName="description">
                     </mat-form-field>
 
                     <div id="innertable">
@@ -41,7 +46,7 @@
                                 <input matInput formControlName="amount">
                             </mat-form-field>
 
-                            <button mat-raised-button id="btnAdd" (click)="btnaddMc()">Add</button>
+                            <button mat-raised-button id="btnAdd" (click)="btnaddMc()"><mat-icon>add_circle</mat-icon>Add</button>
 
                         </form>
 
@@ -51,22 +56,20 @@
                                 <mat-cell *matCellDef="let element">
                                     <div *ngIf="i<inbinders.length-1" [innerHTML]="uiassist.getProperty(element, inbinders[i])"></div>
                                     <div *ngIf="i>=inbinders.length-1">
-                                        <button mat-raised-button id="removeBtn" (click)="deleteRaw(element)">Remove</button>
+                                        <button id="lineDelete" mat-icon-button (click)="deleteRaw(element)"><mat-icon>delete</mat-icon></button>
                                     </div>
                                 </mat-cell>
                             </ng-container>
 
                             <mat-header-row *matHeaderRowDef="incolumns"></mat-header-row>
-                            <mat-row *matRowDef="let row; columns: incolumns"></mat-row>
+                            <mat-row *matRowDef="let row; columns: incolumns" (click)="fillInnerForm(row)"></mat-row>
 
                         </mat-table>
                     </div>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Do Expected</mat-label>
-                        <input matInput [matDatepicker]="dorqstd" formControlName="doexpected">
-                        <mat-datepicker-toggle matIconSuffix [for]="dorqstd"></mat-datepicker-toggle>
-                        <mat-datepicker #dorqstd></mat-datepicker>
+                        <mat-label>Expected Total</mat-label>
+                        <input matInput formControlName="expectedtotal">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
@@ -74,19 +77,19 @@
                         <input matInput formControlName="totalitem">
                     </mat-form-field>
 
-
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date Expected</mat-label>
+                        <input matInput [matDatepicker]="dorqstd" formControlName="doexpected">
+                        <mat-datepicker-toggle matIconSuffix [for]="dorqstd"></mat-datepicker-toggle>
+                        <mat-datepicker #dorqstd></mat-datepicker>
+                    </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Client Order Status</mat-label>
+                        <mat-label>Customer Order Status</mat-label>
                         <mat-select formControlName="customerorderstatus">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let costatus of customerorderstatuses" [value]="costatus">{{ costatus.name }}</mat-option>
                         </mat-select>
-                    </mat-form-field>
-
-                    <mat-form-field appearance="outline">
-                        <mat-label>Description</mat-label>
-                        <input matInput formControlName="description">
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
@@ -98,17 +101,17 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline">
-                        <mat-label>Do Placed</mat-label>
+                        <mat-label>Date Order Placed</mat-label>
                         <input matInput [matDatepicker]="doplcd" formControlName="doplaced">
                         <mat-datepicker-toggle matIconSuffix [for]="doplcd"></mat-datepicker-toggle>
                         <mat-datepicker #doplcd></mat-datepicker>
                     </mat-form-field>
 
                     <div id="butpanel">
-                        <button mat-raised-button  (click)="add()" [disabled]="dsaadd" >Add</button>
+                        <button mat-raised-button  (click)="add()" [disabled]="!this.authService.getEnaAdd()" >Add</button>
                         <button mat-raised-button (click)="clear()">Clear</button>
-                        <button mat-raised-button (click)="update()" [disabled]="dsaupd">Update</button>
-                        <button mat-raised-button  (click)="delete()" [disabled]="dsadel">Delete</button>
+                        <button mat-raised-button (click)="update()" [disabled]="!this.authService.getEnaUpd()">Update</button>
+                        <button mat-raised-button  (click)="delete()" [disabled]="!this.authService.getEnaDel()">Delete</button>
                     </div>
 
                 </form>
@@ -126,25 +129,31 @@
                 <mat-form [formGroup]="ssearch">
 
                     <mat-form-field appearance="outline" class="ssfield">
-                        <mat-label>Search By Supplier</mat-label>
+                        <mat-label>Search By Cus. Order Status</mat-label>
+                        <mat-select formControlName="ssorderstatus">
+                            <mat-option [value]="null" selected>Not Selected</mat-option>
+                            <mat-option *ngFor="let status of customerorderstatuses" [value]="status.id">{{ status.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="ssfield">
+                        <mat-label>Search By Customer</mat-label>
                         <mat-select formControlName="sscustomer">
                             <mat-option [value]="null" selected>Not Selected</mat-option>
                             <mat-option *ngFor="let customer of customers" [value]="customer.id">{{ customer.fullname }}</mat-option>
                         </mat-select>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="ssfield">
-                        <mat-label>Search By Employee</mat-label>
-                        <mat-select formControlName="ssemployee">
-                            <mat-option [value]="null" selected>Not Selected</mat-option>
-                            <mat-option *ngFor="let employee of employees" [value]="employee.id">{{ employee.callingname }}
-                            </mat-option>
-                        </mat-select>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Search By Date Placed</mat-label>
+                        <input matInput [matDatepicker]="doplced" formControlName="ssdoplaced">
+                        <mat-datepicker-toggle matIconSuffix [for]="doplced"></mat-datepicker-toggle>
+                        <mat-datepicker #doplced></mat-datepicker>
                     </mat-form-field>
 
-
                     <mat-form-field appearance="outline">
-                        <mat-label>Search By Do Placed</mat-label>
+                        <mat-label>Search By Date Expected</mat-label>
                         <input matInput [matDatepicker]="doexpcted" formControlName="ssdoexpected">
                         <mat-datepicker-toggle matIconSuffix [for]="doexpcted"></mat-datepicker-toggle>
                         <mat-datepicker #doexpcted></mat-datepicker>
@@ -170,7 +179,7 @@
     <mat-grid-tile [colspan]="7" [rowspan]="4">
         <mat-card>
             <mat-card-header>
-                <mat-card-title>Client Order Table</mat-card-title>
+                <mat-card-title>Customer Order Table</mat-card-title>
                 <div id="loading">
                     <img [src]="imageurl">
                 </div>

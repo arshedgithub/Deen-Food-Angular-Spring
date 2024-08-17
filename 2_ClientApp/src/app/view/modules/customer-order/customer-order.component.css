@@ -122,3 +122,8 @@ button:disabled {
 #tableInner{
     margin-bottom: 20px;
 }
+
+#lineDelete {
+    color: #c70303;
+}
+

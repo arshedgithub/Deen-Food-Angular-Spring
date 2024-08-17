@@ -1,12 +1,10 @@
 package lk.globaltech.deenfood.controller;
 
-import lk.globaltech.deenfood.dao.ProductDao;
 import lk.globaltech.deenfood.dao.ProductionDao;
-import lk.globaltech.deenfood.entity.Product;
-import lk.globaltech.deenfood.entity.ProductIngredient;
 import lk.globaltech.deenfood.entity.Production;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,23 +14,15 @@ import java.util.stream.Stream;
 
 @CrossOrigin
 @RestController
-    @RequestMapping(value = "/productions")
+@RequestMapping(value = "/productions")
 public class ProductionController {
 
     @Autowired
     private ProductionDao productiondao;
 
-//    @GetMapping(path ="/number", produces = "application/json")
-//    public ResponseEntity<Map<String, String>> get() {
-//        String number = this.productiondao.findMaxNumber();
-//        if(number==null)number="0000" ;
-//        Map<String, String> response = new HashMap<>();
-//        response.put("number", number);
-//        return ResponseEntity.ok().body(response);
-//    }
-
     @GetMapping(produces = "application/json")
-    public List<Production> get(@RequestParam HashMap<String, String> params){
+    @PreAuthorize("hasAuthority('production-select')")
+    public List<Production> get(@RequestParam HashMap<String, String> params) {
 
         String placed = params.get("date");
         String productionstatusid = params.get("productionstatusid");
@@ -44,14 +34,16 @@ public class ProductionController {
         if (params.isEmpty()) return productions;
 
         Stream<Production> postream = productions.stream();
-        if (productionstatusid!=null) postream = postream.filter (o -> o.getProductionstatus().getId()==Integer.parseInt(productionstatusid));
-        if (placed!=null) postream = postream.filter (o -> o.getPlaced().toString().contains(placed));
+        if (productionstatusid != null)
+            postream = postream.filter(o -> o.getProductionstatus().getId() == Integer.parseInt(productionstatusid));
+        if (placed != null) postream = postream.filter(o -> o.getPlaced().toString().contains(placed));
         return postream.collect(Collectors.toList());
 
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('production-insert')")
     public HashMap<String, String> add(@RequestBody Production order) {
         HashMap<String, String> response = new HashMap<>();
 
@@ -79,6 +71,7 @@ public class ProductionController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('production-update')")
     public HashMap<String, String> update(@RequestBody Production order) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -119,22 +112,23 @@ public class ProductionController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public HashMap<String,String> delete(@PathVariable Integer id){
+    @PreAuthorize("hasAuthority('production-delete')")
+    public HashMap<String, String> delete(@PathVariable Integer id) {
 
-        HashMap<String,String> response = new HashMap<>();
-        String errors="";
+        HashMap<String, String> response = new HashMap<>();
+        String errors = "";
 
         Production ord = productiondao.findByMyId(id);
 
-        if(ord==null)
-            errors = errors+"<br> Production Does Not Exists";
+        if (ord == null)
+            errors = errors + "<br> Production Does Not Exists";
 
-        if(errors=="") productiondao.delete(ord);
-        else errors = "Server Validation Errors : <br> "+errors;
+        if (errors == "") productiondao.delete(ord);
+        else errors = "Server Validation Errors : <br> " + errors;
 
-        response.put("code",String.valueOf(id));
-        response.put("url","/id/"+id);
-        response.put("errors",errors);
+        response.put("code", String.valueOf(id));
+        response.put("url", "/id/" + id);
+        response.put("errors", errors);
 
         return response;
     }

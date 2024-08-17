@@ -88,10 +88,10 @@
           </mat-form-field>
 
           <div id="butpanel">
-            <button mat-raised-button (click)="add()" [disabled]="!authService.getEnaAdd()">Add</button>
-            <button mat-raised-button>Clear</button>
-            <button mat-raised-button (click)="update()" [disabled]="!authService.getEnaUpd()">Update</button>
-            <button mat-raised-button (click)="delete()" [disabled]="!authService.getEnaDel()">Delete</button>
+            <button mat-raised-button (click)="add()" [disabled]="!this.authService.getEnaAdd()">Add</button>
+<!--            <button mat-raised-button>Clear</button>-->
+            <button mat-raised-button (click)="update()" [disabled]="!this.authService.getEnaUpd()">Update</button>
+            <button mat-raised-button (click)="delete()" [disabled]="!this.authService.getEnaDel()">Delete</button>
           </div>
         </mat-form>
 

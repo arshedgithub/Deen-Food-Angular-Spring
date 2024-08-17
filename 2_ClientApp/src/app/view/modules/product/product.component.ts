@@ -155,7 +155,7 @@ export class ProductComponent {
         this.form.controls['description'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
         this.form.controls['quantity'].setValidators([Validators.required, Validators.pattern(this.regexes['quantity']['regex'])]);
         this.form.controls['price'].setValidators([Validators.required, Validators.pattern(this.regexes['price']['regex'])]);
-        this.form.controls['dointroduced'].setValidators([Validators.required, Validators.pattern(this.regexes['dointroduced']['regex'])]);
+        this.form.controls['dointroduced'].setValidators([Validators.required]);
         this.form.controls['productStatus'].setValidators([Validators.required]);
         this.form.controls['employee'].setValidators([Validators.required]);
 

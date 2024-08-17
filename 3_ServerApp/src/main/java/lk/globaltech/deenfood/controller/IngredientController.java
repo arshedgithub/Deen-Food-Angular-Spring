@@ -5,6 +5,7 @@ import lk.globaltech.deenfood.entity.Ingcategory;
 import lk.globaltech.deenfood.entity.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class IngredientController {
     private IngredientDao ingredientDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('ingredient-select')")
+    @PreAuthorize("hasAuthority('ingredient-select')")
     public List<Ingredient> get(@RequestParam HashMap<String, String> params) {
 
         List<Ingredient> ingredients = this.ingredientDao.findAll();
@@ -44,26 +45,9 @@ public class IngredientController {
 
     }
 
-//    @GetMapping(path ="/list",produces = "application/json")
-//    public List<Ingredient> get() {
-//
-//        List<Ingredient> ingredients = this.ingredientDao.findAllNameId();
-//
-//        ingredients = ingredients.stream().map(
-//                ingredient -> {
-//                    Ingredient i = new Ingredient(ingredient.getId(), ingredient.getCallingname());
-//                    return  i;
-//                }
-//        ).collect(Collectors.toList());
-//
-//        return ingredients;
-//
-//    }
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Ingredient-Insert')")
+    @PreAuthorize("hasAuthority('ingredient-insert')")
     public HashMap<String,String> add(@RequestBody Ingredient ingredient){
 
         HashMap<String,String> response = new HashMap<>();
@@ -84,7 +68,7 @@ public class IngredientController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Ingredient-Update')")
+    @PreAuthorize("hasAuthority('ingredient-update')")
     public HashMap<String,String> update(@RequestBody Ingredient ingredient){
 
         HashMap<String,String> response = new HashMap<>();
@@ -109,6 +93,7 @@ public class IngredientController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ingredient-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         System.out.println(id);
@@ -130,23 +115,6 @@ public class IngredientController {
 
         return response;
     }
-
-//    @GetMapping(path ="/supplier/{id}",produces = "application/json")
-//    public List<Ingredient> get(@PathVariable Integer id) {
-//
-//        Ingcategory ingredientCategory = this.ingredientDao.findIngredientCategoryBySupplier(id);
-//        List<Ingredient> ingredients = (List) ingredientCategory.getIngredients();
-//
-//        ingredients = ingredients.stream().map(
-//                ingredient -> {
-//                    Ingredient i = new Ingredient(ingredient.getId(), ingredient.getCallingname());
-//                    return  i;
-//                }
-//        ).collect(Collectors.toList());
-//
-//        return ingredients;
-//
-//    }
 
 }
 

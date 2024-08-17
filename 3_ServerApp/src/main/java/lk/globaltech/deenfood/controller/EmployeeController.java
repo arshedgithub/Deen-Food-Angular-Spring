@@ -21,7 +21,7 @@ public class EmployeeController {
     private EmployeeDao employeedao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('employee-select')")
     public List<Employee> get(@RequestParam HashMap<String, String> params) {
 
         List<Employee> employees = this.employeedao.findAll();
@@ -76,8 +76,6 @@ public class EmployeeController {
         if(employeedao.findByNic(employee.getNic())!=null)
             errors = errors+"<br> Existing NIC";
 
-        System.out.println(employee.getDoassignment());
-
         if(errors=="")
         employeedao.save(employee);
         else errors = "Server Validation Errors : <br> "+errors;
@@ -85,7 +83,6 @@ public class EmployeeController {
         response.put("id",String.valueOf(employee.getId()));
         response.put("url","/employees/"+employee.getId());
         response.put("errors",errors);
-
         return response;
     }
 
@@ -118,6 +115,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('employee-update')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
             HashMap<String,String> response = new HashMap<>();
@@ -126,7 +124,7 @@ public class EmployeeController {
         Employee emp1 = employeedao.findByMyId(id);
 
         if(emp1==null)
-            errors = errors+"<br> Employee Does Not Existed";
+            errors = errors+"<br>Employee Does Not Existed";
 
         if(errors=="") employeedao.delete(emp1);
         else errors = "Server Validation Errors : <br> "+errors;

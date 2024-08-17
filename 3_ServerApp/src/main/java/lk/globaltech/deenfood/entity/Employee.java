@@ -105,6 +105,18 @@ public class Employee {
     @JsonIgnore
     @OneToMany(mappedBy = "employee")
     private Collection<Customerorder> customerorders;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private Collection<Invoice> invoices;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private Collection<Invoice> invoicesById;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private Collection<Cuspayment> cuspayments;
+    @JsonIgnore
+    @OneToMany(mappedBy = "employee")
+    private Collection<Suppayment> suppayments;
 
     public Employee(){}
 
@@ -372,5 +384,37 @@ public class Employee {
 
     public void setCustomerorders(Collection<Customerorder> customerorders) {
         this.customerorders = customerorders;
+    }
+
+    public Collection<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Collection<Invoice> invoices) {
+        this.invoices = invoices;
+    }
+
+    public Collection<Invoice> getInvoicesById() {
+        return invoicesById;
+    }
+
+    public void setInvoicesById(Collection<Invoice> invoicesById) {
+        this.invoicesById = invoicesById;
+    }
+
+    public Collection<Cuspayment> getCuspayments() {
+        return cuspayments;
+    }
+
+    public void setCuspayments(Collection<Cuspayment> cuspayments) {
+        this.cuspayments = cuspayments;
+    }
+
+    public Collection<Suppayment> getSuppayments() {
+        return suppayments;
+    }
+
+    public void setSuppayments(Collection<Suppayment> suppayments) {
+        this.suppayments = suppayments;
     }
 }

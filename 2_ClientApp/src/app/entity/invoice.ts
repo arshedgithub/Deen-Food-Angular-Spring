@@ -1,27 +1,24 @@
-import {Customer} from "./customer";
 import {Invoicestatus} from "./invoicestatus";
-import {Invoiceitem} from "./invoiceitem";
+import {Employee} from "./employee";
+import {CustomerOrder} from "./customerorder";
 
 export class Invoice {
 
   public id !: number;
-  public name !: string;
-  public date !: string;
-  public time !: string;
+  public number !: string;
   public grandtotal !: number;
-  public invoiceitem!:Array<Invoiceitem>;
-  public customer!:Customer;
+  public date !: string;
+  public customerorder !: CustomerOrder;
+  public employee!:Employee;
   public invoicestatus!:Invoicestatus;
 
-  constructor(id:number,name:string,date:string,time:string,grandtotal:number,
-              invoiceitem:Array<Invoiceitem>,customer:Customer,invoicestatus:Invoicestatus) {
-    this.id=id;
-    this.name=name;
-    this.date = date;
-    this.time = time;
+  constructor(id: number, number: string, grandtotal: number, date: string, customerorder: CustomerOrder, employee: Employee, invoicestatus: Invoicestatus) {
+    this.id = id;
+    this.number = number;
     this.grandtotal = grandtotal;
-    this.invoiceitem = invoiceitem;
-    this.customer = customer;
+    this.date = date;
+    this.customerorder = customerorder;
+    this.employee = employee;
     this.invoicestatus = invoicestatus;
   }
 

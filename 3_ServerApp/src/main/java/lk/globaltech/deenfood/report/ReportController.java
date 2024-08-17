@@ -5,6 +5,7 @@ import lk.globaltech.deenfood.report.dao.IngredientCountByCategoryDao;
 import lk.globaltech.deenfood.report.entity.CountByDesignation;
 import lk.globaltech.deenfood.report.entity.IngredientCountByCategory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,8 +22,8 @@ public class ReportController {
     @Autowired
     private IngredientCountByCategoryDao ingredientCountByCategoryDao;
 
-
     @GetMapping(path ="/countbydesignation",produces = "application/json")
+    @PreAuthorize("hasAuthority('count by designation-select')")
     public List<CountByDesignation> get() {
 
         List<CountByDesignation> designations = this.countByDesignationDao.countByDesignation();
@@ -42,6 +43,7 @@ public class ReportController {
     }
 
     @GetMapping(path ="/ingredientcountbycategory",produces = "application/json")
+    @PreAuthorize("hasAuthority('ingredient count by category-select')")
     public List<IngredientCountByCategory> getIngredientCountByCategory() {
 
         List<IngredientCountByCategory> ingCountByCategories = this.ingredientCountByCategoryDao.ingredientCountByCategory();

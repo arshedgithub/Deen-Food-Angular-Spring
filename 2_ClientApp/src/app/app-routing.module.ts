@@ -21,6 +21,9 @@ import {ProductionOrderComponent} from "./view/modules/production-order/producti
 import {ProductionComponent} from "./view/modules/production/production.component";
 import {CustomerComponent} from "./view/modules/customerModule/customer/customer.component";
 import {CustomerOrderComponent} from "./view/modules/customer-order/customer-order.component";
+import {InvoiceComponent} from "./view/modules/invoice/invoice.component";
+import {CustomerPaymentComponent} from "./view/modules/customer-payment/customer-payment.component";
+import {SupplierPaymentComponent} from "./view/modules/supplier-payment/supplier-payment.component";
 
 const routes: Routes = [
   {path: "login", component: LoginComponent},
@@ -43,8 +46,10 @@ const routes: Routes = [
       {path: "customerorder", component: CustomerOrderComponent},
       {path: "productionorder", component: ProductionOrderComponent},
       {path: "production", component: ProductionComponent},
-      {path: "payments",component:PaymentComponent},
-      {path: "home/payments", redirectTo: 'payments', pathMatch: 'full'},
+      {path: "invoice", component: InvoiceComponent},
+      {path: "supplierpayment",component:SupplierPaymentComponent},
+      {path: "customerpayment",component:CustomerPaymentComponent},
+      {path: "home/payments", redirectTo: 'customerpayment', pathMatch: 'full'},
       {path: "reports/countbydesignation", component: CountByDesignationComponent},
       {path: "reports/ingredientcountbycategory", component: IngredientcountbycategoryComponent},
     ]

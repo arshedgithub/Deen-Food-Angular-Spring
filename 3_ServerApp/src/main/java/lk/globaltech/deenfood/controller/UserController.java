@@ -7,6 +7,7 @@ import lk.globaltech.deenfood.entity.Userrole;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class UserController {
     private UserDao userdao;
 
     @GetMapping(produces = "application/json")
+    @PreAuthorize("hasAuthority('user-select')")
     public List<User> get(@RequestParam HashMap<String, String> params) {
         List<User> users = this.userdao.findAll();
 
@@ -52,6 +54,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('user-insert')")
     public HashMap<String,String> add(@RequestBody User user){
 
         HashMap<String,String> response = new HashMap<>();
@@ -90,6 +93,7 @@ public class UserController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('user-update')")
     public HashMap<String, String> update(@RequestBody User user) {
         HashMap<String, String> response = new HashMap<>();
 
@@ -133,6 +137,7 @@ public class UserController {
 
     @DeleteMapping("/{username}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('user-delete')")
     public HashMap<String,String> delete(@PathVariable String username){
 
         HashMap<String,String> response = new HashMap<>();

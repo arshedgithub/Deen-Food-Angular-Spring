@@ -1,5 +1,8 @@
 package lk.globaltech.deenfood.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lk.globaltech.deenfood.util.RegexPattern;
+
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
@@ -23,7 +26,8 @@ public class Customerorder {
     private Integer totalitem;
     @Basic
     @Column(name = "expectadtotal")
-    private BigDecimal expectadtotal;
+    @RegexPattern(reg = "^[0-9]+(\\.[0-9]{1,2})?$", msg = "Invalid price format.")
+    private BigDecimal expectedtotal;
     @Basic
     @Column(name = "description")
     @Pattern(regexp = "^.*$", message = "Invalid Description")
@@ -42,6 +46,9 @@ public class Customerorder {
     private Employee employee;
     @OneToMany(mappedBy = "customerorder", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Orderproduct> orderproducts;
+    @JsonIgnore
+    @OneToMany(mappedBy = "customerorder")
+    private Collection<Invoice> invoices;
 
     public Integer getId() {
         return id;
@@ -75,12 +82,12 @@ public class Customerorder {
         this.totalitem = totalitem;
     }
 
-    public BigDecimal getExpectadtotal() {
-        return expectadtotal;
+    public BigDecimal getExpectedtotal() {
+        return expectedtotal;
     }
 
-    public void setExpectadtotal(BigDecimal expectadtotal) {
-        this.expectadtotal = expectadtotal;
+    public void setExpectedtotal(BigDecimal expectedtotal) {
+        this.expectedtotal = expectedtotal;
     }
 
     public String getDescription() {
@@ -110,7 +117,7 @@ public class Customerorder {
         if (number != null ? !number.equals(that.number) : that.number != null) return false;
         if (doexpected != null ? !doexpected.equals(that.doexpected) : that.doexpected != null) return false;
         if (totalitem != null ? !totalitem.equals(that.totalitem) : that.totalitem != null) return false;
-        if (expectadtotal != null ? !expectadtotal.equals(that.expectadtotal) : that.expectadtotal != null)
+        if (expectedtotal != null ? !expectedtotal.equals(that.expectedtotal) : that.expectedtotal != null)
             return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (doplaced != null ? !doplaced.equals(that.doplaced) : that.doplaced != null) return false;
@@ -124,7 +131,7 @@ public class Customerorder {
         result = 31 * result + (number != null ? number.hashCode() : 0);
         result = 31 * result + (doexpected != null ? doexpected.hashCode() : 0);
         result = 31 * result + (totalitem != null ? totalitem.hashCode() : 0);
-        result = 31 * result + (expectadtotal != null ? expectadtotal.hashCode() : 0);
+        result = 31 * result + (expectedtotal != null ? expectedtotal.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (doplaced != null ? doplaced.hashCode() : 0);
         return result;
@@ -160,5 +167,13 @@ public class Customerorder {
 
     public void setOrderproducts(Collection<Orderproduct> orderproducts) {
         this.orderproducts = orderproducts;
+    }
+
+    public Collection<Invoice> getInvoices() {
+        return invoices;
+    }
+
+    public void setInvoices(Collection<Invoice> invoices) {
+        this.invoices = invoices;
     }
 }
