@@ -21,7 +21,7 @@ public class EmployeeController {
     private EmployeeDao employeedao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('employee-select')")
     public List<Employee> get(@RequestParam HashMap<String, String> params) {
 
         List<Employee> employees = this.employeedao.findAll();
@@ -115,6 +115,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('employee-update')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
             HashMap<String,String> response = new HashMap<>();

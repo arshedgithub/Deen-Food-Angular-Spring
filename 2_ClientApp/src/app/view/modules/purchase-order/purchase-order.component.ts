@@ -158,7 +158,7 @@ export class PurchaseOrderComponent {
     createForm() {
         this.form.controls['number'].setValidators([Validators.required]);
         this.form.controls['postatus'].setValidators([Validators.required]);
-        this.form.controls['dorequested'].setValidators([Validators.required, Validators.pattern(this.regexes['dorequested']['regex'])]);
+        this.form.controls['dorequested'].setValidators([Validators.required]);
         this.form.controls['expectedtotal'].setValidators([Validators.required, Validators.pattern(this.regexes['expectedtotal']['regex'])]);
         this.form.controls['description'].setValidators([Validators.required, Validators.pattern(this.regexes['description']['regex'])]);
         this.form.controls['employee'].setValidators([Validators.required]);

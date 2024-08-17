@@ -5,6 +5,7 @@ import lk.globaltech.deenfood.entity.Poitem;
 import lk.globaltech.deenfood.entity.Purchaseorder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class PurchaseorderController {
     @Autowired
     private PurchaseOrderDao purchaseOrderDao;
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('purchase order-select')")
     public List<Purchaseorder> get(@RequestParam HashMap<String,String> params) {
 
         List<Purchaseorder> purorders = this.purchaseOrderDao.findAll();
@@ -44,7 +45,7 @@ public class PurchaseorderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+    @PreAuthorize("hasAuthority('purchase order-insert')")
     public HashMap<String,String> add(@RequestBody Purchaseorder purorder){
         HashMap<String,String> response = new HashMap<>();
         String errors="";
@@ -69,7 +70,7 @@ public class PurchaseorderController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
+    @PreAuthorize("hasAuthority('purchase order-update')")
     public HashMap<String,String> update(@RequestBody Purchaseorder purorder) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -97,6 +98,7 @@ public class PurchaseorderController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('purchase order-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

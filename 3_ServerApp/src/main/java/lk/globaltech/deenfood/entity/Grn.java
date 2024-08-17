@@ -16,7 +16,6 @@ public class Grn {
     private Integer id;
     @Basic
     @Column(name = "date")
-    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date Format")
     private String date;
     @Basic
     @Column(name = "description")

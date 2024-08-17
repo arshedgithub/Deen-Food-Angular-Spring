@@ -2,6 +2,7 @@ package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.*;
 import lk.globaltech.deenfood.entity.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +33,7 @@ public class GrnController {
     private PostatusDao postatusDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('GRN-select')")
+    @PreAuthorize("hasAuthority('grn-select')")
     public List<Grn> get(@RequestParam HashMap<String, String> params) {
 
         List<Grn> grns = this.grndao.findAll();
@@ -52,7 +53,7 @@ public class GrnController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('GRN-insert')")
+    @PreAuthorize("hasAuthority('grn-insert')")
     public HashMap<String,String> add(@RequestBody Grn grn){
 
         HashMap<String,String> response = new HashMap<>();
@@ -64,30 +65,20 @@ public class GrnController {
         }
 
         if(errors==""){
-            grndao.save(grn);
-            for (Grnitem grnItem : grn.getGrnitems()) {
-                Ingredient ingredient = grnItem.getIngredient();
-                BigDecimal unitCost = grnItem.getUnitcost();
-                BigDecimal qtyToIncrease = grnItem.getQuantity();
 
-                // Finding the existing ingredient or create a new one if not found
+            grn.getGrnitems().forEach(grnitem -> {
+                Ingredient ingredient = grnitem.getIngredient();
+                BigDecimal unitCost = grnitem.getUnitcost();
+                BigDecimal qtyToIncrease = grnitem.getQuantity();
+
                 Ingredient existingIngredient = ingredientDao.findById(ingredient.getId()).orElse(ingredient);
-
-                // Calculating the updated qty for the ingredient
                 BigDecimal increasedQty = existingIngredient.getQoh().add(qtyToIncrease);
-
-                // Updating the ingredient's qty and unit price
                 existingIngredient.setQoh(increasedQty);
-                existingIngredient.setCost(unitCost); // Set unitprice as unitcost for simplicity, you can customize the logic here.
+                existingIngredient.setCost(unitCost);
 
-                // Saving the ingredient with the updated qty and unitprice
                 ingredientDao.save(existingIngredient);
-
-//                Purchaseorder purorder = purorderDao.findByPONumber(grn.getPurchaseorder().getNumber());
-//                purorder.setPostatus(postatusDao.findByName("Received"));
-//                System.out.println(purorder.getPostatus());
-//                purorderDao.save(purorder);
-            }
+            });
+            grndao.save(grn);
         }
 
         else errors = "Server Validation Errors : <br> "+errors;
@@ -101,7 +92,7 @@ public class GrnController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('GRN-update')")
+    @PreAuthorize("hasAuthority('grn-update')")
     public HashMap<String,String> update(@RequestBody Grn grn){
 
         HashMap<String,String> response = new HashMap<>();
@@ -116,6 +107,8 @@ public class GrnController {
             grnItem.setGrn(grn);
         }
 
+        BeanUtils.copyProperties(grn, grn1, "id", "grnitems");
+
         if(errors==""){
 
             for (Grnitem grnItem : grn.getGrnitems()) {
@@ -129,7 +122,7 @@ public class GrnController {
                 List<Grnitem> oldGrnItems = grndao.findByGrnItemId(grn.getId());
                 for (Grnitem oldgrnitm : oldGrnItems){
                     if (oldgrnitm.getIngredient().getId()==grnItem.getIngredient().getId()){
-//                        newqty =  oldgrnitm.getQuantity().add(grnItem.getQuantity());
+                        newqty =  oldgrnitm.getQuantity().add(grnItem.getQuantity());
                         oldgrnitm.getIngredient().setQoh(oldgrnitm.getIngredient().getQoh().add(grnItem.getQuantity()));
                         System.out.println("newqty"+newqty);
                     }
@@ -139,23 +132,42 @@ public class GrnController {
                 Ingredient existingIngredient = ingredientDao.findById(ingredient.getId()).orElse(ingredient);
                 System.out.println("extqty"+existingIngredient.getQoh());
                 // Calculate the updated qty for the item
-//                BigDecimal increasedQty = existingIngredient.getQoh().add(newqty);
-//                System.out.println("incresqty"+increasedQty);
+                BigDecimal increasedQty = existingIngredient.getQoh().add(newqty);
+                System.out.println("incresqty"+increasedQty);
                 // Update the item's qty and unitprice
-//                existingIngredient.setQoh(increasedQty);
+                existingIngredient.setQoh(increasedQty);
                 existingIngredient.setCost(unitCost); // Set unitprice as unitcost for simplicity, you can customize the logic here.
 
                 // Save the item with the updated qty and unitprice
                 ingredientDao.save(existingIngredient);
             }
+
+            Purchaseorder extpo = purorderDao.findByMyId(grn.getPurchaseorder().getId());
+
+            List<Postatus> postatses = postatusDao.findAll();
+            if (grn.getGrnstatus().getName().equalsIgnoreCase("recieved")) {
+                Postatus receivedStatus = postatses.stream()
+                        .filter(postatus -> "Completed".equals(postatus.getName()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (receivedStatus != null) {
+                    extpo.setPostatus(receivedStatus);
+                    purorderDao.save(extpo);
+                }
+            }
+
             grndao.save(grn);
+
+            response.put("id",String.valueOf(grn.getId()));
+            response.put("url","/grns/"+grn.getId());
+            response.put("errors",errors);
+            
+        }else {
+            errors = "Server Validation Errors : <br> " + errors;
         }
 
-        else errors = "Server Validation Errors : <br> "+errors;
 
-        response.put("id",String.valueOf(grn.getId()));
-        response.put("url","/grns/"+grn.getId());
-        response.put("errors",errors);
 
         return response;
     }
@@ -163,7 +175,7 @@ public class GrnController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('GRN-delete')")
+    @PreAuthorize("hasAuthority('grn-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

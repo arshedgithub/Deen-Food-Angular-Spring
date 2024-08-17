@@ -1,9 +1,13 @@
 package lk.globaltech.deenfood.controller;
 
 import lk.globaltech.deenfood.dao.CustpaymentDao;
+import lk.globaltech.deenfood.dao.InvoiceDao;
+import lk.globaltech.deenfood.dao.InvoicestatusDao;
 import lk.globaltech.deenfood.entity.Cuspayment;
+import lk.globaltech.deenfood.entity.Invoicestatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,8 +22,14 @@ public class CustpaymentController {
 
     @Autowired
     private CustpaymentDao custpaymentDao;
+
+    @Autowired
+    private InvoicestatusDao invoicestatusDao;
+
+    @Autowired
+    private InvoiceDao invoiceDao;
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('customer payment-select')")
     public List<Cuspayment> get(@RequestParam HashMap<String,String> params) {
 
         List<Cuspayment> custpayments = this.custpaymentDao.findAll();
@@ -38,7 +48,7 @@ public class CustpaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+    @PreAuthorize("hasAuthority('customer payment-insert')")
     public HashMap<String,String> add(@RequestBody Cuspayment custpayment){
 
         HashMap<String,String> response = new HashMap<>();
@@ -48,7 +58,9 @@ public class CustpaymentController {
         if(existingProduct!=null && custpayment.getId()!=existingProduct.getId())
             errors = errors+"<br>Purchase Order Not Found";
 
-        if(errors=="") custpaymentDao.save(custpayment);
+        if(errors=="") {
+            custpaymentDao.save(custpayment);
+        }
         else errors = "Server Validation Errors : <br> "+errors;
 
         response.put("id",String.valueOf(custpayment.getId()));
@@ -60,7 +72,7 @@ public class CustpaymentController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
+    @PreAuthorize("hasAuthority('customer payment-update')")
     public HashMap<String,String> update(@RequestBody Cuspayment cuspayment) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -70,7 +82,25 @@ public class CustpaymentController {
         if (itm != null && cuspayment.getId() != itm.getId())
             errors = errors + "<br> Existing Number";
         
-        if (errors == "") custpaymentDao.save(cuspayment);
+        if (errors == "") {
+            List<Invoicestatus> invoicestatuses = invoicestatusDao.findAll();
+
+            if (cuspayment.getPaystatus().getName().equalsIgnoreCase("paid")) {
+                Invoicestatus paidStatus = invoicestatuses.stream()
+                        .filter(invoicestatus -> "Paid".equals(invoicestatus.getName()))
+                        .findFirst()
+                        .orElse(null);
+
+                if (paidStatus != null) {
+                    cuspayment.getInvoice().setInvoicestatus(paidStatus);
+
+                    invoiceDao.save(cuspayment.getInvoice());
+                }
+            }
+
+            custpaymentDao.save(cuspayment);
+
+        }
         else errors = "Server Validation Errors : <br> " + errors;
 
         response.put("id", String.valueOf(cuspayment.getId()));
@@ -81,6 +111,7 @@ public class CustpaymentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('customer payment-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

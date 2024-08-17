@@ -41,7 +41,6 @@ public class Ingredient {
     private BigDecimal cost;
     @Basic
     @Column(name = "dointroduced")
-    @RegexPattern(reg = "^\\d{2}-\\d{2}-\\d{2}$", msg = "Invalid Date")
     private Date dointroduced;
     @ManyToOne
     @JoinColumn(name = "ingcategory_id", referencedColumnName = "id", nullable = false)

@@ -4,6 +4,7 @@ import lk.globaltech.deenfood.dao.SuppaymentDao;
 import lk.globaltech.deenfood.entity.Suppayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class SuppaymentController {
 
     @Autowired private SuppaymentDao suppaymentDao;
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('supplier payment-select')")
     public List<Suppayment> get(@RequestParam HashMap<String,String> params) {
 
         List<Suppayment> suppayments = this.suppaymentDao.findAll();
@@ -37,7 +38,7 @@ public class SuppaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+    @PreAuthorize("hasAuthority('supplier payment-insert')")
     public HashMap<String,String> add(@RequestBody Suppayment custpayment){
 
         HashMap<String,String> response = new HashMap<>();
@@ -59,7 +60,7 @@ public class SuppaymentController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
+    @PreAuthorize("hasAuthority('supplier payment-update')")
     public HashMap<String,String> update(@RequestBody Suppayment suppayment) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -80,6 +81,7 @@ public class SuppaymentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('supplier payment-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

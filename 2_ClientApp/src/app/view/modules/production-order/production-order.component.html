@@ -15,6 +15,10 @@
             <input matInput formControlName="orderNumber">
           </mat-form-field>
 
+          <hr>
+
+          <h2>Add Products</h2>
+
           <div id="innertable">
             <form #myInnerForm [formGroup]="innerform">
 
@@ -92,7 +96,7 @@
             <button mat-raised-button id="searchcolor" (click)="add()"  [disabled]="!enaadd" >Add</button>
             <button mat-raised-button id="clearcolor" (click)="clear()">Clear</button>
             <button mat-raised-button id="updatecolor" (click)="update()" [disabled]="!enaupd">Update</button>
-            <button mat-raised-button id="deletecolor" (click)="delete()"  [disabled]="!enadel">Delete</button>
+<!--            <button mat-raised-button id="deletecolor" (click)="delete()"  [disabled]="!enadel">Delete</button>-->
           </div>
 
         </form>

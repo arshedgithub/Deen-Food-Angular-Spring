@@ -4,6 +4,7 @@ import lk.globaltech.deenfood.dao.CustomerDao;
 import lk.globaltech.deenfood.entity.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,7 +21,7 @@ public class CustomerController {
     private CustomerDao customerDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('customer-select')")
     public List<Customer> get(@RequestParam HashMap<String, String> params) {
 
         List<Customer> customers = this.customerDao.findAll();
@@ -37,24 +38,9 @@ public class CustomerController {
 
     }
 
-//    @GetMapping(path ="/list",produces = "application/json")
-//    public List<Customer> get() {
-//
-//        List<Customer> customers = this.customerDao.findAllNameId();
-//
-//        customers = customers.stream().map(
-//                customer -> {
-//                    Customer e = new Customer(customer.getId(), customer.getCustomername());
-//                    return e;
-//                }
-//        ).collect(Collectors.toList());
-//        return customers;
-//    }
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Customer-Insert')")
+    @PreAuthorize("hasAuthority('customer-insert')")
     public HashMap<String,String> add(@RequestBody Customer customer){
 
         HashMap<String,String> response = new HashMap<>();
@@ -76,7 +62,7 @@ public class CustomerController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Customer-Update')")
+    @PreAuthorize("hasAuthority('customer-update')")
     public HashMap<String,String> update(@RequestBody Customer customer){
 
         HashMap<String,String> response = new HashMap<>();
@@ -98,6 +84,7 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('customer-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();
