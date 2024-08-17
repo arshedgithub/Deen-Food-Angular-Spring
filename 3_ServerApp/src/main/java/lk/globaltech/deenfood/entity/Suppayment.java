@@ -23,7 +23,7 @@ public class Suppayment {
     @JoinColumn(name = "grn_id", referencedColumnName = "id", nullable = false)
     private Grn grn;
     @ManyToOne
-    @JoinColumn(name = "paytype_id1", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "paytype_id", referencedColumnName = "id", nullable = false)
     private Paytype paytype;
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id", nullable = false)

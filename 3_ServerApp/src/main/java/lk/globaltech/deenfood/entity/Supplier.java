@@ -266,11 +266,11 @@ public class Supplier {
         this.purchaseorders = purchaseorders;
     }
 
-    public Collection<Suppayment> getSuppaymentsById() {
+    public Collection<Suppayment> getSuppayments() {
         return suppayments;
     }
 
-    public void setSuppaymentsById(Collection<Suppayment> suppayments) {
+    public void setSuppayments(Collection<Suppayment> suppayments) {
         this.suppayments = suppayments;
     }
 }

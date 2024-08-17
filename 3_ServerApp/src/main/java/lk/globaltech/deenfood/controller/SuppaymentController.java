@@ -16,8 +16,7 @@ import java.util.stream.Stream;
 @RequestMapping(value = "/suppayments")
 public class SuppaymentController {
 
-    @Autowired
-    private SuppaymentDao suppaymentDao;
+    @Autowired private SuppaymentDao suppaymentDao;
     @GetMapping(produces = "application/json")
 //    @PreAuthorize("hasAuthority('employee-select')")
     public List<Suppayment> get(@RequestParam HashMap<String,String> params) {
