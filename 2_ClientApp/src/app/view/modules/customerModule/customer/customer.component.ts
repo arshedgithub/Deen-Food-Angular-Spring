@@ -24,12 +24,12 @@ import {CustomerFormComponent} from "../customer-form/customer-form.component";
   styleUrls: ['./customer.component.css']
 })
 export class CustomerComponent {
-  columns: string[] = ['customernumber', 'fullname', 'gender', 'contact', 'email', 'edit','del'];
-  headers: string[] = ['Number', 'Name', 'Gender', 'Contact', 'Email', '', ''];
-  binders: string[] = ['customernumber', 'fullname', 'gender.name', 'contact', 'email', '',''];
+  columns: string[] = ['customernumber', 'fullname', 'gender', 'contact', 'email', 'edit'];
+  headers: string[] = ['Number', 'Name', 'Gender', 'Contact', 'Email', ''];
+  binders: string[] = ['customernumber', 'fullname', 'gender.name', 'contact', 'email', ''];
 
-  cscolumns: string[] = ['csnumber', 'csname', 'csgender', 'cscontact', 'csemail','csempty1','csempty2'];
-  csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender', 'Search by Contact', 'Search by Email', '', ''];
+  cscolumns: string[] = ['csnumber', 'csname', 'csgender', 'cscontact', 'csemail','csempty1'];
+  csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender', 'Search by Contact', 'Search by Email', ''];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;

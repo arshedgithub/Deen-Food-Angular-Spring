@@ -7,6 +7,7 @@ import lk.globaltech.deenfood.entity.Cuspayment;
 import lk.globaltech.deenfood.entity.Invoicestatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ public class CustpaymentController {
     @Autowired
     private InvoiceDao invoiceDao;
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('customer payment-select')")
     public List<Cuspayment> get(@RequestParam HashMap<String,String> params) {
 
         List<Cuspayment> custpayments = this.custpaymentDao.findAll();
@@ -47,7 +48,7 @@ public class CustpaymentController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Insert')")
+    @PreAuthorize("hasAuthority('customer payment-insert')")
     public HashMap<String,String> add(@RequestBody Cuspayment custpayment){
 
         HashMap<String,String> response = new HashMap<>();
@@ -58,16 +59,6 @@ public class CustpaymentController {
             errors = errors+"<br>Purchase Order Not Found";
 
         if(errors=="") {
-
-//            List<Invoicestatus> invoicestatuses = invoicestatusDao.findAll();
-//
-//            if (custpayment.getPaystatus().getName().equalsIgnoreCase("paid")){
-//                Invoicestatus paidStatus = invoicestatuses.stream()
-//                        .filter(invoicestatus -> "Paid".equals(invoicestatus.getName()))
-//                        .findFirst()
-//                        .orElse(null);
-//                custpayment.getInvoice().setInvoicestatus(paidStatus);
-//            }
             custpaymentDao.save(custpayment);
         }
         else errors = "Server Validation Errors : <br> "+errors;
@@ -81,7 +72,7 @@ public class CustpaymentController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Employee-Update')")
+    @PreAuthorize("hasAuthority('customer payment-update')")
     public HashMap<String,String> update(@RequestBody Cuspayment cuspayment) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -120,6 +111,7 @@ public class CustpaymentController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('customer payment-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

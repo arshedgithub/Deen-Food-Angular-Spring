@@ -29,13 +29,13 @@ import {EmployeeFormComponent} from "../employee-form/employee-form.component";
 
 export class EmployeeComponent {
 
-  columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname', 'edit','del'];
-  headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name', '', ''];
-  binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname', '',''];
+  columns: string[] = ['number', 'callingname', 'gender', 'designation', 'fullname', 'edit'];
+  headers: string[] = ['Number', 'Calling Name', 'Gender', 'Designation', 'Full Name', ''];
+  binders: string[] = ['number', 'callingname', 'gender.name', 'designation.name', 'fullname', ''];
 
-  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname','csempty1','csempty2'];
+  cscolumns: string[] = ['csnumber', 'cscallingname', 'csgender', 'csdesignation', 'csname','csempty1'];
   csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Gender',
-    'Search by Designation', 'Search by Full Name'];
+    'Search by Designation', 'Search by Full Name', 'se'];
 
   public csearch!: FormGroup;
   public ssearch!: FormGroup;
@@ -49,8 +49,8 @@ export class EmployeeComponent {
   imageurl: string = '';
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  // enaadd:boolean = false;
-  // enaupd:boolean = false;
+  enaadd:boolean = false;
+  enaupd:boolean = false;
 
   genders: Array<Gender> = [];
   designations: Array<Designation> = [];
@@ -68,8 +68,6 @@ export class EmployeeComponent {
     private fb: FormBuilder,
     private dg: MatDialog,
     public authService:AuthorizationManager) {
-
-
     this.uiassist = new UiAssist(this);
 
     this.csearch = this.fb.group({

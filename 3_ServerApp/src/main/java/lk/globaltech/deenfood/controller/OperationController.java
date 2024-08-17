@@ -5,6 +5,7 @@ import lk.globaltech.deenfood.dao.OperationDao;
 import lk.globaltech.deenfood.entity.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -21,6 +22,7 @@ public class OperationController {
     private OperationDao operationDao;
 
     @GetMapping(produces = "application/json")
+    @PreAuthorize("hasAuthority('operation-select')")
     public List<Operation> get(@RequestParam HashMap<String, String> params) {
 
         List<Operation> operations = this.operationDao.findAll();
@@ -38,6 +40,7 @@ public class OperationController {
     }
 
     @GetMapping(path ="/list", produces = "application/json")
+    @PreAuthorize("hasAuthority('operation-select')")
     public List<Operation> get() {
 
         List<Operation> operations = this.operationDao.findAll();
@@ -56,6 +59,7 @@ public class OperationController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('operation-insert')")
     public HashMap<String,String> add(@RequestBody Operation operation){
 
         HashMap<String,String> responce = new HashMap<>();
@@ -76,6 +80,7 @@ public class OperationController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('operation-update')")
     public HashMap<String,String> update(@RequestBody Operation operation){
 
         HashMap<String,String> responce = new HashMap<>();
@@ -93,6 +98,7 @@ public class OperationController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('operation-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         System.out.println(id);

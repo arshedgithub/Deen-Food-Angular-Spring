@@ -6,6 +6,7 @@ import lk.globaltech.deenfood.entity.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ public class CustomerorderController {
     private ProductDao productDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('employee-select')")
+    @PreAuthorize("hasAuthority('customer order-select')")
     public List<Customerorder> get(@RequestParam HashMap<String, String> params) {
 
         List<Customerorder> customerorders = this.customerorderDao.findAll();
@@ -47,6 +48,7 @@ public class CustomerorderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('customer order-insert')")
     public HashMap<String, String> add(@RequestBody Customerorder customerorder) {
 
         HashMap<String, String> response = new HashMap<>();
@@ -92,7 +94,7 @@ public class CustomerorderController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Customer-Update')")
+    @PreAuthorize("hasAuthority('customer order-update')")
     public HashMap<String,String> update(@RequestBody Customerorder customerorder){
 
         HashMap<String,String> response = new HashMap<>();
@@ -134,6 +136,7 @@ public class CustomerorderController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('customer order-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

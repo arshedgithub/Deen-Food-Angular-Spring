@@ -33,7 +33,7 @@ public class GrnController {
     private PostatusDao postatusDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('GRN-select')")
+    @PreAuthorize("hasAuthority('grn-select')")
     public List<Grn> get(@RequestParam HashMap<String, String> params) {
 
         List<Grn> grns = this.grndao.findAll();
@@ -53,7 +53,7 @@ public class GrnController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('GRN-insert')")
+    @PreAuthorize("hasAuthority('grn-insert')")
     public HashMap<String,String> add(@RequestBody Grn grn){
 
         HashMap<String,String> response = new HashMap<>();
@@ -92,7 +92,7 @@ public class GrnController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('GRN-update')")
+    @PreAuthorize("hasAuthority('grn-update')")
     public HashMap<String,String> update(@RequestBody Grn grn){
 
         HashMap<String,String> response = new HashMap<>();
@@ -175,7 +175,7 @@ public class GrnController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('GRN-delete')")
+    @PreAuthorize("hasAuthority('grn-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         HashMap<String,String> response = new HashMap<>();

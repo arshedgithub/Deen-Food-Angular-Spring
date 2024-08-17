@@ -10,6 +10,7 @@ import lk.globaltech.deenfood.entity.Invoice;
 import lk.globaltech.deenfood.entity.Invoicestatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class InvoiceController {
     private CustomerorderDao customerorderDao;
 
     @GetMapping(produces = "application/json")
-//    @PreAuthorize("hasAuthority('invoice-select')")
+    @PreAuthorize("hasAuthority('invoice-select')")
     public List<Invoice> get(@RequestParam HashMap<String, String> params) {
 
         List<Invoice> invoices = this.invoiceDao.findAll();
@@ -51,7 +52,7 @@ public class InvoiceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Invoice-Insert')")
+    @PreAuthorize("hasAuthority('invoice-insert')")
     public HashMap<String,String> add(@RequestBody Invoice invoice){
 
         HashMap<String,String> response = new HashMap<>();
@@ -72,7 +73,7 @@ public class InvoiceController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.CREATED)
-//    @PreAuthorize("hasAuthority('Invoice-Update')")
+    @PreAuthorize("hasAuthority('invoice-update')")
     public HashMap<String,String> update(@RequestBody Invoice invoice){
 
         HashMap<String,String> response = new HashMap<>();
@@ -113,6 +114,7 @@ public class InvoiceController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('invoice-delete')")
     public HashMap<String,String> delete(@PathVariable Integer id){
 
         System.out.println(id);
