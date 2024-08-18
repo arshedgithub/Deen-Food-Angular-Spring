@@ -18,6 +18,7 @@ import {EmployeeService} from "../../../service/employeeservice";
 import {ProductService} from "../../../service/productservice";
 import {Productstatusservice} from "../../../service/productStatusservice";
 import {Productstatus} from "../../../entity/productstatus";
+import {logCumulativeDurations} from "@angular-devkit/build-angular/src/builders/browser-esbuild/profiling";
 
 @Component({
     selector: 'app-product',
@@ -26,12 +27,12 @@ import {Productstatus} from "../../../entity/productstatus";
 })
 export class ProductComponent {
 
-    columns: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee'];
-    headers: string[] = ['Number', 'Name', 'Description', 'Quantity', 'Price', 'Employee'];
-    binders: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee.fullname'];
+    columns: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee', 'rop'];
+    headers: string[] = ['Number', 'Name', 'Description', 'Quantity', 'Price', 'Employee', 'ROP status'];
+    binders: string[] = ['productnumber', 'name', 'description', 'quantity', 'price', 'employee.fullname', 'rop'];
 
-    cscolumns: string[] = ['csnumber', 'csname', 'csdescription', 'csquantity', 'csprice', 'csemployee'];
-    csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Description', 'Search by Quantity', 'Search by Price', 'Search by Employee'];
+    cscolumns: string[] = ['csnumber', 'csname', 'csdescription', 'csquantity', 'csprice', 'csemployee', 'csrop'];
+    csprompts: string[] = ['Search by Number', 'Search by Name', 'Search by Description', 'Search by Quantity', 'Search by Price', 'Search by Employee', 'Search by rop'];
 
     incolumns: string[] = ['ingredient', 'quantityratio', 'remove'];
     inheaders: string[] = ['Ingredient', 'Quantity', ''];
@@ -89,6 +90,7 @@ export class ProductComponent {
             csquantity: new FormControl(),
             csprice: new FormControl(),
             csemployee: new FormControl(),
+            csrop: new FormControl(),
         });
 
         this.ssearch = this.fb.group({
@@ -105,6 +107,7 @@ export class ProductComponent {
             "productStatus": new FormControl('', [Validators.required]),
             "dointroduced": new FormControl({value: new Date(), disabled: false}, [Validators.required]),
             "employee": new FormControl('', [Validators.required]),
+            "rop": new FormControl('', [Validators.required]),
         }, {updateOn: 'change'});
 
         this.innerform = this.fb.group({
@@ -127,6 +130,7 @@ export class ProductComponent {
         });
 
         this.prodService.getAll("").then((products: Product[]) => {
+            console.log(products)
             this.products = products;
         });
 
@@ -158,6 +162,7 @@ export class ProductComponent {
         this.form.controls['dointroduced'].setValidators([Validators.required]);
         this.form.controls['productStatus'].setValidators([Validators.required]);
         this.form.controls['employee'].setValidators([Validators.required]);
+        this.form.controls['rop'].setValidators([Validators.required, Validators.pattern('^[0-9]{1,9}$')]);
 
         this.innerform.controls['ingredient'].setValidators([Validators.required]);
         this.innerform.controls['quantityratio'].setValidators([Validators.required, Validators.pattern(this.regexes['quantity']['regex'])]);
@@ -199,6 +204,7 @@ export class ProductComponent {
     loadTable(query: string) {
         this.prodService.getAll(query)
             .then((prods: Product[]) => {
+                console.log(prods)
                 this.products = prods;
                 // this.ns.setLastSequenceNumber(this.purorders[this.purorders.length-1].number);
                 // this.generateNumber();
@@ -311,7 +317,6 @@ export class ProductComponent {
                 }
             });
         } else {
-
             this.product = this.form.getRawValue();
             this.product.productIngredients = this.productIngredients;
             // @ts-ignore
@@ -330,6 +335,8 @@ export class ProductComponent {
 
             let addstatus: boolean = false;
             let addmessage: string = "Server Not Found";
+
+            console.log(this.product)
 
             confirm.afterClosed().subscribe(async result => {
                 if (result) {
@@ -592,5 +599,9 @@ export class ProductComponent {
         //@ts-ignore
         this.innerdata.ingredient = this.ingredients.find((i) => i.id === this.innerdata.ingredient.id);
         this.innerform.patchValue(this.innerdata);
+    }
+
+    showRop (data: any): boolean {
+        return data.quantity > data.rop;
     }
 }

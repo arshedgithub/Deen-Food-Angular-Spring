@@ -23,7 +23,7 @@ public class ProductController {
     @Autowired
     private ProductDao productDao;
     @GetMapping(produces = "application/json")
-    @PreAuthorize("hasAuthority('product-select')")
+//    @PreAuthorize("hasAuthority('product-select')")
     public List<Product> get(@RequestParam HashMap<String,String> params) {
 
         List<Product> products = this.productDao.findAll();

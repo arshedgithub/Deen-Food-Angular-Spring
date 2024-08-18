@@ -28,29 +28,6 @@
                         <input matInput formControlName="grandtotal">
                     </mat-form-field>
 
-<!--                    <mat-form-field appearance="outline">-->
-<!--                        <mat-label>GRN Number</mat-label>-->
-<!--                        <mat-select formControlName="grn" >-->
-<!--                            <mat-option [value]="null" selected>Not Selected</mat-option>-->
-<!--                            <ng-container *ngIf="!enaupd">-->
-<!--                                <ng-container *ngFor="let invoice of invoices">-->
-<!--                                    <mat-option *ngIf="invoice.invoicestatus.name === 'Approved'|| invoice.invoicestatus.name === 'Partially Received'" [value]="invoice">-->
-<!--                                        {{invoice.number}}-->
-<!--                                    </mat-option>-->
-<!--                                </ng-container>-->
-<!--                            </ng-container>-->
-<!--                            <ng-container *ngIf="enaupd">-->
-<!--                                <ng-container *ngFor="let invoice of invoices">-->
-<!--                                    <mat-option [value]="invoice">-->
-<!--                                        {{invoice.number}}-->
-<!--                                    </mat-option>-->
-<!--                                </ng-container>-->
-<!--                            </ng-container>-->
-<!--                        </mat-select>-->
-<!--                    </mat-form-field>-->
-
-<!--                    <button (click)="filteritem()">Check</button><br><br>-->
-
                     <mat-form-field appearance="outline">
                         <mat-label>Payment Type</mat-label>
                         <mat-select formControlName="paytype">
