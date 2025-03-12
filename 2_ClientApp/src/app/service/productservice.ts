@@ -12,6 +12,7 @@ export class ProductService {
 
   async getAll(query:string): Promise<Array<Product>> {
     const products = await this.http.get<Array<Product>>('http://localhost:8080/products'+query).toPromise();
+    console.log(products + "service")
     if(products == undefined) return [];
     return products;
   }

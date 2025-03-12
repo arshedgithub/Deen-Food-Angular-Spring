@@ -58,6 +58,9 @@ public class Product {
     @JsonIgnore
     @OneToMany(mappedBy = "product")
     private Collection<Orderproduct> orderproducts;
+    @Basic
+    @Column(name = "rop")
+    private Integer rop;
 
     public Integer getId() {
         return id;
@@ -203,5 +206,13 @@ public class Product {
 
     public void setOrderproducts(Collection<Orderproduct> orderproducts) {
         this.orderproducts = orderproducts;
+    }
+
+    public Integer getRop() {
+        return rop;
+    }
+
+    public void setRop(Integer rop) {
+        this.rop = rop;
     }
 }

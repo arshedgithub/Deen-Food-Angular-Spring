@@ -98,6 +98,11 @@
                         </mat-select>
                     </mat-form-field>
 
+                    <mat-form-field appearance="outline">
+                        <mat-label>ROP</mat-label>
+                        <input matInput formControlName="rop">
+                    </mat-form-field>
+
                     <div id="butpanel">
                         <button mat-raised-button (click)="add()" [disabled]="!enaadd">Add</button>
                         <button mat-raised-button (click)="clear()">Clear</button>
@@ -163,7 +168,10 @@
 
                     <ng-container *ngFor="let column of columns;let i = index;" [matColumnDef]="column">
                         <mat-header-cell *matHeaderCellDef> {{headers[i]}} </mat-header-cell>
-                        <mat-cell *matCellDef="let element">{{ uiassist.getProperty(element, binders[i]) }} </mat-cell>
+                        <mat-cell *matCellDef="let element">
+                            <div *ngIf="i < binders.length - 1" [innerHTML]="uiassist.getProperty(element, binders[i])"></div>
+                            <div *ngIf="i >= binders.length - 1">{{showRop(element) ? "over" : "less"}}</div>
+                        </mat-cell>
                     </ng-container>
 
                     <ng-container *ngFor="let cscolumn of cscolumns;let i = index;" [matColumnDef]="cscolumn">
